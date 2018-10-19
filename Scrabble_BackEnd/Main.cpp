@@ -5,10 +5,9 @@ using namespace std;
 int main()
 {
 	/*
-	Intiating TileLookUp instance t from TileLookUp class
+	Intiating  instance tileLookUp from TileLookUp class
 	*/
 	TileLookUp * tileLookUp = new TileLookUp();
-
 	system("pause");
 	return 0;
 } 
