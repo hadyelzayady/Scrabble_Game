@@ -7,13 +7,11 @@ inline const char& Board::getLetter(int row, int column) const
 
 inline bool Board::isEmptySquare(int row, int column) const
 {
+	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
 	{
-		if (row < ROWS_COUNT && column < COLUMNS_COUNT)
-		{
-			return board[row][column].letter == EMPTY_SQUARE;
-		}
-		throw "array out of bound Board-> isEmpty"
+		return board[row][column].isEmpty();
 	}
+	throw "array out of bound (Board-> isEmpty)";
 }
 
 Board::Board()

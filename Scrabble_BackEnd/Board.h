@@ -2,7 +2,7 @@
 #include <vector>
 #include "Square.h"
 #include "Constants.h"
-static class Board
+class Board
 {
 public:
 	Square board[ROWS_COUNT][COLUMNS_COUNT];
