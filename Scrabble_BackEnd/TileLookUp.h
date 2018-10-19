@@ -3,16 +3,17 @@
 #define TILELOOKUP_H
 #include <string>
 #include <iostream>
+#include "Constants.h"
 using namespace std;
 
 class Letter
 {
 public:
 	
-	string letter;
+	char letter;
 	int frequency;
 	int score;
-	Letter(string l, int f, int s)
+	Letter(char l, int f, int s)
 	{
 		letter = l;
 		frequency = f;
