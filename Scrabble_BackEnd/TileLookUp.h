@@ -1,28 +1,40 @@
 #pragma once
 #ifndef TILELOOKUP_H
 #define TILELOOKUP_H
-#include <string>
 #include <iostream>
 #include "Constants.h"
+#include <map>
 using namespace std;
 
-class Letter
+class FrequencyScore 
 {
 public:
 	
-	char letter;
 	int frequency;
 	int score;
-	Letter(char l, int f, int s)
-	{
-		letter = l;
-		frequency = f;
-		score = s;
-	}
-	~Letter()
+
+	FrequencyScore()
 	{
 
 	}
+	FrequencyScore(int f, int s)
+	{
+		
+		frequency = f;
+		score = s;
+	}
+	~FrequencyScore()
+	{
+
+	}
+
+	void setValues(int f, int s)
+	{
+		frequency = f;
+		score = s;
+	}
+
+	
 
 };
 
@@ -30,11 +42,15 @@ public:
 class TileLookUp
 {
 public:
-	Letter * letterArray[27];
+	map<char, FrequencyScore> letterMap;
 
 public:
 	TileLookUp();
 	~TileLookUp();
+
+	void setFrequency(char c, int f);
+	int  getFrequency(char c);
+	int  getScore(char c);
 
 };
 
