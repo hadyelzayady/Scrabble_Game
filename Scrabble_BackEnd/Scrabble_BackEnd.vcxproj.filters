@@ -22,6 +22,8 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="TileLookUp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,6 +36,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Constants.h">
+       <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="TileLookUp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
