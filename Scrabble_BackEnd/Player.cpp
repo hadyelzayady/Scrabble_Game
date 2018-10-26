@@ -15,6 +15,15 @@ string Player::getPlayerName()
 	return playerName;
 }
 
+int Player::getPlayerScore()
+{
+	return playerScore;
+}
+void Player::editPlayerScore(int score)
+{
+	playerScore = score;
+}
+
 Rack & Player::getRack()
 {
 	return *rack;

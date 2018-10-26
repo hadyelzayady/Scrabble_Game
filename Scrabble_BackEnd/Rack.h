@@ -12,11 +12,12 @@ private:
 
 public:
 
-	
+
 	void addTile(char x);
 	void removeTile(char x);
 	int getSize();
 	void updateSize(int x);
+	char* getRackTiles();
 
 	Rack();		//constructor
 	~Rack();		//destructor
