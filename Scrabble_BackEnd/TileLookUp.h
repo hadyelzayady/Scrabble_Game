@@ -6,43 +6,11 @@
 #include <map>
 using namespace std;
 
-class FrequencyScore 
-{
-public:
-	
-	int frequency;
-	int score;
-
-	FrequencyScore()
-	{
-
-	}
-	FrequencyScore(int f, int s)
-	{
-		
-		frequency = f;
-		score = s;
-	}
-	~FrequencyScore()
-	{
-
-	}
-
-	void setValues(int f, int s)
-	{
-		frequency = f;
-		score = s;
-	}
-
-	
-
-};
-
 
 class TileLookUp
 {
 public:
-	map<char, FrequencyScore> letterMap;
+	map<char, int*> letterMap;
 
 public:
 	TileLookUp();

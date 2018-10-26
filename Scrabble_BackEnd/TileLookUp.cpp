@@ -4,34 +4,33 @@
 
 TileLookUp::TileLookUp()
 {
-
-	letterMap['A'].setValues(9, 1);
-	letterMap['B'].setValues(2, 3);
-	letterMap['C'].setValues(2, 3);
-	letterMap['D'].setValues(4, 2);
-	letterMap['E'].setValues(12, 1);
-	letterMap['F'].setValues(2, 4);
-	letterMap['G'].setValues(3, 2);
-	letterMap['H'].setValues(2, 4);
-	letterMap['I'].setValues(9, 1);
-	letterMap['J'].setValues(1, 8);
-	letterMap['K'].setValues(1, 5);
-	letterMap['L'].setValues(4, 1);
-	letterMap['M'].setValues(2, 3);
-	letterMap['N'].setValues(6, 1);
-	letterMap['O'].setValues(8, 1);
-	letterMap['P'].setValues(2, 3);
-	letterMap['Q'].setValues(1, 10);
-	letterMap['R'].setValues(6, 1);
-	letterMap['S'].setValues(4, 1);
-	letterMap['T'].setValues(6, 1);
-	letterMap['U'].setValues(4, 1);
-	letterMap['V'].setValues(2, 4);
-	letterMap['W'].setValues(2, 4);
-	letterMap['X'].setValues(1, 8);
-	letterMap['Y'].setValues(2, 4);
-	letterMap['Z'].setValues(1, 10);
-	letterMap[BLANK_TILE].setValues(2, 0);
+	letterMap['A'] = new int [2]{9, 1};
+	letterMap['B']= new int [2]{2, 3};
+	letterMap['C']= new int [2]{2, 3};
+	letterMap['D']= new int [2]{4, 2};
+	letterMap['E']= new int [2]{12, 1};
+	letterMap['F']= new int [2]{2, 4};
+	letterMap['G']= new int [2]{3, 2};
+	letterMap['H']= new int [2]{2, 4};
+	letterMap['I']= new int [2]{9, 1};
+	letterMap['J']= new int [2]{1, 8};
+	letterMap['K']= new int [2]{1, 5};
+	letterMap['L']= new int [2]{4, 1};
+	letterMap['M']= new int [2]{2, 3};
+	letterMap['N']= new int [2]{6, 1};
+	letterMap['O']= new int [2]{8, 1};
+	letterMap['P']= new int [2]{2, 3};
+	letterMap['Q']= new int [2]{1, 10};
+	letterMap['R']= new int [2]{6, 1};
+	letterMap['S']= new int [2]{4, 1};
+	letterMap['T']= new int [2]{6, 1};
+	letterMap['U']= new int [2]{4, 1};
+	letterMap['V']= new int [2]{2, 4};
+	letterMap['W']= new int [2]{2, 4};
+	letterMap['X']= new int [2]{1, 8};
+	letterMap['Y']= new int [2]{2, 4};
+	letterMap['Z']= new int [2]{1, 10};
+	letterMap[BLANK_TILE]= new int [2]{2, 0};
 }
 
 
@@ -41,17 +40,17 @@ TileLookUp::~TileLookUp()
 
 int TileLookUp::getFrequency(char c)
 {
-	return letterMap.find(c)->second.frequency;
+	return letterMap.find(c)->second[0];
 }
 
 int TileLookUp::getScore(char c)
 {
-	return letterMap.find(c)->second.score;
+	return letterMap.find(c)->second[1];
 }
 
 void TileLookUp::setFrequency(char c,int f)
 {
-	letterMap.find(c)->second.frequency = f;
+	letterMap.find(c)->second[0]= f;
 }
 
 
