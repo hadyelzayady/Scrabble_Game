@@ -18,6 +18,8 @@ public:
 	~Player();					//destructor
 
 	string getPlayerName();
+	int getPlayerScore();
+	void editPlayerScore(int score);
 	Rack &getRack();
 protected:
 

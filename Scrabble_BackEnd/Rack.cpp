@@ -3,8 +3,8 @@
 
 Rack::Rack()
 {
-	//for (int i = 0; i < Rack::RACKSIZE; i++)
-	//	list[i] = ' ';
+	for (int i = 0; i < Rack::RACKSIZE; i++)
+		list[i] = ' ';
 	listSize = 0;
 
 }
@@ -17,6 +17,11 @@ void Rack::addTile(char x)
 
 	list[listSize] = x;
 	listSize++;
+}
+
+char* Rack::getRackTiles()
+{
+	return list;
 }
 
 void Rack::removeTile(char x)
