@@ -3,6 +3,7 @@
 #include "Board.h"
 #include "Player.h"
 #include "ScoreManager.h"
+#include "AI.h"
 // FIXME: Remove the comment when the bag class is added
 // #include "Bag.h"
 
@@ -14,7 +15,9 @@ public:
 	Board * boardManager;
 	Player ** players;
 	ScoreManager * scoreManager;
+	AI * agent;
 	int playerCount;
+	bool gameOver;
 	// FIXME: Remove the comment when the bag class is added
 	// Bag * bagManager;
 

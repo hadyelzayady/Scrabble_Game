@@ -4,17 +4,12 @@
 
 class Player
 {
-
-private:
-	
-
 public:
-
-	Player(string name);		//constructor
-	~Player();					//destructor
-
 	string playerName;
 	int playerScore;
 	Rack *rack;
 
+
+	Player(string name);		//constructor
+	~Player();					//destructor
 };
