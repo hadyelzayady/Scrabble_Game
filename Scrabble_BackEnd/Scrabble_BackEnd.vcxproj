@@ -116,15 +116,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rack.cpp" />
+    <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="Square.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rack.h" />
+    <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="Square.h" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="TileLookUp.cpp" />

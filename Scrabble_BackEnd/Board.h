@@ -2,6 +2,8 @@
 #include <vector>
 #include "Square.h"
 #include "Constants.h"
+#include <iostream>
+using namespace std;
 class Board
 {
 public:

@@ -16,6 +16,8 @@ inline bool Board::isEmptySquare(int row, int column) const
 
 Board::Board()
 {
+	cout << "Board initialising..." << endl;
+	cout << "Board initialised" << endl;
 }
 
 Board::~Board()
