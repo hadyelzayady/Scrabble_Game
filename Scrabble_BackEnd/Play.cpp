@@ -1,4 +1,4 @@
-#include "Play.h"
+#include "Play.h"
 
 
 
@@ -7,9 +7,9 @@ pair<int, int> Play::get_Cooridantes()
 	return this->cooridantes;
 }
 
-void Play::set_Cooridantes(pair<int, int> Corridantes)
+void Play::set_Cooridantes(pair<int, int> coordinates)
 {
-	this->cooridantes = Corridantes;
+	this->cooridantes = coordinates;
 
 }
 
