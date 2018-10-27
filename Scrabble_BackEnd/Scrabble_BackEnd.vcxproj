@@ -118,6 +118,8 @@
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="move.cpp" />
+    <ClCompile Include="Play.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rack.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
@@ -128,6 +130,8 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="move.h" />
+    <ClInclude Include="Play.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rack.h" />
     <ClInclude Include="ScoreManager.h" />
