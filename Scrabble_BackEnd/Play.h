@@ -6,10 +6,10 @@ class Play
 
 private:
 	char Letter;
-	pair<int, int> cooridantes;
+	pair<int, int> coordinates;
 public:
-	pair<int, int> get_Cooridantes();
-	void set_Cooridantes(pair<int, int> coordinates);
+	pair<int, int> get_Coordinates();
+	void set_Coordinates(pair<int, int> coordinates);
 	void set_Letter(char Letter);
 	char get_Letter();
 	Play();

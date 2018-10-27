@@ -2,14 +2,14 @@
 
 
 
-pair<int, int> Play::get_Cooridantes()
+pair<int, int> Play::get_Coordinates()
 {
-	return this->cooridantes;
+	return this->coordinates;
 }
 
-void Play::set_Cooridantes(pair<int, int> coordinates)
+void Play::set_Coordinates(pair<int, int> coordinates)
 {
-	this->cooridantes = coordinates;
+	this->coordinates = coordinates;
 
 }
 
