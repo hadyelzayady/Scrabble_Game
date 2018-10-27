@@ -5,6 +5,7 @@ enum BonusSquareType { NoBonus = 0, LetterBonusX2, LetterBonusX3, WordBonusX2, W
 
 class Square
 {
+
 public:
 	char letter = EMPTY_SQUARE;//! blank tile has special character (check in constants file) , empty square equals null
 	int row;
