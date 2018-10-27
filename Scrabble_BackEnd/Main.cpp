@@ -2,15 +2,13 @@
 #include "GameManager.h"
 using namespace std;
 
-int main(int argc, char *argv[])
+int main()
 {
 	string * playerNames;
-	int playerCount = atoi(argv[1]);
+	int playerCount = 2;
 	playerNames = new string[playerCount];
-	for (int i = 0; i < playerCount; i++) {
-		playerNames[i] = argv[i + 2];
-		// cout << playerNames[i] << endl;
-	}
+	playerNames[0] = "Scrabby-Do";
+	playerNames[1] = "Enemy";
 	/*
 	Intiating  instance tileLookUp from TileLookUp class
 	*/
