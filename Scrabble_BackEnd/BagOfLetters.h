@@ -17,6 +17,7 @@ class BagOfLetters {
 	char swap(char b);
 
 	int getSize();
+
 	bool hasLetters();
 
 	//void fillRack(Rack* r);

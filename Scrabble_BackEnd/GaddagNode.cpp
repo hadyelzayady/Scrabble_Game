@@ -35,7 +35,7 @@ GaddagNode* GaddagNode::putTransitionChar(char transitionChar) {
 }
 
 GaddagNode* GaddagNode::getChildren(char  transitionChar) {
-	if (bitPosistion[transitionChar - 'A'] & transitions != 0) {
+	if ((bitPosistion[transitionChar - 'A'] & transitions) != 0) {
 		return children[calculateChildrenIndex(transitionChar)];
 	}
 	return NULL;
@@ -74,7 +74,7 @@ bool GaddagNode::hasCharAsEnd(char endChar) {
 }
 
 bool GaddagNode::contains(unsigned int x, char y) {
-	if ((bitPosistion[y - 'A']) & (x) != 0)
+	if ((bitPosistion[y - 'A'] & (x)) != 0)
 		return true;
 	return false;
 }
@@ -103,7 +103,7 @@ void GaddagNode::getOnesPositions(unsigned int  transitions, std::vector<unsigne
 	res.reserve(27);
 	for (; transitions != 0; transitions &= (transitions - 1))
 	{
-		res.push_back(log2(transitions & ~(transitions - 1)));
+		res.push_back((unsigned int)log2(transitions & ~(transitions - 1)));
 	}
 }
 

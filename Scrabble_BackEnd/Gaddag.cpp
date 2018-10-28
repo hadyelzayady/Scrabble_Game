@@ -4,7 +4,7 @@ Gaddag::Gaddag(std::string path) {
 	char x = ' ';
 	root = new GaddagNode(x);
 	buildtime =
-		std::chrono::duration_cast<std::chrono::milliseconds>
+		(unsigned long)std::chrono::duration_cast<std::chrono::milliseconds>
 		(std::chrono::system_clock::now().time_since_epoch()).count();
 	std::ifstream infile(path);
 	if (infile.fail()) {
@@ -16,7 +16,7 @@ Gaddag::Gaddag(std::string path) {
 		infile.close();
 		std::cout << "Done!" << std::endl;
 		unsigned long currentTime =
-			std::chrono::duration_cast<std::chrono::milliseconds>
+			(unsigned long)std::chrono::duration_cast<std::chrono::milliseconds>
 			(std::chrono::system_clock::now().time_since_epoch()).count();
 		std::cout << "Build time: ";
 		std::cout << (currentTime - buildtime) / (1000.0) << std::endl;
