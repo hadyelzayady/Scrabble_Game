@@ -48,6 +48,15 @@
     <ClCompile Include="Play.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BagOfLetters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Gaddag.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GaddagNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Square.h">
@@ -81,6 +90,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Play.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BagOfLetters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gaddag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GaddagNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
