@@ -2,7 +2,10 @@
 #include <vector>
 #include "Square.h"
 #include "Constants.h"
+#include <iostream>
+using namespace std;
 #include <string>
+
 class Board
 {
   public:
