@@ -49,7 +49,7 @@ char BagOfLetters::swap(char x) {
 	return y;
 }
 
-int BagOfLetters::size() {
+int BagOfLetters::getSize() {
 	return this->size;
 }
 
