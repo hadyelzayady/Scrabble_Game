@@ -116,7 +116,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
+    <ClCompile Include="BagOfLetters.cpp" />
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Gaddag.cpp" />
+    <ClCompile Include="GaddagNode.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="move.cpp" />
     <ClCompile Include="Play.cpp" />
@@ -127,8 +130,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
+    <ClInclude Include="BagOfLetters.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="Gaddag.h" />
+    <ClInclude Include="GaddagNode.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="move.h" />
     <ClInclude Include="Play.h" />
