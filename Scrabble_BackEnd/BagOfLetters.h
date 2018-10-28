@@ -16,7 +16,7 @@ class BagOfLetters {
 	//Swap tiles
 	char swap(char b);
 
-	int size();
+	int getSize();
 
 	bool hasLetters();
 
