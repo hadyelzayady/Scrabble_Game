@@ -8,17 +8,17 @@ class Rack
 {
 	enum { RACKSIZE = 7 };	//Max Size of List
 private:
-	Square list[RACKSIZE];
+	char list[RACKSIZE];
 	int  listSize;
 
 public:
 
 
-	void addTile(Square x);
-	void removeTile(Square x);
+	void addTile(char x);
+	void removeTile(char x);
 	int getSize();
 	void updateSize(int x);
-	Square* getRackTiles();
+	char* getRackTiles();
 
 	Rack();		//constructor
 	~Rack();		//destructor
