@@ -5,14 +5,14 @@ Rack::Rack()
 {
 	for (int i = 0; i < Rack::RACKSIZE; i++)
 	{
-		list[i].points = 0;
-		list[i].letter = ' ';
+		
+		list[i] = ' ';
 	}
 	listSize = 0;
 }
 
 
-void Rack::addTile(Square x)
+void Rack::addTile(char x)
 {
 	if (listSize == 7)
 		return;
@@ -21,30 +21,24 @@ void Rack::addTile(Square x)
 	listSize++;
 }
 
-Square* Rack::getRackTiles()
+char* Rack::getRackTiles()
 {
 	return list;
 }
 
-void Rack::removeTile(Square x)
+void Rack::removeTile(char x)
 {
 
 	for (int i = 0; i < listSize; i++)
 	{
-		if (list[i].letter == x.letter)
+		if (list[i] == x)
 		{
-			for (int j = i; j < (listSize - i - 1); i++)
-			{
-				list[j] = list[j + 1];
-
-			}
-
+			list[i] = list[listSize];
+			list[listSize] = ' ';
+			listSize--;
 			break;
 		}
 	}
-	list[listSize].points = 0;
-	list[listSize].letter = ' ';
-	listSize--;
 
 }
 
