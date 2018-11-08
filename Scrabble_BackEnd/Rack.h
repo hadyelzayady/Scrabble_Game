@@ -1,4 +1,5 @@
 #pragma once
+#include "Square.h"
 #include <iostream>
 using namespace std;
 
@@ -7,17 +8,17 @@ class Rack
 {
 	enum { RACKSIZE = 7 };	//Max Size of List
 private:
-	char list[RACKSIZE];
+	Square list[RACKSIZE];
 	int  listSize;
 
 public:
 
 
-	void addTile(char x);
-	void removeTile(char x);
+	void addTile(Square x);
+	void removeTile(Square x);
 	int getSize();
 	void updateSize(int x);
-	char* getRackTiles();
+	Square* getRackTiles();
 
 	Rack();		//constructor
 	~Rack();		//destructor
