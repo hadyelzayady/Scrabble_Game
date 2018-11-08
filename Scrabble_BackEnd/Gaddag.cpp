@@ -33,9 +33,9 @@ GaddagNode* Gaddag::buildGaddag(std::ifstream& infile)
 	int line = 0;
 	while (std::getline(infile, word)) {
 		line++;
-		std::cout << "line # = ";
-		std::cout << line << std::endl;
-		std::cout << "word= " + word << std::endl;
+		//std::cout << "line # = ";
+		//std::cout << line<<std::endl;
+		//std::cout <<"word= " + word << std::endl;
 
 		std::string tempWord = word;
 		std::reverse(tempWord.begin(), tempWord.end());
@@ -47,10 +47,10 @@ GaddagNode* Gaddag::buildGaddag(std::ifstream& infile)
 		for (int j = word.length() - 3; j >= 0; j--) {
 			GaddagNode* temp = node;
 			node = root;
-			for (int i = j; i >= 0; i--) {
-				node = node->putTransitionChar(word[i]);
+			for (int i = j; i >= 0; --i) {
+				node = node->putTransitionChar(word[i], NULL);
 			}
-			node = node->putTransitionChar(delimiter);
+			node = node->putTransitionChar(delimiter, NULL);
 			node->putTransitionChar(word[j + 1], temp);
 		}
 	}
@@ -60,8 +60,8 @@ GaddagNode* Gaddag::buildGaddag(std::ifstream& infile)
 
 GaddagNode* Gaddag::buildGaddagBranch(GaddagNode* root, std::string word) {
 	GaddagNode *current = root;
-	for (int i = 0; i < word.length() - 1; i++) {
-		current = current->putTransitionChar(word[i]);
+	for (int i = 0, ilen = word.length() - 1; i < ilen; ++i) {
+		current = current->putTransitionChar(word[i], NULL);
 		if (i == word.length() - 2) {
 			current->putEnd(word[word.length() - 1]);
 		}

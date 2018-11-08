@@ -11,7 +11,7 @@
 class GaddagNode {
 public:
 	static int idCounter;
-	GaddagNode* children[27];
+	GaddagNode* children[27] = {};
 	unsigned int transitions = 0;
 	unsigned int end = 0;
 	int ID;
@@ -19,9 +19,8 @@ public:
 
 	GaddagNode(char x);
 	~GaddagNode();
-	GaddagNode* putTransitionChar(char transitionChar, GaddagNode* node);
 
-	GaddagNode* putTransitionChar(char transitionChar);
+	GaddagNode* putTransitionChar(char transitionChar, GaddagNode * son);
 
 	GaddagNode* getChildren(char  transitionChar);
 
