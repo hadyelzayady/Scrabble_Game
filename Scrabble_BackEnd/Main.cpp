@@ -1,8 +1,13 @@
 #include <iostream>
 #include "GameManager.h"
+
+
+
 using namespace std;
 
-int main()
+
+
+int main(int argc, char* argv[])
 {
 	string * playerNames;
 	int playerCount = 2;
