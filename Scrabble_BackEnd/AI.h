@@ -3,12 +3,13 @@
 #include "Rack.h"
 #include "TileLookUp.h"
 #include "ScoreManager.h"
+#include "move.h"
 class AI
 {
 public:
 
 	// change return type to Move object after it is added
-	void makeDecision(Rack*, Board*, ScoreManager*, TileLookUp*);
+	Move makeDecision(Rack*, Board*, ScoreManager*, TileLookUp*);
 	AI();
 	~AI();
 };
