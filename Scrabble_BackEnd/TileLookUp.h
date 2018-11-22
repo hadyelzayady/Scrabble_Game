@@ -3,14 +3,14 @@
 #define TILELOOKUP_H
 #include <iostream>
 #include "Constants.h"
-#include <map>
+#include <unordered_map>
 using namespace std;
 
 
 class TileLookUp
 {
 public:
-	map<char, int*> letterMap;
+	unordered_map<char, int*> letterMap;
 
 public:
 	TileLookUp();

@@ -4,9 +4,11 @@
 Rack::Rack()
 {
 	for (int i = 0; i < Rack::RACKSIZE; i++)
+	{
+		
 		list[i] = ' ';
+	}
 	listSize = 0;
-
 }
 
 
@@ -31,17 +33,12 @@ void Rack::removeTile(char x)
 	{
 		if (list[i] == x)
 		{
-			for (int j = i; j < (listSize - i - 1); i++)
-			{
-				list[j] = list[j + 1];
-
-			}
-
+			list[i] = list[listSize];
+			list[listSize] = ' ';
+			listSize--;
 			break;
 		}
 	}
-	list[listSize] = ' ';
-	listSize--;
 
 }
 
