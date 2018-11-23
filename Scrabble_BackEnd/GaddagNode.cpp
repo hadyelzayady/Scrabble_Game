@@ -13,7 +13,6 @@ GaddagNode::~GaddagNode() {
 GaddagNode::GaddagNode(char x) {
 	ID = idCounter;
 	idCounter++;
-	letter = x;
 }
 
 GaddagNode* GaddagNode::putTransitionChar(char transitionChar, GaddagNode* node) {
@@ -30,9 +29,6 @@ GaddagNode* GaddagNode::putTransitionChar(char transitionChar, GaddagNode* node)
 	}
 }
 
-GaddagNode* GaddagNode::putTransitionChar(char transitionChar) {
-	return this->putTransitionChar(transitionChar, new GaddagNode(transitionChar));
-}
 
 GaddagNode* GaddagNode::getChildren(char  transitionChar) {
 	if ((bitPosistion[transitionChar - 'A'] & transitions) != 0) {
