@@ -27,12 +27,13 @@ Gaddag::Gaddag(std::string path) {
 
 GaddagNode* Gaddag::buildGaddag(std::ifstream& infile)
 {
-	GaddagNode * node = root;
+	GaddagNode * node ;
 	std::cout << "Building gaddag: " << std::endl;
 	std::string word;
 	int line = 0;
 	while (std::getline(infile, word)) {
-		line++;
+		node = root;
+		//line++;
 		//std::cout << "line # = ";
 		//std::cout << line<<std::endl;
 		//std::cout <<"word= " + word << std::endl;

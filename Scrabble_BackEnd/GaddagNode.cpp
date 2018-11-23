@@ -13,7 +13,6 @@ GaddagNode::~GaddagNode() {
 GaddagNode::GaddagNode(char x) {
 	ID = idCounter;
 	idCounter++;
-	letter = x;
 }
 
 GaddagNode* GaddagNode::putTransitionChar(char transitionChar, GaddagNode* node) {
