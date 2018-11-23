@@ -1,5 +1,5 @@
 #include "move.h"
-vector<Play> Move::getPlaysPointer()
+vector<Play> Move::getPlaysPointer()const
 {
 
 	return this->Plays;
