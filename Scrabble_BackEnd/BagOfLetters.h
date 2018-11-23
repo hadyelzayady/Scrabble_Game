@@ -9,6 +9,7 @@ class BagOfLetters {
 
 	int bag[27];	//Stack used to represent the letter bag
 	int size;
+public:
 	//Constructor
 	BagOfLetters();
 
