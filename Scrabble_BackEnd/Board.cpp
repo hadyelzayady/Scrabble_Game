@@ -1,5 +1,24 @@
 #include "Board.h"
 
+const string & Board::getBoardLetters()
+{
+	// TODO: insert return statement here
+	return LettersOnBoard;
+}
+
+void Board::commitMove(Move & move)
+{
+	vector<Play>plays =move.getPlaysPointer();
+	for (size_t i = 0; i < plays.size(); i++)
+	{
+		char letter = plays[i].get_Letter();
+		pair<int,int> position = plays[i].get_Coordinates();
+		setTile(letter, position.first, position.second);
+		//
+		LettersOnBoard.append(&letter);
+	}
+}
+
 inline const char &Board::getLetter(unsigned short row, unsigned short column) const
 {
 	return m_board[row][column].letter;
