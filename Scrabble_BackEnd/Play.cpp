@@ -13,7 +13,7 @@ void Play::set_Coordinates(pair<int, int> coordinates)
 
 }
 
-void Play::set_Letter(char Letter,int index,bool blank= false)
+void Play::set_Letter(char Letter,int index,bool blank)
 {
 	this->Index = index; 
 	this->Blank =  blank;
