@@ -19,11 +19,12 @@ void Board::commitMove(const Move & move)
 	}
 }
 //we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
-Board Board::commitMoveSim(const Move & move)
+Board * Board::commitMoveSim(const Move & move, Board * board)
 {
 	Square newBoardArray[ROWS_COUNT][COLUMNS_COUNT];
 	//copy(begin(newBoardArray[0]), end(newBoardArray[0]), begin(newBoardArray));
-	Board newBoard=Board(newBoardArray);
+	Board * newBoard = new Board(*board);
+		//Board(newBoardArray);
 	newBoard.commitMove(move);
 	return newBoard;//! still not sure if we should return 2d array or board object but soliman needs board object to get moves
 }
@@ -65,6 +66,15 @@ Board::Board() {
 			m_board[i][j] = Square(NoBonus);
 		}
 }
+
+Board::Board(Board&b) {
+	for (size_t i = 0; i < ROWS_COUNT; i++)
+		for (size_t j = 0; j < COLUMNS_COUNT; j++)
+		{
+			m_board[i][j] = b.m_board[i][j];
+		}
+}
+
 //exectued after each play
 void updateAnchors(std::string letters, int positions[3][3])
 {

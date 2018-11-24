@@ -20,7 +20,7 @@ class Heuristics
 public:
 	Heuristics( );
 	int getHeuristics(int turn, Rack * estimatedRack, Rack * leave, Move  *move, BagOfLetters *bag);
-	int preEnd(Rack * estimatedRack, Move *move, Rack * leave);
+	int preEnd( Move move, Rack * leave);
 	int midGame(int turn, Rack * estimatedRack, Move * move, Rack * leave);
 
 
