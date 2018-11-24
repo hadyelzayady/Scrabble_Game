@@ -15,8 +15,6 @@ public:
 	unsigned int transitions = 0;
 	unsigned int end = 0;
 	int ID;
-	char letter;
-
 	GaddagNode(char x);
 	~GaddagNode();
 
