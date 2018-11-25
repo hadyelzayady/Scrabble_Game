@@ -6,21 +6,18 @@
 #include <unordered_map>
 using namespace std;
 
-
 class TileLookUp
 {
-public:
-	unordered_map<char, int*> letterMap;
+  public:
+	unordered_map<char, int *> letterMap;
 
-public:
+  public:
 	TileLookUp();
 	~TileLookUp();
 
 	void setFrequency(char c, int f);
-	int  getFrequency(char c);
-	int  getScore(char c);
-
+	int getFrequency(char c);
+	int getScore(char c);
 };
 
 #endif
-
