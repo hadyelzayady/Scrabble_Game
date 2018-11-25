@@ -15,14 +15,17 @@ GaddagNode::GaddagNode(char x) {
 	idCounter++;
 }
 
-GaddagNode* GaddagNode::putTransitionChar(char transitionChar, GaddagNode* node) {
+GaddagNode* GaddagNode::putTransitionChar(char transitionChar, GaddagNode * son) {
 	GaddagNode* child = this->getChildren(transitionChar);
-	int i = 0;
-	bool childrenCreated = false;
 	if (child == NULL) {
 		transitions |= bitPosistion[transitionChar - 'A'];
-		children[transitionChar - 'A'];
-		return node;
+		if (son == NULL) {
+			GaddagNode * node = new GaddagNode(transitionChar);
+			children[transitionChar - 'A'] = node;
+		}
+		else
+			children[transitionChar - 'A'] = son;
+		return children[transitionChar - 'A'];
 	}
 	else {
 		return child;
@@ -30,15 +33,16 @@ GaddagNode* GaddagNode::putTransitionChar(char transitionChar, GaddagNode* node)
 }
 
 
+
 GaddagNode* GaddagNode::getChildren(char  transitionChar) {
 	if ((bitPosistion[transitionChar - 'A'] & transitions) != 0) {
-		return children[calculateChildrenIndex(transitionChar)];
+		return children[transitionChar - 'A'];
 	}
 	return NULL;
 }
 
 bool GaddagNode::contains(std::string query) {
-	if (query.find('<') != std::string::npos) {
+	if (query.find('[') != std::string::npos) {
 		return containsRecur(query);
 	}
 	else {
@@ -70,7 +74,7 @@ bool GaddagNode::hasCharAsEnd(char endChar) {
 }
 
 bool GaddagNode::contains(unsigned int x, char y) {
-	if ((bitPosistion[y - 'A'] & (x)) != 0)
+	if ((bitPosistion[y - 'A'] & x) != 0)
 		return true;
 	return false;
 }
