@@ -17,7 +17,7 @@ public:
 
 	GaddagNode* buildGaddagBranch(GaddagNode* root, std::string word);
 
-	//std::vector<std::string> traverse(GaddagNode* root);
+	std::vector<std::string> traverse(GaddagNode* root);
 
 
 
