@@ -6,7 +6,7 @@ class Move
 	vector<Play>  Plays;
 
 public:
-vector<Play> getPlaysPointer();
+vector<Play> getPlaysPointer()const;
 void addPlay(Play play);
 void  setPlayPointer(vector<Play>  Plays);
 	Move();
