@@ -1,31 +1,31 @@
 #include "Board.h"
 
-const string & Board::getBoardLetters()
+const string &Board::getBoardLetters()
 {
 	// TODO: insert return statement here
 	return LettersOnBoard;
 }
 //we added board as parameter so we can use it inside commitMoveSim
-void Board::commitMove(const Move & move)
+void Board::commitMove(const Move &move)
 {
-	vector<Play>plays =move.getPlaysPointer();
+	vector<Play> plays = move.getPlaysPointer();
 	for (size_t i = 0; i < plays.size(); i++)
 	{
 		char letter = plays[i].get_Letter();
-		pair<int,int> position = plays[i].get_Coordinates();
+		pair<int, int> position = plays[i].get_Coordinates();
 		setTile(letter, position.first, position.second);
 		//
 		LettersOnBoard.append(&letter);
 	}
 }
-//we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
-Board Board::commitMoveSim(const Move & move)
+//?we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
+Board Board::commitMoveSim(const Move &move)
 {
-	Square newBoardArray[ROWS_COUNT][COLUMNS_COUNT];
-	//copy(begin(newBoardArray[0]), end(newBoardArray[0]), begin(newBoardArray));
-	Board newBoard=Board(newBoardArray);
+	Square newBoardArray[ROWS_COUNT][COLUMNS_COUNT] = {{}};
+	copy(begin(m_board[0]), end(m_board[ROWS_COUNT - 1]), begin(newBoardArray[0]));
+	Board newBoard = Board(newBoardArray);
 	newBoard.commitMove(move);
-	return newBoard;//! still not sure if we should return 2d array or board object but soliman needs board object to get moves
+	return newBoard; //? still not sure if we should return 2d array or board object but soliman needs board object to get moves
 }
 
 inline const char &Board::getLetter(unsigned short row, unsigned short column) const
@@ -58,7 +58,8 @@ Board::Board(const Square board[ROWS_COUNT][COLUMNS_COUNT])
 	}
 }
 //TODO: init the board with squares with bonues ones
-Board::Board() {
+Board::Board()
+{
 	for (size_t i = 0; i < ROWS_COUNT; i++)
 		for (size_t j = 0; j < COLUMNS_COUNT; j++)
 		{
