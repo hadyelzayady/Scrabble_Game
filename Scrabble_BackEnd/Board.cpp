@@ -1,5 +1,33 @@
 #include "Board.h"
 
+const string & Board::getBoardLetters()
+{
+	// TODO: insert return statement here
+	return LettersOnBoard;
+}
+//we added board as parameter so we can use it inside commitMoveSim
+void Board::commitMove(const Move & move)
+{
+	vector<Play>plays =move.getPlaysPointer();
+	for (size_t i = 0; i < plays.size(); i++)
+	{
+		char letter = plays[i].get_Letter();
+		pair<int,int> position = plays[i].get_Coordinates();
+		setTile(letter, position.first, position.second);
+		//
+		LettersOnBoard.append(&letter);
+	}
+}
+//we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
+Board Board::commitMoveSim(const Move & move)
+{
+	Square newBoardArray[ROWS_COUNT][COLUMNS_COUNT];
+	//copy(begin(newBoardArray[0]), end(newBoardArray[0]), begin(newBoardArray));
+	Board newBoard=Board(newBoardArray);
+	newBoard.commitMove(move);
+	return newBoard;//! still not sure if we should return 2d array or board object but soliman needs board object to get moves
+}
+
 inline const char &Board::getLetter(unsigned short row, unsigned short column) const
 {
 	return m_board[row][column].letter;
@@ -29,6 +57,14 @@ Board::Board(const Square board[ROWS_COUNT][COLUMNS_COUNT])
 		throw "error in board init";
 	}
 }
+//TODO: init the board with squares with bonues ones
+Board::Board() {
+	for (size_t i = 0; i < ROWS_COUNT; i++)
+		for (size_t j = 0; j < COLUMNS_COUNT; j++)
+		{
+			m_board[i][j] = Square(NoBonus);
+		}
+}
 //exectued after each play
 void updateAnchors(std::string letters, int positions[3][3])
 {
@@ -36,9 +72,6 @@ void updateAnchors(std::string letters, int positions[3][3])
 	//iterate over characters of newly created words and update the anchor. (newly created words includes other connected chars)
 	// ? why not anchors are array of positions as we can get letter by poistion!
 	// if we return letter then we iterate over small array which will have high probability of existance in cache!
-}
-Board::Board()
-{
 }
 
 void Board::setTile(char letter, unsigned short row, unsigned short column)
