@@ -19,7 +19,7 @@ Heuristics::Heuristics()
 {
 }
 
-double Heuristics::getHeuristics(int turn, vector<char> estimatedRack, Rack  current, Move  move, BagOfLetters bag, pair<int, int> * Qpos, pair<int, int> * Zpos)
+double Heuristics::getHeuristics(int turn, vector<char> estimatedRack, Rack  current, Move  move, BagOfLetters bag, vector < pair<int, int>>  Qpos, vector < pair<int, int> > Zpos)
 // leave is the remaining rack after the move is played
 {																										//bag is left private in the class BagOfLetters
 																									//turn to decide the openinng move of the game
@@ -51,6 +51,7 @@ double Heuristics::endGame(vector<char> estimatedRack, Move move, vector<pair<in
 	vector<Play> plays = move.getPlaysPointer();
 	bool hasQ = false;
 	bool hasZ = false;
+	TileLookUp t;
 
 	for (int i = 0; i < estimatedRack.size(); i++)
 	{
@@ -136,7 +137,7 @@ double Heuristics::preEnd(Move move, vector<char>  leave)
 double Heuristics::midGame(int turn, Move  move, vector<char> leave)
 {
 	double cost = 0.0;
-	vector<Play> plays = move->getPlaysPointer();
+	vector<Play> plays = move.getPlaysPointer();
 	if (turn == 0)
 	{
 		if (plays.size() == 7)
