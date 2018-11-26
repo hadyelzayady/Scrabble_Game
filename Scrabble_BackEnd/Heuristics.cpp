@@ -20,25 +20,10 @@ Heuristics::Heuristics()
 }
 
 double Heuristics::getHeuristics(int turn, vector<char> estimatedRack, Rack  current, Move  move, BagOfLetters bag, vector < pair<int, int>>  Qpos, vector < pair<int, int> > Zpos)
-// leave is the remaining rack after the move is played
-{																										//bag is left private in the class BagOfLetters
-																									//turn to decide the openinng move of the game
-	vector<char> leave;
-	vector<Play> plays = move.getPlaysPointer();
-	char * c = current.getRackTiles();
-	for (int i = 0; i < current.getSize(); i++)
-	{
-		leave.push_back(c[i])
-	}
-	for (int i = 0; i < plays.size(); i++)
-	{
-		for (int k = 0; k < leave.size(); k++)
-		{
-			if (leave[k] == plays[i].get_Letter())
-				leave.erase(leave.begin() + k);
-		}
-
-	}
+// leave is the remaining rack after the move is played//bag is left private in the class BagOfLetters //turn to decide the openinng move of the game
+{
+	
+	vector<char> leave = current.getLeave(move); 
 
 	if (bag.getSize() == 0) return endGame(estimatedRack, move, Qpos, Zpos);
 	else if (bag.getSize() < 10 && bag.getSize() > 0) return preEnd(move, leave);

@@ -1,5 +1,8 @@
 #pragma once
 #include "Square.h"
+#include<vector>
+#include "Rack.h"
+#include "move.h"
 #include <iostream>
 using namespace std;
 
@@ -8,8 +11,7 @@ class Rack
 {
 	enum { RACKSIZE = 7 };	//Max Size of List
 private:
-	char list[RACKSIZE];
-	int  listSize;
+	vector <char> list;
 
 public:
 
@@ -17,12 +19,13 @@ public:
 	void addTile(char x);
 	void removeTile(char x);
 	int getSize();
-	void updateSize(int x);
-	char* getRackTiles();
 
-	Rack();		//constructor
+	vector<char> getRackTiles();
+	vector<char> getLeave(Move move, Rack current)
+
+	Rack();					    //constructor
 	Rack(const Rack &R);		//copy constructor
-	~Rack();		//destructor
+	~Rack();				    //destructor
 
 protected:
 

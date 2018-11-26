@@ -3,35 +3,47 @@
 
 Rack::Rack()
 {
-	for (int i = 0; i < Rack::RACKSIZE; i++)
-	{
+	list.reserve(7);
 
-		list[i] = ' ';
-	}
-	listSize = 0;
 }
 
 Rack::Rack(const Rack & R)
 {
-	this->listSize = R.listSize;
-	for (int i = 0; i < R.listSize; i++)
-	{
-		this->list[i] = R.list[i];
-	}
+		this->list.reserve(7);
+	
+		this->list = R.list;
+	
 
+}
+
+vector<char> Rack::getLeave(Move move) 
+{
+	vector<Play> plays = move.getPlaysPointer();
+	vector<char> leave = this->list;
+
+	for (int i = 0; i < plays.size(); i++)
+	{
+		for (int k = 0; k < leave.size(); k++)
+		{
+			if (leave[k] == plays[i].get_Letter())
+				leave.erase(leave.begin() + k);
+		}
+
+	}
+	return leave;
 }
 
 
 void Rack::addTile(char x)
 {
-	if (listSize == 7)
+	if (list.size() == 7)
 		return;
 
-	list[listSize] = x;
-	listSize++;
+	list[list.size()] = x;
+
 }
 
-char* Rack::getRackTiles()
+vector<char> Rack::getRackTiles()
 {
 	return list;
 }
@@ -43,9 +55,9 @@ void Rack::removeTile(char x)
 	{
 		if (list[i] == x)
 		{
-			list[i] = list[listSize];
-			list[listSize] = ' ';
-			listSize--;
+			
+			list.erase(leave.begin() + i);
+
 			break;
 		}
 	}
@@ -56,13 +68,9 @@ void Rack::removeTile(char x)
 
 int Rack::getSize()
 {
-	return listSize;
+	return list.size();
 }
 
-void Rack::updateSize(int x)
-{
-	listSize = x;
-}
 
 
 Rack::~Rack()
