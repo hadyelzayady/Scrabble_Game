@@ -28,12 +28,11 @@ void Move::setPlayPointer(vector<Play> Plays)
 
 Move::Move()
 {
-	score = -999;
+	
 }
 
 Move::Move(const Move& other)
 {
-	score = other.score;
 	Plays = other.Plays;
 	isBingo = other.isBingo;
 }
@@ -45,12 +44,6 @@ bool Move::getBingo() {
 	return isBingo;
 }
 
-void Move::setScore(int score) {
-	this->score = score;
-}
-int Move::getScore() {
-	return score;
-}
 
 
 Move::~Move()
