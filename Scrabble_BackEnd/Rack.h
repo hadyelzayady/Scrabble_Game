@@ -21,7 +21,7 @@ public:
 	int getSize();
 
 	vector<char> getRackTiles();
-	vector<char> getLeave(Move move, Rack current)
+	vector<char> getLeave(Move move);
 
 	Rack();					    //constructor
 	Rack(const Rack &R);		//copy constructor

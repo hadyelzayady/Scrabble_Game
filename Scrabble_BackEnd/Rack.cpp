@@ -51,12 +51,12 @@ vector<char> Rack::getRackTiles()
 void Rack::removeTile(char x)
 {
 
-	for (int i = 0; i < listSize; i++)
+	for (int i = 0; i < list.size(); i++)
 	{
 		if (list[i] == x)
 		{
 			
-			list.erase(leave.begin() + i);
+			list.erase(list.begin() + i);
 
 			break;
 		}
