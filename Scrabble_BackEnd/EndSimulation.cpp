@@ -21,6 +21,7 @@ int EndSimulation::minimax(Board board, int score, int alpha, int beta, bool max
 		int maxEval = INT_MIN;
 		for (size_t i = 0; i < moves.size(); i++)
 		{
+			myRack.removeMoveTiles(moves[i]);
 			int eval = minimax(board.commitMoveSim(moves[i]), score + scoreManager->computeMoveScore(moves[i], &board), alpha, beta, false);
 			int maxEval = max(maxEval, eval);
 			int alpha = max(alpha, eval);
@@ -35,6 +36,7 @@ int EndSimulation::minimax(Board board, int score, int alpha, int beta, bool max
 		int minEval = INT_MAX;
 		for (size_t i = 0; i < moves.size(); i++)
 		{
+			opponetRack.removeMoveTiles(moves[i]);
 			int eval = minimax(board.commitMoveSim(moves[i]), score - scoreManager->computeMoveScore(moves[i], &board), alpha, beta, true);
 			int minEval = min(minEval, eval);
 			int beta = min(beta, eval);
@@ -48,11 +50,13 @@ void EndSimulation::start()
 {
 }
 
-EndSimulation::EndSimulation(ScoreManager *scoreManager)
+EndSimulation::EndSimulation(ScoreManager * scoreManager, Rack opponentRack, Rack myRack)
 {
 	this->scoreManager = scoreManager;
-}
+	this->opponetRack = opponentRack;
+	this->myRack = myRack;
 
+}
 EndSimulation::~EndSimulation()
 {
 }
