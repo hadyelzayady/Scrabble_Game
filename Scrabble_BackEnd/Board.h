@@ -9,17 +9,19 @@ using namespace std;
 class Board
 {
 	string LettersOnBoard;
-  public:
-	  Square m_board[ROWS_COUNT][COLUMNS_COUNT] = { {} };
+public:
+	Square m_board[ROWS_COUNT][COLUMNS_COUNT] = { {} };
 	inline const string& getBoardLetters();
 	void commitMove(const Move& move);
-	Board commitMoveSim(const Move& move);
+	static Board  commitMoveSim(const Move & move, Board board);
+	Board  commitMoveSimB(const Move& move);
 	inline const char &getLetter(unsigned short row, unsigned short column) const;
 	inline bool isEmptySquare(unsigned short row, unsigned short column) const; //same as square.isEmpty just another interface
 	//bool isConnected(const Move);
 
 	Board(const Square board[ROWS_COUNT][COLUMNS_COUNT]);
 	Board();
+	Board(const Board & b);
 	void setTile(char letter, unsigned short row, unsigned short column);
 	//static void setTileSim(char letter, unsigned short row, unsigned short column, Square m_board[ROWS_COUNT][COLUMNS_COUNT]);
 	void updateAnchors(std::string move); //TODO : parameter should be Move objedut this is for testing

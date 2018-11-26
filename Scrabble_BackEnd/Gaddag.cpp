@@ -27,12 +27,13 @@ Gaddag::Gaddag(std::string path) {
 
 GaddagNode* Gaddag::buildGaddag(std::ifstream& infile)
 {
-	GaddagNode * node = root;
+	GaddagNode * node ;
 	std::cout << "Building gaddag: " << std::endl;
 	std::string word;
 	int line = 0;
 	while (std::getline(infile, word)) {
-		line++;
+		node = root;
+		//line++;
 		//std::cout << "line # = ";
 		//std::cout << line<<std::endl;
 		//std::cout <<"word= " + word << std::endl;
@@ -69,23 +70,26 @@ GaddagNode* Gaddag::buildGaddagBranch(GaddagNode* root, std::string word) {
 	return current;
 }
 
-//std::vector<std::string> Gaddag::traverse(GaddagNode* root) {
-//	std::vector<std::string>words;
-//	std::vector<unsigned int> indexTransition;
-//	std::vector<unsigned int> indexEnd;
-//	root->getOnesPositions(root->transitions, indexTransition);
-//	root->getOnesPositions(root->end, indexEnd);
-//	for (unsigned int i : indexTransition) {
-//		GaddagNode* child = root->children[i];
-//		if (child == NULL)
-//			continue;
-//		for (std::string s : traverse(child)) {
-//			words.push_back("" + mapping[i] + s);
-//		}
-//	}
-//	for (unsigned int i : indexEnd) {
-//		words.push_back("" + mapping[i]);
-//	}
-//	return words;
-//}
+std::vector<std::string> Gaddag::traverse(GaddagNode* root) {
 
+	std::vector<std::string>words;
+
+	std::vector<unsigned int> indexTransition;
+	std::vector<unsigned int> indexEnd;
+	root->getOnesPositions(root->transitions, indexTransition);
+	root->getOnesPositions(root->end, indexEnd);
+	for (unsigned int i : indexTransition) {
+		GaddagNode* child = root->children[i];
+		if (child == NULL)
+			continue;
+		for (std::string s : traverse(child)) {
+			std::string word = std::string(1, mapping[i]) + s;
+			words.push_back(word);
+		}
+	}
+	for (unsigned int i : indexEnd) {
+		std::string word = std::string(1, mapping[i]);
+		words.push_back(word);
+	}
+	return words;
+}

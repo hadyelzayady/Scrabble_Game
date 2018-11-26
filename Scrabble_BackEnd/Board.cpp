@@ -8,7 +8,7 @@ const string &Board::getBoardLetters()
 //we added board as parameter so we can use it inside commitMoveSim
 void Board::commitMove(const Move &move)
 {
-	vector<Play> plays = move.getPlaysPointer();
+	vector<Play>plays = move.getPlaysPointer();
 	for (size_t i = 0; i < plays.size(); i++)
 	{
 		char letter = plays[i].get_Letter();
@@ -19,11 +19,18 @@ void Board::commitMove(const Move &move)
 	}
 }
 //?we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
-Board Board::commitMoveSim(const Move &move)
+Board Board::commitMoveSimB(const Move &move)
 {
 	Board newBoard(m_board);
 	newBoard.commitMove(move);
 	return newBoard; //? still not sure if we should return 2d array or board object but soliman needs board object to get moves
+}
+//we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
+Board Board::commitMoveSim(const Move & move, Board board)
+{
+	Board  * B = new Board(board);
+	B->commitMove(move);
+	return *B;
 }
 
 inline const char &Board::getLetter(unsigned short row, unsigned short column) const
@@ -66,6 +73,15 @@ Board::Board()
 		}
 	LettersOnBoard = "\0";
 }
+
+Board::Board(const Board&b) {
+	for (size_t i = 0; i < ROWS_COUNT; i++)
+		for (size_t j = 0; j < COLUMNS_COUNT; j++)
+		{
+			m_board[i][j] = b.m_board[i][j];
+		}
+}
+
 //exectued after each play
 void updateAnchors(std::string letters, int positions[3][3])
 {
@@ -82,7 +98,7 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 		m_board[row][column].letter = letter;
 		return;
 	}
-	throw EXCEPTION_OUT_OF_BOUND;
+	//	throw EXCEPTION_OUT_OF_BOUND;
 }
 
 inline bool Board::isHook(unsigned short row, unsigned short column) const
@@ -90,10 +106,10 @@ inline bool Board::isHook(unsigned short row, unsigned short column) const
 	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
 	{
 		return !m_board[row][column].isEmpty() ||
-			   ((column < COLUMNS_COUNT - 1) && m_board[row][column + 1].isEmpty()) || // right
-			   ((column > 0) && m_board[row][column - 1].isEmpty()) ||				   // left
-			   ((row > 0) && m_board[row - 1][column].isEmpty()) ||					   // top
-			   ((column < ROWS_COUNT - 1) && m_board[row + 1][column].isEmpty())	   // down
+			((column < COLUMNS_COUNT - 1) && m_board[row][column + 1].isEmpty()) || // right
+			((column > 0) && m_board[row][column - 1].isEmpty()) ||				   // left
+			((row > 0) && m_board[row - 1][column].isEmpty()) ||					   // top
+			((column < ROWS_COUNT - 1) && m_board[row + 1][column].isEmpty())	   // down
 			;
 	}
 	throw EXCEPTION_OUT_OF_BOUND;
@@ -103,10 +119,10 @@ inline bool Board::isAnchor(unsigned short row, unsigned short column) const
 	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
 	{
 		return m_board[row][column].isEmpty() &&
-				   ((column < COLUMNS_COUNT - 1) && !m_board[row][column + 1].isEmpty()) || // right
-			   ((column > 0) && !m_board[row][column - 1].isEmpty()) ||						// left
-			   ((row > 0) && !m_board[row - 1][column].isEmpty()) ||						// top
-			   ((row < ROWS_COUNT - 1) && !m_board[row + 1][column].isEmpty())				// down
+			((column < COLUMNS_COUNT - 1) && !m_board[row][column + 1].isEmpty()) || // right
+			((column > 0) && !m_board[row][column - 1].isEmpty()) ||						// left
+			((row > 0) && !m_board[row - 1][column].isEmpty()) ||						// top
+			((row < ROWS_COUNT - 1) && !m_board[row + 1][column].isEmpty())				// down
 			;
 	}
 	throw EXCEPTION_OUT_OF_BOUND;

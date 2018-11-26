@@ -1,6 +1,7 @@
 #pragma once
 #include "Board.h"
 #include "TileLookUp.h"
+#include "move.h"
 #include <cmath>
 class ScoreManager
 {

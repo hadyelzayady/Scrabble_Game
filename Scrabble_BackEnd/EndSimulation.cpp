@@ -22,7 +22,7 @@ int EndSimulation::minimax(Board board, int score, int alpha, int beta, bool max
 		for (size_t i = 0; i < moves.size(); i++)
 		{
 			myRack.removeMoveTiles(moves[i]);
-			int eval = minimax(board.commitMoveSim(moves[i]), score + scoreManager->computeMoveScore(moves[i], &board), alpha, beta, false);
+			int eval = minimax(board.commitMoveSimB(moves[i]), score + scoreManager->computeMoveScore(moves[i], &board), alpha, beta, false);
 			int maxEval = max(maxEval, eval);
 			int alpha = max(alpha, eval);
 			if (beta <= alpha)
@@ -37,7 +37,7 @@ int EndSimulation::minimax(Board board, int score, int alpha, int beta, bool max
 		for (size_t i = 0; i < moves.size(); i++)
 		{
 			opponetRack.removeMoveTiles(moves[i]);
-			int eval = minimax(board.commitMoveSim(moves[i]), score - scoreManager->computeMoveScore(moves[i], &board), alpha, beta, true);
+			int eval = minimax(board.commitMoveSimB(moves[i]), score - scoreManager->computeMoveScore(moves[i], &board), alpha, beta, true);
 			int minEval = min(minEval, eval);
 			int beta = min(beta, eval);
 			if (beta <= alpha)
@@ -50,11 +50,12 @@ void EndSimulation::start()
 {
 }
 
-EndSimulation::EndSimulation(ScoreManager * scoreManager, Rack opponentRack, Rack myRack)
+EndSimulation::EndSimulation(const Board&board,ScoreManager * scoreManager, Rack opponentRack, Rack myRack)
 {
 	this->scoreManager = scoreManager;
 	this->opponetRack = opponentRack;
 	this->myRack = myRack;
+	this->board=board;//! test implicit copy constructors
 
 }
 EndSimulation::~EndSimulation()

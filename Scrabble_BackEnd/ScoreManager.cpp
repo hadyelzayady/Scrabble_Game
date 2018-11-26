@@ -13,10 +13,6 @@ double ScoreManager::computeMoveScore(Move M, Board *B)
 
 		if (B->m_board[M.getPlaysPointer()[i].get_Coordinates().first][M.getPlaysPointer()[i].get_Coordinates().second].bonusType == WordBonusX2)
 		{
-			W2++;
-		}
-		else if (B->m_board[M.getPlaysPointer()[i].get_Coordinates().first][M.getPlaysPointer()[i].get_Coordinates().second].bonusType == WordBonusX3)
-		{
 			W3++;
 		}
 

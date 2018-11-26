@@ -15,7 +15,7 @@ Rack::Rack()
 void Rack::removeMoveTiles(const Move & move)
 {
 	vector<Play> plays = move.getPlaysPointer();
-	for (size_t i = 0; i <plays.size; i++)
+	for (size_t i = 0; i <plays.size(); i++)
 	{
 		removeTile(plays[i].get_Letter());
 	}

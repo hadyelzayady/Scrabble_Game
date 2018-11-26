@@ -7,11 +7,11 @@ class EndSimulation
 	ScoreManager *scoreManager;
 
 public:
-	EndSimulation(Square board[ROWS_COUNT][COLUMNS_COUNT]);
 	Rack opponetRack;
 	Rack myRack;
+	Board board;
 	int minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
 	void start();
-	EndSimulation(ScoreManager *scoreManager);
+	EndSimulation(const Board&board,ScoreManager *scoreManager, Rack opponentRack, Rack myRack);
 	~EndSimulation();
 };
