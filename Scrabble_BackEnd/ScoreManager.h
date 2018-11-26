@@ -1,6 +1,7 @@
 #pragma once
 #include "Board.h"
 #include "TileLookUp.h"
+#include "move.h"
 #include <cmath>
 class ScoreManager
 {
@@ -10,7 +11,7 @@ public:
 	TileLookUp * tileLookUp;
 
 	// Methods
-	int computeMoveScore(int[],int[],char[],int);
+	double computeMoveScore(Move M, Board * B);
 	ScoreManager(Board*, TileLookUp*);
 	~ScoreManager();
 };

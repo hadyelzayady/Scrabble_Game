@@ -16,20 +16,35 @@ Move PreEndGameManager::GenerateMove()
 	return Move();
 }
 
-Move * PreEndGameManager::Blocking(Move  movesList[] ,Rack Rack , Board  board, ProbabilityManager *pm)
+void  PreEndGameManager::Blocking(Move  movesList[], Rack* Rack, Board b, ProbabilityManager *pm)
 {
+	string letters = b.getBoardLetters();
+	char* boardpool = new char[letters.length() + 1];
+	strcpy(boardpool, letters.c_str());
 	int size = sizeof(movesList) / sizeof(Move);
-	vector<double> Costs;
+	MonteCarlo * M = new MonteCarlo(Rack, boardpool, pm);
+	vector<pair<vector<char>, double>> estimatedRackCost = M->simulation();
 	for (int i = 0; i < size; i++ ) 
-	{
-		Board b =  board.move(movesList[i]);
-		 char* boardpool = b.getboardpool();
-		 MonteCarlo * M = new MonteCarlo(Rack, boardpool, pm);
-		double cost= M->simulation(); // simulation gowha handi 3ala compute board cost fe halet kol move hanshof eh ahsan move we cost bet3ha howa momken el3bha hatdelo ad eh bensbla lel simulated rack
-		costs.push_back(cost);
-	
+	{		
+		double costestimated = 0;
+		double weightestimated = 0;
+		int futureWeight=(double)this->Heu->preEnd( movesList[i], Rack);
+		Board * B =  b.commitMoveSim(movesList[i]);
+		MoveGenerator * MG = new MoveGenerator();
+		for (auto rack = estimatedRackCost.begin(); rack != estimatedRackCost.end(); rack++)
+		{
+			double Costweighted = 0.0f;
+			double max = 0.0f;
+			double weightes = 0.0f;
+			vector<Move> M = 	MG->generateMoves((*rack).first, B);
+			for (auto move = M.begin(); move != M.end(); move++) {
+					max = (max > scoreManager->computeMoveScore(*move,&B))? max: 
+			}
+		}
 	}
-}
+		
+	}
+
 
 Move * PreEndGameManager::Fishing()
 {

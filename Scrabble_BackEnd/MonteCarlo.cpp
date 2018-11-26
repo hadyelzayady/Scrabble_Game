@@ -55,10 +55,10 @@ void MonteCarlo::createAvaliableLetters()
 
 }
 
-void MonteCarlo::simulation(int N)
+vector<pair<vector<char>,double>> MonteCarlo::simulation(int N)
 {
 	this->createAvaliableLetters();
-
+	vector<pair<vector<char>, double>> estimatedRackCost;
 	for (int i = 0; i < N; i++) {
 		 std::vector<char> temp = this->availableCharacters;
 		 std::vector<char> rackgenerated;
@@ -75,13 +75,14 @@ void MonteCarlo::simulation(int N)
 		 }
 		 sort(rackgenerated.begin(), rackgenerated.end());
 		double value = Pm->calculateRackWeight(rackgenerated, this->availableFrequinces);
-		 for (auto z = rackgenerated.begin(); z != rackgenerated.end(); ++z)
-			 std::cout << *z << ' ';
-		 std::cout << value << endl;
+		// for (auto z = rackgenerated.begin(); z != rackgenerated.end(); ++z)
+			// std::cout << *z << ' ';
+		 //std::cout << value << endl;
+		estimatedRackCost.push_back(std::make_pair(rackgenerated,value));
 		 temp.clear();
 		 rackgenerated.clear();
 	}
-
+	return estimatedRackCost;
 }
 
 MonteCarlo::~MonteCarlo()

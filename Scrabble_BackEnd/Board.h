@@ -20,6 +20,7 @@ class Board
 
 	Board(const Square board[ROWS_COUNT][COLUMNS_COUNT]);
 	Board();
+	Board(Board & b);
 	void setTile(char letter, unsigned short row, unsigned short column);
 	//static void setTileSim(char letter, unsigned short row, unsigned short column, Square m_board[ROWS_COUNT][COLUMNS_COUNT]);
 	void updateAnchors(std::string move); //TODO : parameter should be Move objedut this is for testing

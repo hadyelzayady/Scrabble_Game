@@ -2,14 +2,18 @@
 #include "move.h"
 #include "MonteCarlo.h"
 #include "Board.h"
+#include "Heuristics.h"
+#include "ScoreManager.h"
 class PreEndGameManager
 {
-	vector<double> costs;
+	ScoreManager *scoreManager;
+	Heuristics * Heu;
+	vector<double> blockingCosts;
 public:
 	PreEndGameManager();
 	~PreEndGameManager();
 	Move GenerateMove();
-	Move * Blocking(Move  movesList[], Rack Rack, Board board, ProbabilityManager *pm);
+	void  Blocking(Move  movesList[], Rack* Rack, Board b, ProbabilityManager *pm);
 	Move * Fishing();
 	Move * GoodEndGame();
 
