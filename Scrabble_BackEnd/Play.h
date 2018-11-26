@@ -17,6 +17,7 @@ public:
 	int get_Index();
 	char get_Letter();
 	Play();
+	Play(int x, int y, char l,bool blank = false);
 	~Play();
 };
 

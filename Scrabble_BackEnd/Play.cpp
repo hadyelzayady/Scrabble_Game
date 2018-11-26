@@ -13,14 +13,14 @@ void Play::set_Coordinates(pair<int, int> coordinates)
 
 }
 
-void Play::set_Letter(char Letter,int index,bool blank= false)
+void Play::set_Letter(char Letter,int index,bool blank)
 {
 	this->Index = index; 
 	this->Blank =  blank;
 	this->Letter = Letter;
 }
 
-int Play::get_Index(int index){
+int Play::get_Index(){
 	return this->Index;
 }
 
@@ -35,6 +35,13 @@ char Play::get_Letter()
 
 Play::Play()
 {
+}
+
+Play::Play(int x, int y, char l,bool blank) {
+	Letter = l;
+	coordinates.first=x;
+	coordinates.second = y;
+	this->Blank = blank;
 }
 
 
