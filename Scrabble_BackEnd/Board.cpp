@@ -21,9 +21,7 @@ void Board::commitMove(const Move &move)
 //?we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
 Board Board::commitMoveSim(const Move &move)
 {
-	Square newBoardArray[ROWS_COUNT][COLUMNS_COUNT] = {{}};
-	copy(begin(m_board[0]), end(m_board[ROWS_COUNT - 1]), begin(newBoardArray[0]));
-	Board newBoard = Board(newBoardArray);
+	Board newBoard(m_board);
 	newBoard.commitMove(move);
 	return newBoard; //? still not sure if we should return 2d array or board object but soliman needs board object to get moves
 }
@@ -51,6 +49,7 @@ Board::Board(const Square board[ROWS_COUNT][COLUMNS_COUNT])
 			{
 				m_board[i][j] = board[i][j];
 			}
+		LettersOnBoard ="\0";
 	}
 	catch (...)
 	{
@@ -65,6 +64,7 @@ Board::Board()
 		{
 			m_board[i][j] = Square(NoBonus);
 		}
+	LettersOnBoard = "\0";
 }
 //exectued after each play
 void updateAnchors(std::string letters, int positions[3][3])
@@ -80,6 +80,7 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
 	{
 		m_board[row][column].letter = letter;
+		return;
 	}
 	throw EXCEPTION_OUT_OF_BOUND;
 }
