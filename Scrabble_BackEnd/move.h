@@ -7,7 +7,7 @@ class Move
 public:
 	vector< Play>  Plays;
 	bool isBingo;
-	vector<Play> getPlaysPointer();
+	vector<Play> getPlaysPointer() const;
 	void setBingo(bool bingo);
 	bool getBingo();
 	void addPlay(Play play);

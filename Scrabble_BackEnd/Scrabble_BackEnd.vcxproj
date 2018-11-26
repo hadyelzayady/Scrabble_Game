@@ -141,6 +141,7 @@
     <ClInclude Include="Gaddag.h" />
     <ClInclude Include="GaddagNode.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Heuristics.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="MonteCarlo.h" />
     <ClInclude Include="move.h" />
