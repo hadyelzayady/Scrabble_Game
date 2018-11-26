@@ -14,7 +14,7 @@ public:
 	void set_Coordinates(pair<int, int> coordinates);
 	void set_Letter(char Letter,int index,bool blank = false);
 	bool isBlank();
-	int get_Index();
+	int get_Index(int index);
 	char get_Letter();
 	Play();
 	Play(int x, int y, char l,bool blank = false);
