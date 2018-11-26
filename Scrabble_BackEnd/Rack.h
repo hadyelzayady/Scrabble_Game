@@ -21,6 +21,7 @@ public:
 	char* getRackTiles();
 
 	Rack();		//constructor
+	Rack(const Rack &R);		//copy constructor
 	~Rack();		//destructor
 
 protected:

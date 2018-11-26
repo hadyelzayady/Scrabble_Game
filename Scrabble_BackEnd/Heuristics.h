@@ -6,22 +6,16 @@
 
 
 
-struct GamePosition
-{
-int player1score;
-int player2score;
-};
 
 class Heuristics
 {
 
-
-
 public:
-	Heuristics( );
-	int getHeuristics(int turn, Rack * estimatedRack, Rack * leave, Move  *move, BagOfLetters *bag);
-	int preEnd(Rack * estimatedRack, Move *move, Rack * leave);
-	int midGame(int turn, Rack * estimatedRack, Move * move, Rack * leave);
+	Heuristics();
+	double getHeuristics(int turn, vector<char> estimatedRack, Rack  current, Move  move, BagOfLetters bag, pair<int, int> * Qpos, pair<int, int> * Zpos);
+	double endGame(vector<char> estimatedRack, Move move, vector<pair<int, int>>  Qpos, vector<pair<int, int>>  Zpos);
+	double preEnd(Move move, vector<char>  leave);
+	double midGame(int turn, Move  move, vector<char> leave);
 
 
 	~Heuristics();

@@ -5,10 +5,20 @@ Rack::Rack()
 {
 	for (int i = 0; i < Rack::RACKSIZE; i++)
 	{
-		
+
 		list[i] = ' ';
 	}
 	listSize = 0;
+}
+
+Rack::Rack(const Rack & R)
+{
+	this->listSize = R.listSize;
+	for (int i = 0; i < R.listSize; i++)
+	{
+		this->list[i] = R.list[i];
+	}
+
 }
 
 
