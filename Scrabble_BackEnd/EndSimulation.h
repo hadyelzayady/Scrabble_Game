@@ -10,7 +10,7 @@ public:
 	Rack opponetRack;
 	Rack myRack;
 	Board board;
-	int minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
+	pair<int,Move> minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
 	void start();
 	EndSimulation(const Board&board,ScoreManager *scoreManager, Rack opponentRack, Rack myRack);
 	~EndSimulation();

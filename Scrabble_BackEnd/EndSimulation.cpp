@@ -9,41 +9,67 @@
 //{
 //
 //}
-int EndSimulation::minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer)
+pair<int,Move> EndSimulation::minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer)
 {
 	////TODO:score is myscore-opponet score
+	//! only start with max player
 
-	vector<Move> moves; //=getPlays()
-	if (moves.empty())
-		return score;
 	if (maximizingPlayer)
 	{
+		//end condition
+		vector<Move> moves; //=getPlays(board,myRack)
+		if (moves.empty())
+		{
+			Move move;
+			return pair<int, Move>(score, move);
+		}
 		int maxEval = INT_MIN;
+		Move move=moves[0];
 		for (size_t i = 0; i < moves.size(); i++)
 		{
 			myRack.removeMoveTiles(moves[i]);
-			int eval = minimax(board.commitMoveSimB(moves[i]), score + scoreManager->computeMoveScore(moves[i], &board), alpha, beta, false);
-			int maxEval = max(maxEval, eval);
+			pair<int,Move> eval_move = minimax(board.commitMoveSimB(moves[i]), score + scoreManager->computeMoveScore(moves[i], &board), alpha, beta, false);
+			int eval = eval_move.first;
+
+			if (maxEval < eval)//select best move with score
+			{
+				maxEval = eval;
+				move = moves[i];
+			}
 			int alpha = max(alpha, eval);
 			if (beta <= alpha)
 				break;
-			return maxEval;
 		}
+		return pair<int,Move>(maxEval,move);
+
 	}
 	else
 	{
-
+		vector<Move> moves; //=getPlays(board,opponentRack)
+		if (moves.empty())
+		{
+			Move move;
+			return pair<int, Move>(score, move);
+		}
 		int minEval = INT_MAX;
+		Move move = moves[0];
+
 		for (size_t i = 0; i < moves.size(); i++)
 		{
 			opponetRack.removeMoveTiles(moves[i]);
-			int eval = minimax(board.commitMoveSimB(moves[i]), score - scoreManager->computeMoveScore(moves[i], &board), alpha, beta, true);
-			int minEval = min(minEval, eval);
-			int beta = min(beta, eval);
+			pair<int, Move> eval_move = minimax(board.commitMoveSimB(moves[i]), score - scoreManager->computeMoveScore(moves[i], &board), alpha, beta, true);
+			int eval = eval_move.first;
+
+			if (minEval > eval)//select best move with score
+			{
+				minEval = eval;
+				move = moves[i];
+			}
 			if (beta <= alpha)
 				break;
-			return minEval;
 		}
+		return pair<int, Move>(minEval, move);;
+
 	}
 }
 void EndSimulation::start()
