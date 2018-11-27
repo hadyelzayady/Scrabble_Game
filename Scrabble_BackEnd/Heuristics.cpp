@@ -14,11 +14,81 @@ const float vcvalues[8][8] =
 	{-23.5,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0},
 };
 
-
 Heuristics::Heuristics()
 {
-}
 
+	ReadMap("double_RL.txt");
+
+
+}
+void Heuristics::ReadMap(string inDirectory)
+{
+	ifstream input(inDirectory);
+
+	if (!input) cout << "Error occured while opening the file" << endl;
+	else
+	{
+
+		while (!input.eof())
+		{
+
+			char ch;
+			double cost;
+			string total = "";
+			input >> ch;
+			total += ch;
+			input >> ch;
+			total += ch;
+			input >> cost;
+
+			double_RL[total] = cost;
+
+		}
+		input.close();
+	}
+
+}
+double Heuristics::calculateDRL(vector<char> leave)
+{
+	double cost = 0.0;
+
+	for (int i = 0; i < leave.size(); i++)
+	{
+		for (int j = i + 1; j < leave.size(); j++)
+		{
+			string x;
+			char c1 = leave[i];
+			char c2 = leave[j];
+
+			if (c1 == BLANK_TILE)
+			{
+				c1 = '?';
+			}
+			if (c2 == BLANK_TILE)
+			{
+				c2 = '?';
+			}
+
+			if (c1 == '?')
+			{
+				x.push_back(c2);
+				x.push_back(c1);
+			}
+			else
+			{
+				x.push_back(c1);
+				x.push_back(c2);
+			}
+
+			cost += double_RL[x];
+
+
+		}
+	}
+
+	return cost;
+
+}
 double Heuristics::getHeuristics(int turn, vector<char> estimatedRack, Rack  current, Move  move, BagOfLetters bag, vector < pair<int, int>>  Qpos, vector < pair<int, int> > Zpos)
 // leave is the remaining rack after the move is played//bag is left private in the class BagOfLetters //turn to decide the openinng move of the game
 {
@@ -52,7 +122,7 @@ double Heuristics::endGame(vector<char> estimatedRack, Move move, vector<pair<in
 			{
 				if (plays[i].get_Coordinates() == Qpos[k])
 				{
-					priority++;
+					priority = priority + 0.2;
 				}
 
 			}
@@ -64,13 +134,13 @@ double Heuristics::endGame(vector<char> estimatedRack, Move move, vector<pair<in
 			{
 				if (plays[i].get_Coordinates() == Zpos[k])
 				{
-					priority++;
+					priority = priority + 0.2;
 				}
 
 			}
 		}
 
-		cost -= t.getScore(plays[i].get_Letter());
+		cost += t.getScore(plays[i].get_Letter());
 
 	}
 
@@ -103,19 +173,22 @@ double Heuristics::preEnd(Move move, vector<char>  leave)
 	int priority = 1;
 	if (move.getPlaysPointer().size() == 7)
 	{
-		priority = 2;
+		priority = priority + 0.2;
 	}
 	for (int i = 0; i < move.getPlaysPointer().size(); i++)// here the move should already have a score generating function to take into consideration
 											//the tile location for special bonus on the board
 	{
 		if (move.getPlaysPointer()[i].get_Letter() == 'Q' || move.getPlaysPointer()[i].get_Letter() == 'U' || move.getPlaysPointer()[i].get_Letter() == 'Z' || move.getPlaysPointer()[i].get_Letter() == 'X')
 		{
-			priority++;
+			priority = priority + 0.2;
 		}
 
-		cost -= t.getScore(move.getPlaysPointer()[i].get_Letter());
+		cost += t.getScore(move.getPlaysPointer()[i].get_Letter());
 
 	}
+
+	cost = cost + calculateDRL(leave);
+
 	cost = cost * priority;
 	return cost;
 }
@@ -127,7 +200,7 @@ double Heuristics::midGame(int turn, Move  move, vector<char> leave)
 	{
 		if (plays.size() == 7)
 		{
-			cost += 50;
+			cost -= 50;
 		}
 	}
 	int vowels = 0;
@@ -147,10 +220,10 @@ double Heuristics::midGame(int turn, Move  move, vector<char> leave)
 	for (int i = 0; i < plays.size(); i++)// here the move should already have a score generating function to take into consideration
 											//the tile location for special bonus on the board
 	{
-		cost -= t.getScore(plays[i].get_Letter());
+		cost += t.getScore(plays[i].get_Letter());
 
 	}
-
+	cost = cost + calculateDRL(leave);
 	return cost;
 }
 

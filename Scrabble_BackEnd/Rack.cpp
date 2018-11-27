@@ -39,7 +39,7 @@ void Rack::addTile(char x)
 	if (list.size() == 7)
 		return;
 
-	list[list.size()] = x;
+	list.push_back(x);
 
 }
 
