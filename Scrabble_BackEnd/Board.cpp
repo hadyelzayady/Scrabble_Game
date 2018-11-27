@@ -33,12 +33,12 @@ Board Board::commitMoveSim(const Move & move, Board board)
 	return *B;
 }
 
-inline const char &Board::getLetter(unsigned short row, unsigned short column) const
+ const char &Board::getLetter(unsigned short row, unsigned short column) const
 {
 	return m_board[row][column].letter;
 }
 
-inline bool Board::isEmptySquare(unsigned short row, unsigned short column) const
+ bool Board::isEmptySquare(unsigned short row, unsigned short column) const
 {
 	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
 	{
@@ -101,7 +101,7 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 	//	throw EXCEPTION_OUT_OF_BOUND;
 }
 
-inline bool Board::isHook(unsigned short row, unsigned short column) const
+ bool Board::isHook(unsigned short row, unsigned short column) const
 {
 	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
 	{
@@ -114,7 +114,7 @@ inline bool Board::isHook(unsigned short row, unsigned short column) const
 	}
 	throw EXCEPTION_OUT_OF_BOUND;
 }
-inline bool Board::isAnchor(unsigned short row, unsigned short column) const
+ bool Board::isAnchor(unsigned short row, unsigned short column) const
 {
 	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
 	{

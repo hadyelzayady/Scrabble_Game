@@ -17,7 +17,7 @@ public:
 	BonusSquareType bonusType;
 	
 	Square(BonusSquareType bType = NoBonus);
-	inline bool isEmpty() const {
+	bool isEmpty() const {
 		return letter == EMPTY_SQUARE;
 	}
 	~Square();

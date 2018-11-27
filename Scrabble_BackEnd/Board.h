@@ -11,12 +11,12 @@ class Board
 	string LettersOnBoard;
 public:
 	Square m_board[ROWS_COUNT][COLUMNS_COUNT] = { {} };
-	inline const string& getBoardLetters();
+	const string& getBoardLetters();
 	void commitMove(const Move& move);
 	static Board  commitMoveSim(const Move & move, Board board);
 	Board  commitMoveSimB(const Move& move);
-	inline const char &getLetter(unsigned short row, unsigned short column) const;
-	inline bool isEmptySquare(unsigned short row, unsigned short column) const; //same as square.isEmpty just another interface
+	const char &getLetter(unsigned short row, unsigned short column) const;
+	bool isEmptySquare(unsigned short row, unsigned short column) const; //same as square.isEmpty just another interface
 	//bool isConnected(const Move);
 
 	Board(const Square board[ROWS_COUNT][COLUMNS_COUNT]);
@@ -25,8 +25,8 @@ public:
 	void setTile(char letter, unsigned short row, unsigned short column);
 	//static void setTileSim(char letter, unsigned short row, unsigned short column, Square m_board[ROWS_COUNT][COLUMNS_COUNT]);
 	void updateAnchors(std::string move); //TODO : parameter should be Move objedut this is for testing
-	inline bool isHook(unsigned short row, unsigned short column) const;
-	inline bool isAnchor(unsigned short row, unsigned short column) const;
+	bool isHook(unsigned short row, unsigned short column) const;
+	bool isAnchor(unsigned short row, unsigned short column) const;
 	//TODO in B* simu: the node is board state and the arch is the move
 	~Board();
 };
