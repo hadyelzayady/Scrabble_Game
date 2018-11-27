@@ -13,9 +13,9 @@ public:
 	Utilities myUtilities;
 
 	double hyperGeometricDistrubution(int population, int cluster, int specialElementsCount, int specialElementsDesired);
-	double calculateRackWeight(char* opponentRack, vector<pair<char,int>> availableFrequencies);
+	double calculateRackWeight(vector<char>opponentRack, vector<pair<char,int>> availableFrequencies);
 	
-	ProbabilityManager(TileLookUp*);
+	ProbabilityManager();
 	~ProbabilityManager();
 };
 

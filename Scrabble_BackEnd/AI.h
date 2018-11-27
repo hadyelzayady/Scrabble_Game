@@ -2,6 +2,7 @@
 #include "Board.h"
 #include "Rack.h"
 #include "TileLookUp.h"
+#include "MonteCarlo.h"
 #include "ScoreManager.h"
 #include "move.h"
 class AI

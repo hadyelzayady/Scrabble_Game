@@ -15,11 +15,10 @@ public:
 	unsigned int transitions = 0;
 	unsigned int end = 0;
 	int ID;
-	char letter;
-
 	GaddagNode(char x);
 	~GaddagNode();
 
+	GaddagNode* putTransitionChar(char transitionChar);
 	GaddagNode* putTransitionChar(char transitionChar, GaddagNode * son);
 
 	GaddagNode* getChildren(char  transitionChar);

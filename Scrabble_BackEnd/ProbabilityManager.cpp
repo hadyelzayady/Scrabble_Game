@@ -4,12 +4,11 @@
 
 double ProbabilityManager::hyperGeometricDistrubution(int population, int cluster, int specialElementsCount, int specialElementsDesired)
 {
-	return	(double)((double)myUtilities.C(specialElementsCount, specialElementsDesired) * 
-			(double)myUtilities.C(population - specialElementsCount, cluster - specialElementsDesired) /
-			(double)myUtilities.C(population, cluster));
+
+	return	(double)(myUtilities.Cpartc(population, specialElementsCount, cluster, specialElementsDesired) / myUtilities.Cpartb(population, cluster))*myUtilities.Cparta(specialElementsCount, specialElementsDesired);
 }
 
-double ProbabilityManager::calculateRackWeight(char * opponentRack, vector<pair<char, int>> availableFrequencies)
+double ProbabilityManager::calculateRackWeight(vector<char>  opponentRack, vector<pair<char, int>> availableFrequencies)
 {
 	double returnValue = 1;
 	int population = 0;
@@ -28,9 +27,9 @@ double ProbabilityManager::calculateRackWeight(char * opponentRack, vector<pair<
 	return returnValue;
 }
 
-ProbabilityManager::ProbabilityManager(TileLookUp* t)
+ProbabilityManager::ProbabilityManager()
 {
-	tileLookup = t;
+
 }
 
 

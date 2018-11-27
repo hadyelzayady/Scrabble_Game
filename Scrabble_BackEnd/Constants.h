@@ -1,9 +1,8 @@
 #pragma once
 constexpr auto ROWS_COUNT = 15;
 constexpr auto COLUMNS_COUNT = 15;
-constexpr auto TOTAL_TILE_COUNT = 100;
 constexpr auto RACK_SIZE = 7;
-constexpr auto BLANK_TILE = '_';
+constexpr auto BLANK_TILE = '[';
 constexpr auto EMPTY_SQUARE = '\0';
 constexpr auto EXCEPTION_OUT_OF_BOUND = "array out of bound (Board-> isEmpty)";
 
