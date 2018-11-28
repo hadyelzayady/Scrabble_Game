@@ -28,9 +28,43 @@ vector<char> Rack::getLeave(Move move)
 			if (leave[k] == plays[i].get_Letter())
 				leave.erase(leave.begin() + k);
 		}
-
 	}
 	return leave;
+}
+
+
+
+
+vector<char> Rack::getUniqueLeave(Move move)
+{
+
+	vector<Play> plays = move.getPlaysPointer();
+	vector<char> leave = this->list;
+	
+
+	for (int i = 0; i < plays.size(); i++)
+	{
+		for (int k = 0; k < leave.size(); k++)
+		{
+			if (leave[k] == plays[i].get_Letter())
+				leave.erase(leave.begin() + k);
+		}
+
+	}
+
+
+	for (int i = 0; i < leave.size(); i++)
+	{
+		for (int k = i+1; k < leave.size(); k++)
+		{
+			if (leave[i] == leave[k])
+				leave.erase(leave.begin() + k);
+		}
+
+	}
+
+	return leave;
+
 }
 
 

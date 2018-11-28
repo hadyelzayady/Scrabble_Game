@@ -57,6 +57,7 @@ double Heuristics::calculateDRL(vector<char> leave)
 		for (int j = i + 1; j < leave.size(); j++)
 		{
 			string x;
+			string y;
 			char c1 = leave[i];
 			char c2 = leave[j];
 
@@ -69,35 +70,36 @@ double Heuristics::calculateDRL(vector<char> leave)
 				c2 = '?';
 			}
 
-			if (c1 == '?')
-			{
+			
 				x.push_back(c2);
 				x.push_back(c1);
-			}
-			else
-			{
-				x.push_back(c1);
-				x.push_back(c2);
-			}
-
-			cost += double_RL[x];
-
-
+			
+				y.push_back(c1);
+				y.push_back(c2);
+			
+				if (abs(double_RL[x]) >= abs(double_RL[y]))
+				{
+					cost += double_RL[x];
+				}
+				else
+				{
+					cost += double_RL[y];
+				}
 		}
 	}
 
 	return cost;
 
 }
-double Heuristics::getHeuristics(int turn, vector<char> estimatedRack, Rack  current, Move  move, BagOfLetters bag, vector < pair<int, int>>  Qpos, vector < pair<int, int> > Zpos)
-// leave is the remaining rack after the move is played//bag is left private in the class BagOfLetters //turn to decide the openinng move of the game
+double Heuristics::getHeuristics(bool first_turn, vector<char> estimatedRack, Rack  current, Move  move, BagOfLetters bag, vector < pair<int, int>>  Qpos, vector < pair<int, int> > Zpos)
 {
 	
 	vector<char> leave = current.getLeave(move); 
+	vector<char> uniqleave = current.getUniqueLeave(move);
 
 	if (bag.getSize() == 0) return endGame(estimatedRack, move, Qpos, Zpos);
-	else if (bag.getSize() < 10 && bag.getSize() > 0) return preEnd(move, leave);
-	else return midGame(turn, move, leave);
+	else if (bag.getSize() < 10 && bag.getSize() > 0) return preEnd(move, leave,uniqleave);
+	else return midGame(first_turn, move, leave, uniqleave);
 
 }
 double Heuristics::endGame(vector<char> estimatedRack, Move move, vector<pair<int, int>>  Qpos, vector<pair<int, int>>  Zpos)
@@ -149,54 +151,59 @@ double Heuristics::endGame(vector<char> estimatedRack, Move move, vector<pair<in
 
 	return cost;
 }
-double Heuristics::preEnd(Move move, vector<char>  leave)
+double Heuristics::preEnd(Move move, vector<char>  leave, vector<char> uniqleave)
 {
 
 	double cost = 0.0;
 	int vowels = 0;
 	int cons = 0;
 
-	for (int i = 0; i < leave.size(); i++)
+	if (!leave.empty())
 	{
-		if (leave[i] != BLANK_TILE)
+
+		for (int i = 0; i < leave.size(); i++)
 		{
-			if (leave[i] == 'A' || leave[i] == 'E' || leave[i] == 'I' || leave[i] == 'O' || leave[i] == 'U')
-				vowels++;
-			else
-				cons++;
+			if (leave[i] != BLANK_TILE)
+			{
+				if (leave[i] == 'A' || leave[i] == 'E' || leave[i] == 'I' || leave[i] == 'O' || leave[i] == 'U')
+					vowels++;
+				else
+					cons++;
+			}
 		}
-	}
-	cost += vcvalues[vowels][cons];
+		cost += vcvalues[vowels][cons];
 
 
-	TileLookUp t;
-	int priority = 1;
-	if (move.getPlaysPointer().size() == 7)
-	{
-		priority = priority + 0.2;
-	}
-	for (int i = 0; i < move.getPlaysPointer().size(); i++)// here the move should already have a score generating function to take into consideration
-											//the tile location for special bonus on the board
-	{
-		if (move.getPlaysPointer()[i].get_Letter() == 'Q' || move.getPlaysPointer()[i].get_Letter() == 'U' || move.getPlaysPointer()[i].get_Letter() == 'Z' || move.getPlaysPointer()[i].get_Letter() == 'X')
+		TileLookUp t;
+		
+		double synergy = calculateDRL(leave);
+		synergy += calculateDRL(uniqleave);
+
+		// TODO handle the Q
+		bool holding_bad_tile = false;
+		for (int i = 0; i < move.getPlaysPointer().size(); i++)
 		{
-			priority = priority + 0.2;
+			if (t.getScore(move.getPlaysPointer()[i].get_Letter()) > 7)
+			{
+				holding_bad_tile = true;
+			}
+		}
+		if ((synergy > 3.0) && !holding_bad_tile) {
+			synergy = synergy + 1.5 * (synergy - 3.0);
 		}
 
-		cost += t.getScore(move.getPlaysPointer()[i].get_Letter());
-
+		cost = cost + synergy;
 	}
 
-	cost = cost + calculateDRL(leave);
 
-	cost = cost * priority;
+
 	return cost;
 }
-double Heuristics::midGame(int turn, Move  move, vector<char> leave)
+double Heuristics::midGame(bool first_turn, Move  move, vector<char> leave, vector<char> uniqleave)
 {
 	double cost = 0.0;
 	vector<Play> plays = move.getPlaysPointer();
-	if (turn == 0)
+	if ( first_turn ==true)
 	{
 		if (plays.size() == 7)
 		{
@@ -205,25 +212,46 @@ double Heuristics::midGame(int turn, Move  move, vector<char> leave)
 	}
 	int vowels = 0;
 	int cons = 0;
-	for (int i = 0; i < leave.size(); i++)
-	{
-		if (leave[i] != BLANK_TILE)
-		{
-			if (leave[i] == 'A' || leave[i] == 'E' || leave[i] == 'I' || leave[i] == 'O' || leave[i] == 'U')
-				vowels++;
-			else
-				cons++;
-		}
-	}
-	cost += vcvalues[vowels][cons];
-	TileLookUp t;
-	for (int i = 0; i < plays.size(); i++)// here the move should already have a score generating function to take into consideration
-											//the tile location for special bonus on the board
-	{
-		cost += t.getScore(plays[i].get_Letter());
 
+	if (!leave.empty())
+	{
+
+		for (int i = 0; i < leave.size(); i++)
+		{
+			if (leave[i] != BLANK_TILE)
+			{
+				if (leave[i] == 'A' || leave[i] == 'E' || leave[i] == 'I' || leave[i] == 'O' || leave[i] == 'U')
+					vowels++;
+				else
+					cons++;
+			}
+		}
+		cost += vcvalues[vowels][cons];
+
+
+		TileLookUp t;
+		
+		double synergy = calculateDRL(leave);
+		synergy += calculateDRL(uniqleave);
+
+		// TODO handle the Q
+		bool holding_bad_tile = false;
+		for (int i = 0; i < move.getPlaysPointer().size(); i++)
+		{
+			if (t.getScore(move.getPlaysPointer()[i].get_Letter()) > 7)
+			{
+				holding_bad_tile = true;
+			}
+		}
+		if ((synergy > 3.0) && !holding_bad_tile) {
+			synergy = synergy + 1.5 * (synergy - 3.0);
+		}
+
+		cost = cost + synergy;
 	}
-	cost = cost + calculateDRL(leave);
+
+
+
 	return cost;
 }
 

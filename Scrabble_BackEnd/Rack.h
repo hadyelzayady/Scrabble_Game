@@ -3,6 +3,7 @@
 #include<vector>
 #include "Rack.h"
 #include "move.h"
+#include <map>
 #include <iostream>
 using namespace std;
 
@@ -22,6 +23,7 @@ public:
 
 	vector<char> getRackTiles();
 	vector<char> getLeave(Move move);
+	vector<char> getUniqueLeave(Move move);
 
 	Rack();					    //constructor
 	Rack(const Rack &R);		//copy constructor
