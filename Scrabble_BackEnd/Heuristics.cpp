@@ -76,7 +76,7 @@ int Heuristics::preEnd( Move move, Rack * leave)
 int Heuristics::midGame(int turn,Rack * estimatedRack, Move * move, Rack * leave)
 {
 	double cost=0.0;
-	vector<Play> plays = move->getPlaysPointer;
+	vector<Play> plays = move->getPlaysPointer();
 	if (turn == 0)
 	{
 		if (plays.size() == 7)

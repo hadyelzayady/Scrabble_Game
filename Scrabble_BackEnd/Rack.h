@@ -1,5 +1,6 @@
 #pragma once
 #include "Square.h"
+#include "move.h"
 #include <iostream>
 using namespace std;
 
@@ -13,7 +14,7 @@ private:
 
 public:
 
-
+	void removeMoveTiles(const Move& move);
 	void addTile(char x);
 	void removeTile(char x);
 	int getSize();
@@ -21,6 +22,7 @@ public:
 	char* getRackTiles();
 
 	Rack();		//constructor
+	Rack(string tiles);		//constructor
 	~Rack();		//destructor
 
 protected:
