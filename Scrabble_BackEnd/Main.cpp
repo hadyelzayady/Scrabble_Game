@@ -73,7 +73,8 @@ Board parsefile(vector<Move>& mymoves, vector<Move>& opmoves)
 int main()
 {
 	////(test commitmove and commitMoveSim
-	//Board board;
+	Board board;
+	int z=board.m_board[1][0].getWordMultiplier();
 	//Move move;
 	//Play play;
 	//play.set_Letter('A', 1);

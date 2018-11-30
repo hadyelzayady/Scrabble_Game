@@ -14,10 +14,18 @@ public:
 	
 	//also it can be boolean with points=0 for no bonus but using enum is more clear
 	BonusSquareType bonusType;
-	//static Square getSquare(BonusSquareType bon);
 	Square(BonusSquareType bType = NoBonus);
 	bool isEmpty() const {
 		return letter == EMPTY_SQUARE;
+	}
+	bool isBlank()const {
+		return letter == BLANK_TILE;
+	}
+	int getLetterMultiplier()const {
+		return  bonusType == LetterBonusX2 or bonusType == LetterBonusX3? (int)bonusType+1:1;
+	}
+	int getWordMultiplier()const {
+		return  bonusType == WordBonusX2 or bonusType == WordBonusX3 ? (int)bonusType-1 : 1;
 	}
 	~Square();
 };
