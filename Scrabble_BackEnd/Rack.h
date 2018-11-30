@@ -22,6 +22,7 @@ public:
 	char* getRackTiles();
 
 	Rack();		//constructor
+	Rack(string tiles);		//constructor
 	~Rack();		//destructor
 
 protected:

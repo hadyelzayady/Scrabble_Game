@@ -11,11 +11,10 @@ public:
 	
 	// ToDo: we can make new class inherits from this class to contain below data members 
 	// as many squares are not prime squares in the boad so we will save space
-	short points = 0;
 	
 	//also it can be boolean with points=0 for no bonus but using enum is more clear
 	BonusSquareType bonusType;
-	
+	//static Square getSquare(BonusSquareType bon);
 	Square(BonusSquareType bType = NoBonus);
 	bool isEmpty() const {
 		return letter == EMPTY_SQUARE;

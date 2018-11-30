@@ -9,6 +9,22 @@
 //{
 //
 //}
+vector<Move> EndSimulation::getplays()
+{
+	if (i == 3)
+	{
+		vector<Move> m(0);
+		return m;
+	}
+	if (i %2 ==0)
+	{
+		++i;
+		return mymoves;
+	}
+	++i;
+	return opmoves;
+
+}
 pair<int,Move> EndSimulation::minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer)
 {
 	////TODO:score is myscore-opponet score
@@ -17,7 +33,7 @@ pair<int,Move> EndSimulation::minimax(Board board, int score, int alpha, int bet
 	if (maximizingPlayer)
 	{
 		//end condition
-		vector<Move> moves; //=getPlays(board,myRack)
+		vector<Move> moves = getplays();
 		if (moves.empty())
 		{
 			Move move;
@@ -28,6 +44,7 @@ pair<int,Move> EndSimulation::minimax(Board board, int score, int alpha, int bet
 		for (size_t i = 0; i < moves.size(); i++)
 		{
 			myRack.removeMoveTiles(moves[i]);
+			//heruestic needs:
 			pair<int,Move> eval_move = minimax(board.commitMoveSimB(moves[i]), score + scoreManager->computeMoveScore(moves[i], &board), alpha, beta, false);
 			int eval = eval_move.first;
 
@@ -36,8 +53,8 @@ pair<int,Move> EndSimulation::minimax(Board board, int score, int alpha, int bet
 				maxEval = eval;
 				move = moves[i];
 			}
-			int alpha = max(alpha, eval);
-			if (beta <= alpha)
+			int _alpha = max(alpha, eval);
+			if (beta <= _alpha)
 				break;
 		}
 		return pair<int,Move>(maxEval,move);
@@ -45,7 +62,7 @@ pair<int,Move> EndSimulation::minimax(Board board, int score, int alpha, int bet
 	}
 	else
 	{
-		vector<Move> moves; //=getPlays(board,opponentRack)
+		vector<Move> moves = getplays();
 		if (moves.empty())
 		{
 			Move move;
@@ -65,15 +82,17 @@ pair<int,Move> EndSimulation::minimax(Board board, int score, int alpha, int bet
 				minEval = eval;
 				move = moves[i];
 			}
-			if (beta <= alpha)
+			int _beta = min(beta, eval);
+			if (_beta <= alpha)
 				break;
 		}
 		return pair<int, Move>(minEval, move);;
 
 	}
 }
-void EndSimulation::start()
+pair<int, Move> EndSimulation::start()
 {
+	return minimax(board, 0, INT_MIN, INT_MAX, true);
 }
 
 EndSimulation::EndSimulation(const Board&board,ScoreManager * scoreManager, Rack opponentRack, Rack myRack)
@@ -83,6 +102,16 @@ EndSimulation::EndSimulation(const Board&board,ScoreManager * scoreManager, Rack
 	this->myRack = myRack;
 	this->board=board;//! test implicit copy constructors
 
+}
+
+EndSimulation::EndSimulation(const Board & board, ScoreManager * scoreManager, Rack opponentRack, Rack myRack, vector<Move> opmoves, vector<Move> mymoves)
+{
+	this->scoreManager = scoreManager;
+	this->opponetRack = opponentRack;
+	this->myRack = myRack;
+	this->board = board;//! test implicit copy constructors
+	this->mymoves = mymoves;
+	this->opmoves = opmoves;
 }
 EndSimulation::~EndSimulation()
 {
