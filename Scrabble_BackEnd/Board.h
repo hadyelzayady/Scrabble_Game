@@ -16,6 +16,7 @@ public:
 	void commitMove(const Move& move);
 	static Board  commitMoveSim(const Move & move, Board board);
 	Board  commitMoveSimB(const Move& move);
+	void  commitMoveSimC(const Move& move,Board& newBoard);
 	const char &getLetter(unsigned short row, unsigned short column) const;
 	bool isEmptySquare(unsigned short row, unsigned short column) const; //same as square.isEmpty just another interface
 	//bool isConnected(const Move);

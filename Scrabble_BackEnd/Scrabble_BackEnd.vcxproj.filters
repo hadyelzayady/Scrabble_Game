@@ -72,6 +72,9 @@
     <ClCompile Include="MonteCarlo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BStarNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Square.h">
@@ -129,6 +132,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MonteCarlo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BStarNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

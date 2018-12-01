@@ -3,6 +3,7 @@
 #include "Rack.h"
 #include "ScoreManager.h"
 #include "move.h"
+#include "BStarNode.h"
 class EndSimulation
 {
 	ScoreManager *scoreManager;
@@ -16,8 +17,9 @@ class EndSimulation
 	Rack opponetRack;
 	Rack myRack;
 	Board board;
+	void getChildren(const BStarNode& node, vector<BStarNode>&children);
 	pair<int, Move> minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
-	pair<int, Move> BStar(Board board, int score, int alpha, int beta, bool maximizingPlayer);
+	BStarNode BStar(BStarNode &node, int depth, bool maximizingPlayer);
 	pair<int, Move> start();
 	EndSimulation(const Board &board, ScoreManager *scoreManager, Rack opponentRack, Rack myRack);
 	//test construcotr

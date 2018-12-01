@@ -100,7 +100,12 @@ Board Board::commitMoveSimB(const Move &move)
 	newBoard.commitMove(move);
 	return newBoard; //? still not sure if we should return 2d array or board object but soliman needs board object to get moves
 }
+void Board::commitMoveSimC(const Move & move, Board & newBoard)
+{
+	newBoard.commitMove(move);
+}
 //we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
+//this needs imporove ment (3 constructor are called for board !)
 Board Board::commitMoveSim(const Move & move, Board board)
 {
 	Board  * B = new Board(board);

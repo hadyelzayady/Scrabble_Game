@@ -95,7 +95,7 @@ vector<Node>& getMoves(Node node)
 	}
 	if (node.id == 0)
 	{
-		cache[0] = vector<Node>({ Node(30,15,1),Node(22,8,2),Node(19,10,3) });
+		cache[0] = vector<Node>({ Node(30,15,1),Node(30,16,2),Node(19,10,3) });
 		return cache[0];
 	}
 	if (node.id == 1)
@@ -119,10 +119,6 @@ vector<Node>& getMoves(Node node)
 bool myfunctionmax(Node i, Node j) { return (i.optm > j.optm); }
 bool myfunctionmin(Node i, Node j) { return (i.optm < j.optm); }
 
-pair<int, int> getOptPess(Node& node)
-{
-	return pair<int&, int&>(node.optm, node.pess);
-}
 void getBest2MovesMax(vector<Node>& moves, vector<Node*>&best2moves)
 {
 	sort(moves.begin(), moves.end(), myfunctionmax);
@@ -186,7 +182,7 @@ int getBestPessimisticMin(vector<Node>moves)
 }
 Node BStar(Node& node, int depth, bool maximizingPlayer)
 {
-	if (maximizingPlayer)
+	while (maximizingPlayer )
 	{
 		vector<Node>&branches = getMoves(node); //TODO:use map to get moves if node expanded before without searching again
 		if (branches.empty())
@@ -195,10 +191,6 @@ Node BStar(Node& node, int depth, bool maximizingPlayer)
 		//!sorting according to only optimistic value
 		vector<Node*> bestFirstAndSecond;
 		getBest2MovesMax(branches,bestFirstAndSecond); //TODO: sort(index sorting) ,or use cache
-		//Move &bestMove = bestFirstAndSecond[0].first;
-		//pair<int, int> &bestMoveOptimisticPessimistic = bestFirstAndSecond[0].;
-		//Move &alternMove = bestFirstAndSecond[1].first;
-		//pair<int, int> &alternOptimisticPessimistic = bestFirstAndSecond[1].second;
 		int maxOptimisticValue = bestFirstAndSecond[0]->optm; //max perssimistic value
 		int maxPessimisticValue = getMaxPessimistic(branches);			  //max perssimistic value
 		if (maxOptimisticValue < node.pess || maxPessimisticValue > node.optm)
@@ -214,25 +206,21 @@ Node BStar(Node& node, int depth, bool maximizingPlayer)
 		}
 		if (depth == 0)
 		{
-			/*if (bestFirstAndSecond.size()==2 && maxPessimisticValue == bestFirstAndSecond[0]->pess)
-			{
-				if (BStar(*bestFirstAndSecond[1], depth + 1, false).id == -1)
-					return BStar(node, depth, true);
-
-			}
+			Node x = BStar(*bestFirstAndSecond[0], depth + 1, false);
+			if (x.id == -1)
+				continue;
 			else
-			{*/
-				if (BStar(*bestFirstAndSecond[0], depth + 1, false).id == -1)
-					return BStar(node, depth, true);
-			//}
+				break;
 		}
 		else
 		{
-			if ( BStar(*bestFirstAndSecond[0], depth + 1, false).id == -1)
-				return BStar(node, depth, true);
+			if (BStar(*bestFirstAndSecond[0], depth + 1, false).id == -1)
+				continue;
+			else
+				break;
 		}
 	}
-	else
+	while(!maximizingPlayer)
 	{
 		vector<Node>&branches = getMoves(node); //TODO:use map to get moves if node expanded before without searching again
 
@@ -242,10 +230,6 @@ Node BStar(Node& node, int depth, bool maximizingPlayer)
 		//!sorting according to only optimistic value
 		vector<Node*> bestFirstAndSecond;
 		getBest2MovesMin(branches, bestFirstAndSecond); //TODO: sort(index sorting) ,or use cache
-		//Move &bestMove = bestFirstAndSecond[0].first;
-		//pair<int, int> &bestMoveOptimisticPessimistic = bestFirstAndSecond[0].;
-		//Move &alternMove = bestFirstAndSecond[1].first;
-		//pair<int, int> &alternOptimisticPessimistic = bestFirstAndSecond[1].second;
 		int maxOptimisticValue = bestFirstAndSecond[0]->optm; //max perssimistic value
 		int maxPessimisticValue = getBestPessimisticMin(branches);			  //max perssimistic value
 		if (maxOptimisticValue > node.pess || maxPessimisticValue < node.optm)
@@ -260,31 +244,27 @@ Node BStar(Node& node, int depth, bool maximizingPlayer)
 		}
 		if (depth == 0)
 		{
-			//disprovest
-			/*if (bestFirstAndSecond.size()==2 && maxPessimisticValue == bestFirstAndSecond[0]->pess)
-			{
-				if (BStar(*bestFirstAndSecond[1], depth + 1, true).id == -1)
-					return BStar(node, depth, false);
-			}
+			int id = BStar(*bestFirstAndSecond[0], depth + 1, true).id;
+			if (id == -1)
+				continue;
 			else
-			{*/
-				if (BStar(*bestFirstAndSecond[0], depth + 1, true).id == -1)
-					return BStar(node, depth, false);
-			//}
+				break;
 		}
 		else
 		{
-			if(BStar(*bestFirstAndSecond[0], depth + 1, true).id==-1){
-				return BStar(node,depth,false);
+			Node x = BStar(*bestFirstAndSecond[0], depth + 1, true);
+			if (x.id == -1) {
+				continue;
 			}
+			else
+				break;
 		}
 	}
 }
-
 int main()
 {
 	Node root(INT_MIN, INT_MAX, 0);
-	Node best=BStar(root, 0, true);
+	//Node best=BStar(root, 0, true);
 	////(test commitmove and commitMoveSim
 	//Move move;
 	//Play play;
