@@ -1,6 +1,20 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+
+struct uTime
+{
+	int32_t playerTime;
+	int32_t totalTime;
+};
+
+struct endMove
+{
+	EndReasons reason;
+	int score;
+	int opponentScore;
+};
+
 struct readyStruct
 {
 	
@@ -25,3 +39,35 @@ struct readyStruct_formated
 	int playerTime;
 	int totalTime;
 };
+
+struct playMove
+{
+	int Scolumn;
+	int Srow;
+	int direction;
+	std::vector<char> tiles;
+	int score;
+};
+
+struct player2Move
+{
+	uint8_t Scolumn;
+	uint8_t Srow;
+	uint8_t direction;
+	std::vector<uint8_t> tiles;
+	int32_t score;
+	int32_t challengeTime;
+	uTime time;
+};
+
+struct player2Move_formated
+{
+	int Scolumn;
+	int Srow;
+	int direction;
+	std::vector<char> tiles;
+	int score;
+	int challengeTime;
+	uTime time;
+};
+

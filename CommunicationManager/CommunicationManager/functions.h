@@ -3,6 +3,14 @@
 #include <string>
 using namespace std;
 
+template<class myType> 
+void displayVector(vector<myType>v)
+{
+	for (int i = 0; i<int(v.size()); i++)
+			cout << v[i] << " ";
+	cout << endl;
+
+}
 vector<char> convertToletters(vector<int>v)
 {
 	vector<char>result;
@@ -22,6 +30,24 @@ vector<char> convertToletters(vector<int>v)
 	return result;
 }
 
+
+vector<int> convertToNumbers(vector<char>v)
+{
+	vector<int>result;
+	int size = v.size();
+	for (int i = 0; i < size; i++)
+	{
+		if (v[i] == '.')
+			result.push_back(0);
+		else if (v[i] == '[]')
+			result.push_back(100);
+		else
+			result.push_back((int)(v[i] - 'A' + 1));
+
+	}
+	return result;
+
+}
 string timeFormat(int32_t time)
 {
 	string Stime;

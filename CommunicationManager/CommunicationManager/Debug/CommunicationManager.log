@@ -1,2 +1,11 @@
-﻿  CommunicationManager.cpp
+﻿  Client.cpp
+d:\college\year-4 semester-1\machineintelligence\project\communicationmanager\communicationmanager\functions.h(23): warning C4305: 'argument': truncation from 'int' to '_Ty'
+          with
+          [
+              _Ty=char
+          ]
+d:\college\year-4 semester-1\machineintelligence\project\communicationmanager\communicationmanager\functions.h(23): warning C4309: 'argument': truncation of constant value
+d:\college\year-4 semester-1\machineintelligence\project\communicationmanager\communicationmanager\functions.h(55): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  CommunicationManager.cpp
+  Generating Code...
   CommunicationManager.vcxproj -> D:\College\Year-4 semester-1\MachineIntelligence\Project\CommunicationManager\Debug\CommunicationManager.exe

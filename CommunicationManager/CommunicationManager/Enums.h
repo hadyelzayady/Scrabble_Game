@@ -28,5 +28,3 @@ enum EndReasons {
 	CONNECTION_ERROR = 2,
 	STOP_BUTTON_PRESSED = 3,
 };
-
-
