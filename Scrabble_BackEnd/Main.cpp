@@ -19,9 +19,23 @@ int main()
 	r->addTile('F');
 	char c[] = { 'G','Z','Y','X' };
 	ProbabilityManager * Pm = new ProbabilityManager();
-	MonteCarlo * M = new MonteCarlo(r,c,Pm);
-	 M->simulation(100);
-	 Utilities * u =new  Utilities();
+	Board *B = new Board();
+	Move* M = new Move();
+	Play *P = new Play();
+	P->set_Coordinates(make_pair(2, 3));
+	P->set_Letter('A', 1);
+	M->addPlay(*P);
+	B->commitMove(*M);
+	P->set_Coordinates(make_pair(4,5));
+	P->set_Letter('Z', 2);
+	Move* z = new Move();
+	z->addPlay(*P);
+	Board V = Board::commitMoveSim(*z, *B);
+
+	
+//	MonteCarlo * M = new MonteCarlo(r,c,Pm);
+	// M->simulation(100);
+//	 Utilities * u =new  Utilities();
 /*
 	Intiating  instance tileLookUp from TileLookUp class
 	*/
