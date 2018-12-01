@@ -11,7 +11,9 @@ public:
 	TileLookUp * tileLookUp;
 
 	// Methods
-	double computeMoveScore(Move M, Board * B);
+		//timon|
+	static	double calculateScore(const Move & m, const Board & board,  TileLookUp * tileLookUp);
+
 	ScoreManager(Board*, TileLookUp*);
 	~ScoreManager();
 };
