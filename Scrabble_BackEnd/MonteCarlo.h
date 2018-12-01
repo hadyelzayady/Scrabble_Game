@@ -14,7 +14,7 @@ class MonteCarlo
 public:
 	MonteCarlo( Rack * myRack , char * boardPool, ProbabilityManager *pm);
 	void createAvaliableLetters();
-	void simulation(int N = 100);
+	vector<pair<vector<char>, double>> simulation(int N = 100);
 	~MonteCarlo();
 };
 

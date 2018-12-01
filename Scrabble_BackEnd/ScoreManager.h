@@ -1,17 +1,17 @@
 #pragma once
 #include "Board.h"
 #include "TileLookUp.h"
+#include "move.h"
 #include <cmath>
 class ScoreManager
 {
-public:
+  public:
 	// Parameters
-	Board * boardManager;
-	TileLookUp * tileLookUp;
+	Board *boardManager;
+	TileLookUp *tileLookUp;
 
 	// Methods
-	int computeMoveScore(int[],int[],char[],int);
-	ScoreManager(Board*, TileLookUp*);
+	double computeMoveScore(Move M, Board *B);
+	ScoreManager(Board *, TileLookUp *);
 	~ScoreManager();
 };
-

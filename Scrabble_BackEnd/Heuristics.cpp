@@ -259,4 +259,3 @@ Heuristics::~Heuristics()
 {
 }
 
-
