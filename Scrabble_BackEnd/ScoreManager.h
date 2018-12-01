@@ -5,13 +5,15 @@
 #include <cmath>
 class ScoreManager
 {
-  public:
+public:
 	// Parameters
-	Board *boardManager;
-	TileLookUp *tileLookUp;
+	Board * boardManager;
+	TileLookUp * tileLookUp;
 
 	// Methods
-	double computeMoveScore(Move M, Board *B);
-	ScoreManager(Board *, TileLookUp *);
+		//timon|
+	static	double calculateScore(const Move & m, const Board & board,  TileLookUp * tileLookUp);
+
+	ScoreManager(Board*, TileLookUp*);
 	~ScoreManager();
 };

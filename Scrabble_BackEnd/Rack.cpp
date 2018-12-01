@@ -3,45 +3,81 @@
 
 Rack::Rack()
 {
-	for (int i = 0; i < Rack::RACKSIZE; i++)
-	{
-		
-		list[i] = ' ';
-	}
-	listSize = 0;
-}
-
-Rack::Rack(string tiles)
-{
-	listSize = 0;
-	for (size_t i = 0; i < tiles.length() && i<7; i++)
-	{
-		list[i] = tiles[i];
-		++listSize;
-	}
+	list.reserve(7);
 
 }
 
-
-void Rack::removeMoveTiles(const Move & move)
+Rack::Rack(const Rack & R)
 {
+		this->list.reserve(7);
+	
+		this->list = R.list;
+	
+
+}
+
+vector<char> Rack::getLeave(Move move) 
+{
+	vector<Play> plays = move.Plays;
+	vector<char> leave = this->list;
+
+	for (int i = 0; i < plays.size(); i++)
+	{
+		for (int k = 0; k < leave.size(); k++)
+		{
+			if (leave[k] == plays[i].get_Letter())
+				leave.erase(leave.begin() + k);
+		}
+	}
+	return leave;
+}
+
+
+
+
+vector<char> Rack::getUniqueLeave(Move move)
+{
+
 	vector<Play> plays = move.getPlaysPointer();
-	for (size_t i = 0; i <plays.size(); i++)
+	vector<char> leave = this->list;
+	
+
+	for (int i = 0; i < plays.size(); i++)
 	{
-		removeTile(plays[i].get_Letter());
+		for (int k = 0; k < leave.size(); k++)
+		{
+			if (leave[k] == plays[i].get_Letter())
+				leave.erase(leave.begin() + k);
+		}
+
 	}
+
+
+	for (int i = 0; i < leave.size(); i++)
+	{
+		for (int k = i+1; k < leave.size(); k++)
+		{
+			if (leave[i] == leave[k])
+				leave.erase(leave.begin() + k);
+		}
+
+	}
+
+	return leave;
+
 }
+
 
 void Rack::addTile(char x)
 {
-	if (listSize == 7)
+	if (list.size() == 7)
 		return;
 
-	list[listSize] = x;
-	listSize++;
+	list.push_back(x);
+
 }
 
-char* Rack::getRackTiles()
+vector<char> Rack::getRackTiles()
 {
 	return list;
 }
@@ -49,13 +85,13 @@ char* Rack::getRackTiles()
 void Rack::removeTile(char x)
 {
 
-	for (int i = 0; i < listSize; i++)
+	for (int i = 0; i < list.size(); i++)
 	{
 		if (list[i] == x)
 		{
-			list[i] = list[listSize];
-			list[listSize] = ' ';
-			listSize--;
+			
+			list.erase(list.begin() + i);
+
 			break;
 		}
 	}
@@ -66,13 +102,9 @@ void Rack::removeTile(char x)
 
 int Rack::getSize()
 {
-	return listSize;
+	return list.size();
 }
 
-void Rack::updateSize(int x)
-{
-	listSize = x;
-}
 
 
 Rack::~Rack()

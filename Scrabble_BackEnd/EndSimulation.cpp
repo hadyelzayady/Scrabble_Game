@@ -1,4 +1,4 @@
-﻿#include "EndSimulation.h"
+#include "EndSimulation.h"
 #include <limits>
 #include "Play.h"
 #include "move.h"
@@ -9,6 +9,7 @@
 //{
 //
 //}
+/*
 vector<Move> EndSimulation::getplays()
 {
 	if (i == 3)
@@ -28,7 +29,6 @@ pair<int, Move> EndSimulation::minimax(Board board, int score, int alpha, int be
 {
 	////TODO:score is myscore-opponet score
 	//! only start with max player
-
 	if (maximizingPlayer)
 	{
 		//end condition
@@ -42,7 +42,7 @@ pair<int, Move> EndSimulation::minimax(Board board, int score, int alpha, int be
 		Move move = moves[0];
 		for (size_t i = 0; i < moves.size(); i++)
 		{
-			myRack.removeMoveTiles(moves[i]);
+			myRack.getLeave(moves[i]);
 			//heruestic needs:
 			pair<int, Move> eval_move = minimax(board.commitMoveSimB(moves[i]), score + scoreManager->computeMoveScore(moves[i], &board), alpha, beta, false);
 			int eval = eval_move.first;
@@ -68,7 +68,6 @@ pair<int, Move> EndSimulation::minimax(Board board, int score, int alpha, int be
 		}
 		int minEval = INT_MAX;
 		Move move = moves[0];
-
 		for (size_t i = 0; i < moves.size(); i++)
 		{
 			opponetRack.removeMoveTiles(moves[i]);
@@ -294,11 +293,13 @@ pair<int, Move> EndSimulation::start()
 	return minimax(board, 0, INT_MIN, INT_MAX, true);
 }
 
+
 EndSimulation::EndSimulation(const Board &board, ScoreManager *scoreManager, Rack opponentRack, Rack myRack)
 {
 	this->scoreManager = scoreManager;
 	this->opponetRack = opponentRack;
 	this->myRack = myRack;
+
 	this->board = board; //! test implicit copy constructors
 }
 
