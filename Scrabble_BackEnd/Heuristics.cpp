@@ -1,3 +1,4 @@
+
 #include "Heuristics.h"
 
 
@@ -157,7 +158,6 @@ double Heuristics::preEnd(Move move, vector<char>  leave, vector<char> uniqleave
 	double cost = 0.0;
 	int vowels = 0;
 	int cons = 0;
-
 	if (!leave.empty())
 	{
 
@@ -171,7 +171,7 @@ double Heuristics::preEnd(Move move, vector<char>  leave, vector<char> uniqleave
 					cons++;
 			}
 		}
-		cost += vcvalues[vowels][cons];
+		cost += vcvalues[vowels][cons]; //Reward 
 
 
 		TileLookUp t;
@@ -258,4 +258,3 @@ double Heuristics::midGame(bool first_turn, Move  move, vector<char> leave, vect
 Heuristics::~Heuristics()
 {
 }
-

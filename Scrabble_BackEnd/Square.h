@@ -1,6 +1,6 @@
 #pragma once
 #include "Constants.h"
-
+#include <unordered_set>
 enum BonusSquareType { NoBonus = 0, LetterBonusX2, LetterBonusX3, WordBonusX2, WordBonusX3 };
 
 class Square
@@ -12,6 +12,10 @@ public:
 	// ToDo: we can make new class inherits from this class to contain below data members 
 	// as many squares are not prime squares in the boad so we will save space
 	
+	//Timon 
+	std::unordered_set<char> horizontalSet, verticalSet;
+
+
 	//also it can be boolean with points=0 for no bonus but using enum is more clear
 	BonusSquareType bonusType;
 	Square(BonusSquareType bType = NoBonus);

@@ -18,7 +18,7 @@ Rack::Rack(const Rack & R)
 
 vector<char> Rack::getLeave(Move move) 
 {
-	vector<Play> plays = move.getPlaysPointer();
+	vector<Play> plays = move.Plays;
 	vector<char> leave = this->list;
 
 	for (int i = 0; i < plays.size(); i++)
@@ -67,26 +67,6 @@ vector<char> Rack::getUniqueLeave(Move move)
 
 }
 
-Rack::Rack(string tiles)
-{
-	listSize = 0;
-	for (size_t i = 0; i < tiles.length() && i<7; i++)
-	{
-		list[i] = tiles[i];
-		++listSize;
-	}
-
-}
-
-
-void Rack::removeMoveTiles(const Move & move)
-{
-	vector<Play> plays = move.getPlaysPointer();
-	for (size_t i = 0; i <plays.size(); i++)
-	{
-		removeTile(plays[i].get_Letter());
-	}
-}
 
 void Rack::addTile(char x)
 {

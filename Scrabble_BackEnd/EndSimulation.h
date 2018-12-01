@@ -3,6 +3,12 @@
 #include "Rack.h"
 #include "ScoreManager.h"
 #include "move.h"
+
+/*
+=> removeMoveTiles  : maynf3sh t3'er fe el rack 
+*/
+
+
 class EndSimulation
 {
 	ScoreManager *scoreManager;
@@ -16,10 +22,12 @@ public:
 	Rack opponetRack;
 	Rack myRack;
 	Board board;
+	/*
 	pair<int,Move> minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
 	pair<int, Move> start();
 	EndSimulation(const Board&board, ScoreManager *scoreManager, Rack opponentRack, Rack myRack);
 	//test construcotr
 	EndSimulation(const Board&board,ScoreManager *scoreManager, Rack opponentRack, Rack myRack,vector<Move>opmoves,vector<Move>mymoves);
 	~EndSimulation();
-};   
+	*/
+}; 
