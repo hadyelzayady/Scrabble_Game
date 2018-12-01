@@ -6,8 +6,6 @@
 
 /*
 => removeMoveTiles  : maynf3sh t3'er fe el rack 
-
-
 */
 
 
@@ -32,4 +30,4 @@ public:
 	EndSimulation(const Board&board,ScoreManager *scoreManager, Rack opponentRack, Rack myRack,vector<Move>opmoves,vector<Move>mymoves);
 	~EndSimulation();
 	*/
-	};   
+}; 

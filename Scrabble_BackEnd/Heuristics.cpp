@@ -1,3 +1,4 @@
+
 #include "Heuristics.h"
 
 
@@ -257,5 +258,3 @@ double Heuristics::midGame(bool first_turn, Move  move, vector<char> leave, vect
 Heuristics::~Heuristics()
 {
 }
-
-

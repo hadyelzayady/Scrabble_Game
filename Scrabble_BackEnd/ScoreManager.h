@@ -17,4 +17,3 @@ public:
 	ScoreManager(Board*, TileLookUp*);
 	~ScoreManager();
 };
-
