@@ -103,9 +103,9 @@ void Board::commitMove(const Move &move)
 //we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
 Board Board::commitMoveSim(const Move & move, Board board)
 {
-	Board  * B = new Board(board);
-	B->commitMove(move);
-	return *B;
+	Board   B(board);
+	B.commitMove(move);
+	return B;
 }
 
  const char &Board::getLetter(unsigned short row, unsigned short column) const
