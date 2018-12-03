@@ -6,7 +6,7 @@
 class MonteCarlo
 {
 	TileLookUp * tileLookUp;
-	char *  myrackchars; 
+	vector <char>  myrackchars; 
 	char * boardPool;
 	ProbabilityManager * Pm;
 	std::vector<char> availableCharacters;
