@@ -31,7 +31,6 @@ void Rack::removeMoveTiles(const Move & move)
 		removeTile(plays[i].get_Letter());
 	}
 }
-
 void Rack::addTile(char x)
 {
 	if (listSize == 7)

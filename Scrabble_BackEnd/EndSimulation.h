@@ -17,9 +17,9 @@ class EndSimulation
 	Rack opponetRack;
 	Rack myRack;
 	Board board;
-	void getChildren(const BStarNode& node, vector<BStarNode>&children);
+	vector<BStarNode>* getChildren(const BStarNode& node,Rack&rack);
 	pair<int, Move> minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
-	BStarNode BStar(BStarNode &node, int depth, bool maximizingPlayer);
+	BStarNode BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack rack);
 	pair<int, Move> start();
 	EndSimulation(const Board &board, ScoreManager *scoreManager, Rack opponentRack, Rack myRack);
 	//test construcotr

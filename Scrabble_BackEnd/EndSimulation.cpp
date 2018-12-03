@@ -185,40 +185,40 @@ int getBestPessimisticMin(vector<BStarNode> moves)
 	return min;
 }
 
-void EndSimulation::getChildren(const BStarNode &node, vector<BStarNode> &children)
+vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack)
 {
 	if (cache.find(node.id) != cache.end()) //node expanded before
 	{
-		children = cache[node.id]; //? check if children have the same vector by reference
+		return &cache[node.id]; //? check if children have the same vector by reference
 	}
 	//node first expand
-	vector<Move> moves; //= getMoves(board, myRack);
+	vector<Move> moves; //= getMoves(board, rack);
+	vector<BStarNode>&cachevector = cache[node.id];
 	//get max 2 moves
 	for (size_t i = 0; i < moves.size(); i++)
 	{
 		//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 		Board board(node.board);
 		board.commitMove(moves[i]);
-		children.push_back(BStarNode(1, 2, cache.size(), board, moves[i]));
+		int opt_pess[2] = { 1,2 };// getOptimPess();
+		cachevector.push_back(BStarNode(opt_pess[0], opt_pess[1], cache.size(), board, moves[i]));
 	}
-	cache[node.id] = children;
-	children = cache[node.id];//just to make them have the same reference
+	return &cachevector;
 }
-BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer)
+BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack rack)
 {
 	while (maximizingPlayer)
 	{
-		//غير كله يشتغل علي move
-		vector<BStarNode> branches;
-		getChildren(node, branches);
-		if (branches.empty())
+		vector<BStarNode>* branches;
+		branches = getChildren(node, rack);
+		if ((*branches).empty())
 			return node;
 		// heuristic is calculated for each move inside this function,!
 		//!sorting according to only optimistic value
 		vector<BStarNode *> bestFirstAndSecond;
-		getBest2MovesMax(branches, bestFirstAndSecond);		   //TODO: sort(index sorting) ,or use cache
+		getBest2MovesMax((*branches), bestFirstAndSecond);		   //TODO: sort(index sorting) ,or use cache
 		int maxOptimisticValue = bestFirstAndSecond[0]->optm;  //max perssimistic value
-		int maxPessimisticValue = getMaxPessimistic(branches); //max perssimistic value
+		int maxPessimisticValue = getMaxPessimistic(*branches); //max perssimistic value
 		if (maxOptimisticValue < node.pess || maxPessimisticValue > node.optm)
 		{
 			//backup
@@ -227,12 +227,14 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			if (depth > 0)
 				return BStarNode(-1, -1, -1, NULL,Move()); //TODO what to return
 			//else depth=0
-			if (branches.size() == 1 || maxPessimisticValue >= bestFirstAndSecond[1]->optm) //terminating condition
+			if ((*branches).size() == 1 || maxPessimisticValue >= bestFirstAndSecond[1]->optm) //terminating condition
 				return *bestFirstAndSecond[0];
 		}
 		if (depth == 0)//TODO: if max branch is finished parsing--> mark it as done and start expanding next node
 		{
-			BStarNode x = BStar(*bestFirstAndSecond[0], depth + 1, false);
+			Rack newrack = rack;
+			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
+			BStarNode x = BStar(*bestFirstAndSecond[0], depth + 1, false,newrack);
 			if (x.id == -1)
 				continue;
 			else
@@ -240,7 +242,9 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 		}
 		else
 		{
-			if (BStar(*bestFirstAndSecond[0], depth + 1, false).id == -1)
+			Rack newrack = rack;
+			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
+			if (BStar(*bestFirstAndSecond[0], depth + 1, false,newrack).id == -1)
 				continue;
 			else
 				break;
@@ -248,16 +252,16 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 	}
 	while (!maximizingPlayer)
 	{
-		vector<BStarNode> &branches = getMoves(node); //TODO:use map to get moves if node expanded before without searching again
-
-		if (branches.empty())
+		vector<BStarNode>* branches;
+		branches = getChildren(node, rack);
+		if ((*branches).empty())
 			return node;
 		// heuristic is calculated for each move inside this function,!
 		//!sorting according to only optimistic value
 		vector<BStarNode *> bestFirstAndSecond;
-		getBest2MovesMin(branches, bestFirstAndSecond);			   //TODO: sort(index sorting) ,or use cache
+		getBest2MovesMin((*branches), bestFirstAndSecond);		   //TODO: sort(index sorting) ,or use cache
 		int maxOptimisticValue = bestFirstAndSecond[0]->optm;	  //max perssimistic value
-		int maxPessimisticValue = getBestPessimisticMin(branches); //max perssimistic value
+		int maxPessimisticValue = getBestPessimisticMin(*branches); //max perssimistic value
 		if (maxOptimisticValue > node.pess || maxPessimisticValue < node.optm)
 		{
 			//backup
@@ -270,7 +274,9 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 		}
 		if (depth == 0)
 		{
-			BStarNode x = BStar(*bestFirstAndSecond[0], depth + 1, true);
+			Rack newrack = rack;
+			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
+			BStarNode x = BStar(*bestFirstAndSecond[0], depth + 1, true,newrack);
 			if (x.id == -1)
 				continue;
 			else
@@ -278,7 +284,9 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 		}
 		else
 		{
-			BStarNode x = BStar(*bestFirstAndSecond[0], depth + 1, true);
+			Rack newrack = rack;
+			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
+			BStarNode x = BStar(*bestFirstAndSecond[0], depth + 1, true,newrack);
 			if (x.id == -1)
 			{
 				continue;
