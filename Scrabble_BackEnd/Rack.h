@@ -24,7 +24,7 @@ public:
 	vector<char> getRackTiles();
 	vector<char> getLeave(Move move);
 	vector<char> getUniqueLeave(Move move);
-
+	void removeMoveTiles(const Move & move);
 	Rack();					    //constructor
 	Rack(const Rack &R);		//copy constructor
 	~Rack();				    //destructor

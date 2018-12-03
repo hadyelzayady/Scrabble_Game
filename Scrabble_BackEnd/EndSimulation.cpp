@@ -9,7 +9,6 @@
 //{
 //
 //}
-/*
 vector<Move> EndSimulation::getplays()
 {
 	if (i == 3)
@@ -44,7 +43,7 @@ pair<int, Move> EndSimulation::minimax(Board board, int score, int alpha, int be
 		{
 			myRack.getLeave(moves[i]);
 			//heruestic needs:
-			pair<int, Move> eval_move = minimax(board.commitMoveSimB(moves[i]), score + scoreManager->computeMoveScore(moves[i], &board), alpha, beta, false);
+			pair<int, Move> eval_move = minimax(board.commitMoveSimB(moves[i]), score + ScoreManager::calculateScore(moves[i], board,tileLookup), alpha, beta, false);
 			int eval = eval_move.first;
 
 			if (maxEval < eval) //select best move with score
@@ -71,7 +70,7 @@ pair<int, Move> EndSimulation::minimax(Board board, int score, int alpha, int be
 		for (size_t i = 0; i < moves.size(); i++)
 		{
 			opponetRack.removeMoveTiles(moves[i]);
-			pair<int, Move> eval_move = minimax(board.commitMoveSimB(moves[i]), score - scoreManager->computeMoveScore(moves[i], &board), alpha, beta, true);
+			pair<int, Move> eval_move = minimax(board.commitMoveSimB(moves[i]), score - ScoreManager::calculateScore(moves[i], board,tileLookup), alpha, beta, true);
 			int eval = eval_move.first;
 
 			if (minEval > eval) //select best move with score
@@ -184,14 +183,14 @@ int getBestPessimisticMin(vector<BStarNode> moves)
 	return min;
 }
 
-vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack)
+vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, bool ismax)
 {
 	if (cache.find(node.id) != cache.end()) //node expanded before
 	{
 		return &cache[node.id]; //? check if children have the same vector by reference
 	}
 	//node first expand
-	vector<Move> moves; //= getMoves(board, rack);
+	vector<Move> moves;//=MG->findWords(rack.getLeave(rack), board);
 	vector<BStarNode>&cachevector = cache[node.id];
 	//get max 2 moves
 	for (size_t i = 0; i < moves.size(); i++)
@@ -200,7 +199,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack)
 		Board board(node.board);
 		board.commitMove(moves[i]);
 		int opt_pess[2] = { 1,2 };// getOptimPess();
-		cachevector.push_back(BStarNode(opt_pess[0], opt_pess[1], cache.size(), board, moves[i]));
+		cachevector.push_back(BStarNode(opt_pess[0], opt_pess[1], cache.size() + cachevector.size(), board, moves[i]));
 	}
 	return &cachevector;
 }
@@ -209,7 +208,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 	while (maximizingPlayer)
 	{
 		vector<BStarNode>* branches;
-		branches = getChildren(node, rack);
+		branches = getChildren(node, rack,true);
 		if ((*branches).empty())
 			return node;
 		// heuristic is calculated for each move inside this function,!
@@ -226,7 +225,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			if (depth > 0)
 				return BStarNode(-1, -1, -1, NULL,Move()); //TODO what to return
 			//else depth=0
-			if ((*branches).size() == 1 || maxPessimisticValue >= bestFirstAndSecond[1]->optm) //terminating condition
+			if ((*branches).size() == 1 || bestFirstAndSecond[0]->pess >= bestFirstAndSecond[1]->optm) //terminating condition
 				return *bestFirstAndSecond[0];
 		}
 		if (depth == 0)//TODO: if max branch is finished parsing--> mark it as done and start expanding next node
@@ -252,7 +251,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 	while (!maximizingPlayer)
 	{
 		vector<BStarNode>* branches;
-		branches = getChildren(node, rack);
+		branches = getChildren(node, rack,false);
 		if ((*branches).empty())
 			return node;
 		// heuristic is calculated for each move inside this function,!
@@ -268,7 +267,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			node.optm = maxPessimisticValue;
 			if (depth > 0)
 				return BStarNode(-1, -1, -1, NULL,Move()); //TODO what to return
-			if (maxPessimisticValue >= bestFirstAndSecond[1]->optm)
+			if ((*branches).size() == 1 || bestFirstAndSecond[0]->pess <= bestFirstAndSecond[1]->optm)
 				return *bestFirstAndSecond[0];
 		}
 		if (depth == 0)
@@ -302,24 +301,16 @@ pair<int, Move> EndSimulation::start()
 }
 
 
-EndSimulation::EndSimulation(const Board &board, ScoreManager *scoreManager, Rack opponentRack, Rack myRack)
+EndSimulation::EndSimulation(const Board &board, TileLookUp*tl, Rack opponentRack, Rack myRack, Gaddag * GD)
 {
 	this->scoreManager = scoreManager;
 	this->opponetRack = opponentRack;
 	this->myRack = myRack;
-
+	this->tileLookup = tl;
 	this->board = board; //! test implicit copy constructors
+	this->MG = GD;
 }
 
-EndSimulation::EndSimulation(const Board &board, ScoreManager *scoreManager, Rack opponentRack, Rack myRack, vector<Move> opmoves, vector<Move> mymoves)
-{
-	this->scoreManager = scoreManager;
-	this->opponetRack = opponentRack;
-	this->myRack = myRack;
-	this->board = board; //! test implicit copy constructors
-	this->mymoves = mymoves;
-	this->opmoves = opmoves;
-}
 EndSimulation::~EndSimulation()
 {
 }

@@ -33,8 +33,6 @@ vector<char> Rack::getLeave(Move move)
 }
 
 
-
-
 vector<char> Rack::getUniqueLeave(Move move)
 {
 
@@ -98,6 +96,15 @@ void Rack::removeTile(char x)
 
 }
 
+
+void Rack::removeMoveTiles(const Move & move)
+{
+	vector<Play> plays = move.getPlaysPointer();
+	for (size_t i = 0; i < plays.size(); i++)
+	{
+		removeTile(plays[i].get_Letter());
+	}
+}
 
 
 int Rack::getSize()
