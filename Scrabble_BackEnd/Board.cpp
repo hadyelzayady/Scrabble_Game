@@ -1,79 +1,79 @@
 #include "Board.h"
-Square Board::BoardForm[ROWS_COUNT][COLUMNS_COUNT] = { {Square(LetterBonusX3),Square(NoBonus),Square(NoBonus),
+Square Board::BoardForm[ROWS_COUNT][COLUMNS_COUNT] = { {Square(WordBonusX3),Square(NoBonus),Square(NoBonus),
 		Square(LetterBonusX2),Square(NoBonus),Square(NoBonus)
-		,Square(NoBonus),Square(LetterBonusX3),Square(NoBonus)
+		,Square(NoBonus),Square(WordBonusX3),Square(NoBonus)
 		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX2)
-		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX3)}
-	,{Square(NoBonus),Square(LetterBonusX2),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},{
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)} };
+		,Square(NoBonus),Square(NoBonus),Square(WordBonusX3)}
+	,{Square(NoBonus),Square(WordBonusX2),Square(NoBonus),
+		Square(NoBonus),Square(NoBonus),Square(LetterBonusX3)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX3),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(WordBonusX2),Square(NoBonus)},
+	{Square(NoBonus),Square(NoBonus),Square(WordBonusX2),
+		Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX2),Square(NoBonus),Square(LetterBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(WordBonusX2),Square(NoBonus),Square(NoBonus)},
+	{Square(LetterBonusX2),Square(NoBonus),Square(NoBonus),
+		Square(WordBonusX2),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(LetterBonusX2),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(WordBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX2)},
+	{Square(NoBonus),Square(NoBonus),Square(NoBonus),
+		Square(NoBonus),Square(WordBonusX2),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(WordBonusX2),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)},
+	{Square(NoBonus),Square(LetterBonusX3),Square(NoBonus),
+		Square(NoBonus),Square(NoBonus),Square(LetterBonusX3)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX3),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(LetterBonusX3),Square(NoBonus)},
+	{Square(NoBonus),Square(NoBonus),Square(LetterBonusX2),
+		Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX2),Square(NoBonus),Square(LetterBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX2),Square(NoBonus),Square(NoBonus)},
+	{Square(WordBonusX3),Square(NoBonus),Square(NoBonus),
+		Square(LetterBonusX2),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(WordBonusX2),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(WordBonusX3)},
+	{Square(NoBonus),Square(NoBonus),Square(LetterBonusX2),
+		Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX2),Square(NoBonus),Square(LetterBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX2),Square(NoBonus),Square(NoBonus)},
+	{Square(NoBonus),Square(LetterBonusX3),Square(NoBonus),
+		Square(NoBonus),Square(NoBonus),Square(LetterBonusX3)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX3),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(LetterBonusX3),Square(NoBonus)},
+	{Square(NoBonus),Square(NoBonus),Square(NoBonus),
+		Square(NoBonus),Square(WordBonusX2),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(WordBonusX2),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)},
+	{Square(LetterBonusX2),Square(NoBonus),Square(NoBonus),
+		Square(WordBonusX2),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(LetterBonusX2),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(WordBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX2)},
+	{Square(NoBonus),Square(NoBonus),Square(WordBonusX2),
+		Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX2),Square(NoBonus),Square(LetterBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(WordBonusX2),Square(NoBonus),Square(NoBonus)}
+	,{Square(NoBonus),Square(WordBonusX2),Square(NoBonus),
+		Square(NoBonus),Square(NoBonus),Square(LetterBonusX3)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX3),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(WordBonusX2),Square(NoBonus)},
+		{Square(WordBonusX3),Square(NoBonus),Square(NoBonus),
+		Square(LetterBonusX2),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(WordBonusX3),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(WordBonusX3)} };
 //TODO: blank letters should be added in board letter	
 const string &Board::getBoardLetters()
 {
@@ -103,6 +103,19 @@ Board Board::commitMoveSimB(const Move &move)
 void Board::commitMoveSimC(const Move & move, Board & newBoard)
 {
 	newBoard.commitMove(move);
+}
+void Board::UnCommitMove(const Move & move)
+{
+	//
+	vector<Play>plays = move.Plays;
+	string moveLetters="";//2 approachs ,find substring of move in boardletters string then remove it or remove one letter one by one in for loop 
+	for (size_t i = 0; i < plays.size(); i++)
+	{
+		pair<int, int> position = plays[i].get_Coordinates();
+		removeTile(position.second, position.first);
+		moveLetters += plays[i].get_Letter();//TODO: remove move letters from board
+	}
+	
 }
 Board Board::commitMoveSim(const Move & move, Board board)
 {
@@ -177,7 +190,17 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 	throw EXCEPTION_OUT_OF_BOUND;
 
 }
+void Board::removeTile(unsigned short row, unsigned short column)
+{
+	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
+	{
+		m_board[row][column].letter = EMPTY_SQUARE;
+		return;
+	}
 
+	throw EXCEPTION_OUT_OF_BOUND;
+
+}
  bool Board::isHook(unsigned short row, unsigned short column) const
 {
 	if (row < ROWS_COUNT && column < COLUMNS_COUNT)

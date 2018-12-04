@@ -129,18 +129,53 @@ void getBest2MovesMax(vector<BStarNode> &moves, vector<BStarNode *> &best2nodes)
 	{
 		//if 2 nodes have same optimistic values choose node with smallest range (best node)
 		BStarNode *bestBStarNode = &moves[0];
-		int i = 0;
-		for (i = 0; i < moves.size() && moves[i].optm == moves[0].optm; i++)
+		int bestOpenedNodeIndex = 0;
+		if (moves[bestOpenedNodeIndex].closed)
 		{
-			if (moves[i].pess > bestBStarNode->pess)
+			//get first best optm
+			for (int i = bestOpenedNodeIndex+1; i < moves.size(); i++)
+			{
+				if (!moves[i].closed)
+				{
+					bestBStarNode = &moves[i];
+					bestOpenedNodeIndex = i;
+					break;//we need only first unclosed node
+				}
+			}
+		}
+		int i = 0;
+		//get node with optim=bestoptm but with smalled range
+		for (i = bestOpenedNodeIndex; i < moves.size() && moves[i].optm == moves[bestOpenedNodeIndex].optm; i++)
+		{
+			if (moves[i].pess > bestBStarNode->pess && !moves[i].closed)// check smaller range
 				bestBStarNode = &moves[i];
 		}
-		best2nodes = {bestBStarNode};
+
+		best2nodes = { bestBStarNode };
 		if (i < moves.size()) //second best node is the one just after the best one
 			best2nodes.push_back(&moves[i]);
 	}
+	else//only one move
+		best2nodes = { &moves[0] };
+}
+//get best move when depth=0 and terminating condition not met with all branches visited
+//return index of best move
+int getBestMove(vector<BStarNode> &moves)
+{
+	if (moves.size() != 1)
+	{
+		//if 2 nodes have same optimistic values choose node with smallest range (best node)
+		BStarNode *bestBStarNode = &moves[0];
+		int bestOpenedNodeIndex = 0;
+			//get first best optm
+		for (int i = bestOpenedNodeIndex + 1; i < moves.size() && moves[i].optm==moves[0].optm; i++)
+		{
+			if (moves[i].pess > bestBStarNode->pess)// check smaller range
+				bestBStarNode = &moves[i];
+		}
+	}
 	else
-		best2nodes = {&moves[0]};
+		return 0;
 }
 void getBest2MovesMin(vector<BStarNode> &moves, vector<BStarNode *> &best2moves)
 {
@@ -149,13 +184,28 @@ void getBest2MovesMin(vector<BStarNode> &moves, vector<BStarNode *> &best2moves)
 	{
 		//if 2 nodes have same optimistic values choose node with smallest range (best node)
 		BStarNode *bestBStarNode = &moves[0];
-		int i = 0;
-		for (i = 0; i < moves.size() && moves[i].optm == moves[0].optm; i++)
+		int bestOpenedNodeIndex = 0;
+		if (moves[bestOpenedNodeIndex].closed)
 		{
-			if (moves[i].pess < bestBStarNode->pess)
+			//get first best optm
+			for (int i = bestOpenedNodeIndex + 1; i < moves.size(); i++)
+			{
+				if (!moves[i].closed)
+				{
+					bestBStarNode = &moves[i];
+					bestOpenedNodeIndex = i;
+					break;//we need only first unclosed node
+				}
+			}
+		}
+		int i = 0;
+		//get node with optim=bestoptm but with smalled range
+		for (i = bestOpenedNodeIndex; i < moves.size() && moves[i].optm == moves[bestOpenedNodeIndex].optm; i++)
+		{
+			if (moves[i].pess < bestBStarNode->pess && !moves[i].closed)// check smaller range
 				bestBStarNode = &moves[i];
 		}
-		best2moves = {bestBStarNode};
+		best2moves = { bestBStarNode };
 		if (i < moves.size()) //second best node is the one just after the best one
 			best2moves.push_back(&moves[i]);
 	}
@@ -164,8 +214,8 @@ void getBest2MovesMin(vector<BStarNode> &moves, vector<BStarNode *> &best2moves)
 }
 int getMaxPessimistic(vector<BStarNode> moves)
 {
-	int max = 0;
-	for (size_t i = 0; i < moves.size(); i++)
+	int max = moves[0].pess;
+	for (size_t i = 1; i < moves.size(); i++)
 	{
 		if (moves[i].pess > max)
 			max = moves[i].pess;
@@ -174,8 +224,8 @@ int getMaxPessimistic(vector<BStarNode> moves)
 }
 int getBestPessimisticMin(vector<BStarNode> moves)
 {
-	int min = 1000;
-	for (size_t i = 0; i < moves.size(); i++)
+	int min = moves[0].pess;
+	for (size_t i = 1; i < moves.size(); i++)
 	{
 		if (moves[i].pess < min)
 			min = moves[i].pess;
@@ -190,7 +240,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, 
 		return &cache[node.id]; //? check if children have the same vector by reference
 	}
 	//node first expand
-	vector<Move> moves;//=MG->findWords(rack.getLeave(rack), board);
+	vector<Move> moves=MG->findWords(rack.getRackTiles(), board);
 	vector<BStarNode>&cachevector = cache[node.id];
 	//get max 2 moves
 	for (size_t i = 0; i < moves.size(); i++)
@@ -198,23 +248,44 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, 
 		//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 		Board board(node.board);
 		board.commitMove(moves[i]);
-		int opt_pess[2] = { 1,2 };// getOptimPess();
-		cachevector.push_back(BStarNode(opt_pess[0], opt_pess[1], cache.size() + cachevector.size(), board, moves[i]));
+		double optm, pess;
+		if (ismax) {
+			hr->endGame2vals(myRack.getRackTiles(), moves[i], {}, {},optm,pess);
+		}
+		else {
+			hr->endGame2vals(opponetRack.getRackTiles(), moves[i], {}, {}, pess, optm);
+		}
+		cachevector.push_back(BStarNode(optm, pess, cache.size() + cachevector.size(), board, moves[i]));
 	}
 	return &cachevector;
 }
-BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack rack)
+BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack myrack,Rack oprack)
 {
 	while (maximizingPlayer)
 	{
 		vector<BStarNode>* branches;
-		branches = getChildren(node, rack,true);
-		if ((*branches).empty())
-			return node;
+		BStarNode*highestOptmWithSmalledRange;
+		branches = getChildren(node, myrack,true);
+		vector<BStarNode *> bestFirstAndSecond;
+		getBest2MovesMax((*branches), bestFirstAndSecond);
+		if ((*branches).empty())//node has no chilren
+		{
+				node.closed = true;
+				return BStarNode();
+		}
+		else if (bestFirstAndSecond.empty())
+		{
+			if (depth == 0)//all root children are closed without terminating condition met
+			{
+				return (*branches)[getBestMove(*branches)];
+			}
+			else {
+				return BStarNode();//backup as all children are closed
+			}
+		}
 		// heuristic is calculated for each move inside this function,!
 		//!sorting according to only optimistic value
-		vector<BStarNode *> bestFirstAndSecond;
-		getBest2MovesMax((*branches), bestFirstAndSecond);		   //TODO: sort(index sorting) ,or use cache
+		 //TODO: sort(index sorting) ,or use cache
 		int maxOptimisticValue = bestFirstAndSecond[0]->optm;  //max perssimistic value
 		int maxPessimisticValue = getMaxPessimistic(*branches); //max perssimistic value
 		if (maxOptimisticValue < node.pess || maxPessimisticValue > node.optm)
@@ -223,37 +294,40 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			node.pess = maxOptimisticValue;
 			node.optm = maxPessimisticValue;
 			if (depth > 0)
-				return BStarNode(-1, -1, -1, NULL,Move()); //TODO what to return
+				return BStarNode(); //TODO what to return
 			//else depth=0
 			if ((*branches).size() == 1 || bestFirstAndSecond[0]->pess >= bestFirstAndSecond[1]->optm) //terminating condition
 				return *bestFirstAndSecond[0];
 		}
+		//TODO: till now no diff between if and else code (possible removing of if condition)
 		if (depth == 0)//TODO: if max branch is finished parsing--> mark it as done and start expanding next node
 		{
-			Rack newrack = rack;
+			Rack newrack = myrack;
 			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
-			BStarNode x = BStar(*bestFirstAndSecond[0], depth + 1, false,newrack);
-			if (x.id == -1)
+			if (BStar(*bestFirstAndSecond[0], depth + 1, false, newrack,oprack).id == -1)
 				continue;
 			else
 				break;
 		}
 		else
 		{
-			Rack newrack = rack;
+			Rack newrack = myrack;
 			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
-			if (BStar(*bestFirstAndSecond[0], depth + 1, false,newrack).id == -1)
+			if (BStar(*bestFirstAndSecond[0], depth + 1, false,newrack,oprack).id == -1)
 				continue;
 			else
 				break;
 		}
 	}
-	while (!maximizingPlayer)
+	while (!maximizingPlayer)//min always starts in depth 1 (not working if min is depth 0
 	{
 		vector<BStarNode>* branches;
-		branches = getChildren(node, rack,false);
+		branches = getChildren(node, oprack,false);
 		if ((*branches).empty())
-			return node;
+		{
+				node.closed = true;
+				return BStarNode();
+		}
 		// heuristic is calculated for each move inside this function,!
 		//!sorting according to only optimistic value
 		vector<BStarNode *> bestFirstAndSecond;
@@ -266,26 +340,24 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			node.pess = maxOptimisticValue;
 			node.optm = maxPessimisticValue;
 			if (depth > 0)
-				return BStarNode(-1, -1, -1, NULL,Move()); //TODO what to return
+				return BStarNode(); //TODO what to return
 			if ((*branches).size() == 1 || bestFirstAndSecond[0]->pess <= bestFirstAndSecond[1]->optm)
 				return *bestFirstAndSecond[0];
 		}
 		if (depth == 0)
 		{
-			Rack newrack = rack;
+			Rack newrack = oprack;
 			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
-			BStarNode x = BStar(*bestFirstAndSecond[0], depth + 1, true,newrack);
-			if (x.id == -1)
+			if (BStar(*bestFirstAndSecond[0], depth + 1, true, myrack,newrack).id == -1)
 				continue;
 			else
 				break;
 		}
 		else
 		{
-			Rack newrack = rack;
+			Rack newrack = oprack;
 			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
-			BStarNode x = BStar(*bestFirstAndSecond[0], depth + 1, true,newrack);
-			if (x.id == -1)
+			if (BStar(*bestFirstAndSecond[0], depth + 1, true, myrack,newrack).id == -1)
 			{
 				continue;
 			}
@@ -295,13 +367,14 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 	}
 }
 
-pair<int, Move> EndSimulation::start()
+Move EndSimulation::start()
 {
-	return minimax(board, 0, INT_MIN, INT_MAX, true);
+	BStarNode root(-100,100,0,board,Move());
+	return BStar(root, 0, true, myRack,opponetRack).move;
 }
 
 
-EndSimulation::EndSimulation(const Board &board, TileLookUp*tl, Rack opponentRack, Rack myRack, Gaddag * GD)
+EndSimulation::EndSimulation(const Board &board, TileLookUp*tl, Rack opponentRack, Rack myRack, Gaddag * GD, Heuristics* hr)
 {
 	this->scoreManager = scoreManager;
 	this->opponetRack = opponentRack;
@@ -309,6 +382,7 @@ EndSimulation::EndSimulation(const Board &board, TileLookUp*tl, Rack opponentRac
 	this->tileLookup = tl;
 	this->board = board; //! test implicit copy constructors
 	this->MG = GD;
+	this->hr = hr;
 }
 
 EndSimulation::~EndSimulation()

@@ -5,6 +5,7 @@
 #include "move.h"
 #include "BStarNode.h"
 #include "Gaddag.h"
+#include "Heuristics.h"
 class EndSimulation
 {
 	ScoreManager *scoreManager;
@@ -13,6 +14,7 @@ class EndSimulation
 	//var for test only
 	int i = 0;
 	Gaddag * MG;
+	Heuristics* hr;
 	vector<Move> mymoves, opmoves;
 	vector<Move> getplays();
 	//
@@ -22,9 +24,9 @@ class EndSimulation
 	Board board;
 	vector<BStarNode>* getChildren(const BStarNode& node,Rack&rack, bool ismax);
 	pair<int, Move> minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
-	BStarNode BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack rack);
-	pair<int, Move> start();
-	EndSimulation(const Board &board, TileLookUp*tl, Rack opponentRack, Rack myRack, Gaddag* GD);
+	BStarNode BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack myrack,Rack oprack);
+	Move start();
+	EndSimulation(const Board &board, TileLookUp*tl, Rack opponentRack, Rack myRack, Gaddag* GD, Heuristics* hr);
 	//test construcotr
 	~EndSimulation();
 };

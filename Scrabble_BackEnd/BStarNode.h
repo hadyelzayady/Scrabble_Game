@@ -10,7 +10,9 @@ class BStarNode
 		int id;
 		Board board;
 		Move move;
+		bool closed = false;
 		BStarNode(int opt, int pess, int id, Board board, Move move);
+		BStarNode();
 		~BStarNode();
 };
 
