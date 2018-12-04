@@ -2,6 +2,7 @@
 #include "GameManager.h"
 #include "Gaddag.h"
 #include "EndSimulation.h"
+#include <fstream>
 using namespace std;
 Board parsefile()
 {
@@ -27,7 +28,7 @@ Board parsefile()
 int main()
 {
 
-	Gaddag* g = new Gaddag("sowpods.txt");
+	Gaddag* g = new Gaddag("SOWPODS.txt");
 	Board board = parsefile();
 	Rack myrack, oprack;
 	myrack.addTile('E');
@@ -52,6 +53,7 @@ int main()
 	//TileLookUp * tileLookUp = new TileLookUp();
 	//GameManager * gameManager = new GameManager(tileLookUp, playerCount, playerNames);
 	//gameManager->simulateGame();
+
 	system("pause");
 	return 0;
 } 

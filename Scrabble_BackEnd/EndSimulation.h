@@ -22,7 +22,7 @@ class EndSimulation
 	Rack opponetRack;
 	Rack myRack;
 	Board board;
-	vector<BStarNode>* getChildren(const BStarNode& node,Rack&rack, bool ismax);
+	vector<BStarNode>* getChildren(const BStarNode& node,Rack&rack, bool ismax, vector<BStarNode *>& bestFirstAndSecond);
 	pair<int, Move> minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
 	BStarNode BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack myrack,Rack oprack);
 	Move start();

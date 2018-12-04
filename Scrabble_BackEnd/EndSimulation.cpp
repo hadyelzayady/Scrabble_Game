@@ -233,30 +233,93 @@ int getBestPessimisticMin(vector<BStarNode> moves)
 	return min;
 }
 
-vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, bool ismax)
+vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, bool ismax, vector<BStarNode *>& bestFirstAndSecond)
 {
 	if (cache.find(node.id) != cache.end()) //node expanded before
 	{
+		//TODO:set bestfirstandsecond by iterating over cache vector and get max not closed nodes
 		return &cache[node.id]; //? check if children have the same vector by reference
 	}
 	//node first expand
 	vector<Move> moves=MG->findWords(rack.getRackTiles(), board);
 	vector<BStarNode>&cachevector = cache[node.id];
+	BStarNode *bestBStarNode=NULL;
+	BStarNode *alternBStarNode=NULL;
+	//TODO: calc score with heuristic
 	//get max 2 moves
-	for (size_t i = 0; i < moves.size(); i++)
-	{
-		//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
-		Board board(node.board);
-		board.commitMove(moves[i]);
-		double optm, pess;
-		if (ismax) {
-			hr->endGame2vals(myRack.getRackTiles(), moves[i], {}, {},optm,pess);
+	//max node
+	//? what if all nodes have same optim value what altern will be?
+	if (ismax) {
+		double maxOptm = -1;
+		double maxaltern = -2;
+		for (size_t i = 0; i < moves.size(); i++)
+		{
+			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
+			Board board(node.board);
+			board.commitMove(moves[i]);
+			double optm, pess;
+			hr->endGame2vals(myRack.getRackTiles(), moves[i], {}, {}, optm, pess);
+			BStarNode node(optm, pess, cache.size() + cachevector.size(), board, moves[i]);
+			cachevector.push_back(node);
+			if (optm > maxOptm)
+			{
+				maxOptm = optm;
+				bestBStarNode = &cachevector.back();
+			}
+			else if (optm == maxOptm)
+			{
+				if (pess > bestBStarNode->pess)// check smaller range
+					bestBStarNode = &cachevector.back();
+			}
+			else if (optm > maxaltern)
+			{
+				maxaltern = optm;
+				alternBStarNode = &cachevector.back();
+			}
+			else if (optm == maxaltern)
+			{
+				if (pess > alternBStarNode->pess)// check smaller range
+					alternBStarNode = &cachevector.back();
+			}
 		}
-		else {
-			hr->endGame2vals(opponetRack.getRackTiles(), moves[i], {}, {}, pess, optm);
-		}
-		cachevector.push_back(BStarNode(optm, pess, cache.size() + cachevector.size(), board, moves[i]));
 	}
+	else {
+		for (size_t i = 0; i < moves.size(); i++)
+		{
+			double minOptm = DBL_MAX-1;
+			double minaltern = DBL_MAX;
+			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
+			Board board(node.board);
+			board.commitMove(moves[i]);
+			double optm, pess;
+			hr->endGame2vals(myRack.getRackTiles(), moves[i], {}, {}, pess, optm);
+			BStarNode node(optm, pess, cache.size() + cachevector.size(), board, moves[i]);
+			cachevector.push_back(node);
+			if (optm < minOptm)
+			{
+				minOptm = optm;
+				bestBStarNode = &cachevector.back();
+			}
+			else if (optm == minOptm)
+			{
+				if (pess < bestBStarNode->pess)// check smaller range
+					bestBStarNode = &cachevector.back();
+			}
+			else if (optm < minaltern) {//altern node
+				minaltern = optm;
+				alternBStarNode = &cachevector.back();
+			}
+			else if (optm == minaltern)
+			{
+				if (pess < alternBStarNode->pess)// check smaller range
+					alternBStarNode = &cachevector.back();
+			}
+		}
+	}
+	if (bestBStarNode != NULL)
+		bestFirstAndSecond.push_back(bestBStarNode);
+	if (alternBStarNode != NULL)
+		bestFirstAndSecond.push_back(alternBStarNode);
 	return &cachevector;
 }
 BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack myrack,Rack oprack)
@@ -265,15 +328,14 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 	{
 		vector<BStarNode>* branches;
 		BStarNode*highestOptmWithSmalledRange;
-		branches = getChildren(node, myrack,true);
 		vector<BStarNode *> bestFirstAndSecond;
-		getBest2MovesMax((*branches), bestFirstAndSecond);
+		branches = getChildren(node, myrack,true,bestFirstAndSecond);
 		if ((*branches).empty())//node has no chilren
 		{
 				node.closed = true;
 				return BStarNode();
 		}
-		else if (bestFirstAndSecond.empty())
+		else if (bestFirstAndSecond.empty() )
 		{
 			if (depth == 0)//all root children are closed without terminating condition met
 			{
@@ -322,16 +384,26 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 	while (!maximizingPlayer)//min always starts in depth 1 (not working if min is depth 0
 	{
 		vector<BStarNode>* branches;
-		branches = getChildren(node, oprack,false);
+		vector<BStarNode *> bestFirstAndSecond;
+		branches = getChildren(node, oprack,false, bestFirstAndSecond);
 		if ((*branches).empty())
 		{
 				node.closed = true;
 				return BStarNode();
 		}
+		else if (bestFirstAndSecond.empty())
+		{
+			if (depth == 0)//all root children are closed without terminating condition met
+			{
+				return (*branches)[getBestMove(*branches)];
+			}
+			else {
+				return BStarNode();//backup as all children are closed
+			}
+		}
 		// heuristic is calculated for each move inside this function,!
 		//!sorting according to only optimistic value
-		vector<BStarNode *> bestFirstAndSecond;
-		getBest2MovesMin((*branches), bestFirstAndSecond);		   //TODO: sort(index sorting) ,or use cache
+		//getBest2MovesMin((*branches), bestFirstAndSecond);		   //TODO: sort(index sorting) ,or use cache
 		int maxOptimisticValue = bestFirstAndSecond[0]->optm;	  //max perssimistic value
 		int maxPessimisticValue = getBestPessimisticMin(*branches); //max perssimistic value
 		if (maxOptimisticValue > node.pess || maxPessimisticValue < node.optm)
@@ -341,7 +413,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			node.optm = maxPessimisticValue;
 			if (depth > 0)
 				return BStarNode(); //TODO what to return
-			if ((*branches).size() == 1 || bestFirstAndSecond[0]->pess <= bestFirstAndSecond[1]->optm)
+			if (bestFirstAndSecond.size() == 1 || bestFirstAndSecond[0]->pess <= bestFirstAndSecond[1]->optm)
 				return *bestFirstAndSecond[0];
 		}
 		if (depth == 0)
