@@ -103,9 +103,10 @@ void Board::commitMove(const Move &move)
 //we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
 Board Board::commitMoveSim(const Move & move, Board board)
 {
-	Board  * B = new Board(board);
-	B->commitMove(move);
-	return *B;
+	Board   B(board);
+	B.commitMove(move);
+	return B;
+
 }
 
  const char &Board::getLetter(unsigned short row, unsigned short column) const
@@ -203,17 +204,19 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
  }
 
 
- void Board::computeCrossSets(Board& board, GaddagNode* g) {
+
+ void Board::computeCrossSets(GaddagNode* g) {
 
 	 for (int j = 0; j < COLUMNS_COUNT; j++) {
 		 for (int i = 0; i < ROWS_COUNT; i++) {
-			 if (board.isAnchor(i, j)) {
-				 if (!board.isEmptySquare(i + 1, j) || !board.isEmptySquare(i - 1, j)) {
-					 board.m_board[i][j].verticalSet.clear();
+			 if (isAnchor(i, j)) {
+				 if (!isEmptySquare(i + 1, j) || !isEmptySquare(i - 1, j)) {
+					 m_board[i][j].verticalSet.clear();
 					 computeVerticalSet(i, j, g);
 				 }
-				 if (!board.isEmptySquare(i, j + 1) || !board.isEmptySquare(i, j - 1)) {
-					 board.m_board[i][j].horizontalSet.clear();
+				 if (!isEmptySquare(i, j + 1) || !isEmptySquare(i, j - 1)) {
+					 m_board[i][j].horizontalSet.clear();
+
 					 computeHorizontalSet(i, j, g);
 				 }
 			 }
@@ -272,7 +275,8 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 			 current->getOnesPositions(current->end, positions);
 			 int iter, ilen;
 			 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
-				 m_board[i][j].verticalSet.insert(mapping[iter]);
+				 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+
 			 }
 		 }
 		 //else if it has a tile down
@@ -294,7 +298,8 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 		 current->getOnesPositions(current->end, positions);
 		 int iter, ilen;
 		 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
-			 m_board[i][j].verticalSet.insert(mapping[iter]);
+			 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+
 		 }
 	 }
  }
@@ -349,7 +354,7 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 			 current->getOnesPositions(current->end, positions);
 			 int iter, ilen;
 			 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
-				 m_board[i][j].verticalSet.insert(mapping[iter]);
+				 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
 			 }
 		 }
 		 //else if it has a tile to the right
@@ -371,7 +376,8 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 		 current->getOnesPositions(current->end, positions);
 		 int iter, ilen;
 		 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
-			 m_board[i][j].verticalSet.insert(mapping[iter]);
+			 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+
 		 }
 	 }
  }

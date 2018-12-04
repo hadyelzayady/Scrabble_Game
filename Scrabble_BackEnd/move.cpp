@@ -45,7 +45,6 @@ bool Move::getBingo() {
 }
 
 
-
 Move::~Move()
 {
 	
