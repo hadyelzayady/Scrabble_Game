@@ -106,6 +106,7 @@ Board Board::commitMoveSim(const Move & move, Board board)
 	Board   B(board);
 	B.commitMove(move);
 	return B;
+
 }
 
  const char &Board::getLetter(unsigned short row, unsigned short column) const
@@ -203,6 +204,7 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
  }
 
 
+
  void Board::computeCrossSets(GaddagNode* g) {
 
 	 for (int j = 0; j < COLUMNS_COUNT; j++) {
@@ -214,6 +216,7 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 				 }
 				 if (!isEmptySquare(i, j + 1) || !isEmptySquare(i, j - 1)) {
 					 m_board[i][j].horizontalSet.clear();
+
 					 computeHorizontalSet(i, j, g);
 				 }
 			 }
@@ -273,6 +276,7 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 			 int iter, ilen;
 			 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
 				 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+
 			 }
 		 }
 		 //else if it has a tile down
@@ -295,6 +299,7 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 		 int iter, ilen;
 		 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
 			 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+
 		 }
 	 }
  }
@@ -372,6 +377,7 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 		 int iter, ilen;
 		 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
 			 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+
 		 }
 	 }
  }
