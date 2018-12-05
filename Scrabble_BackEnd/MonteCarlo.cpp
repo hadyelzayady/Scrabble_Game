@@ -6,7 +6,9 @@
 MonteCarlo::MonteCarlo( Rack * myRack, char * boardPool, ProbabilityManager *pm)
 {
 	this->Pm = pm;
-	this->myrackchars = myRack->getRackTiles();
+	this->myrackchars;
+	myrackchars.reserve(7);
+	myrackchars=	myRack->getRackTiles();
 	this->boardPool = boardPool;
 }
 
@@ -18,7 +20,9 @@ void MonteCarlo::createAvaliableLetters()
 	int size = sizeof(mapping) / sizeof(char);
 		for(int i = 0; i < size-1; i++)
 		{
-			char * a = strchr(this->myrackchars,mapping[i]);
+			
+			std::vector<char>::iterator it =(std::find(this->myrackchars.begin(), this->myrackchars.end(), mapping[i]));
+			char  a = (it == this->myrackchars.end()) ? NULL : *it;
 			char * b = strchr(this->boardPool, mapping[i]);
 			if (a != NULL)
 				this->tileLookUp->setFrequency(mapping[i], this->tileLookUp->getFrequency(mapping[i]) - 1);
@@ -26,7 +30,8 @@ void MonteCarlo::createAvaliableLetters()
 				this->tileLookUp->setFrequency(mapping[i], this->tileLookUp->getFrequency(mapping[i]) - 1);
 
 		}
-		char * a = strchr(this->myrackchars, BLANK_TILE);
+		std::vector<char>::iterator it = (std::find(this->myrackchars.begin(), this->myrackchars.end(), BLANK_TILE));
+		char  a = (it == this->myrackchars.end()) ? NULL : *it;
 		char * b = strchr(this->boardPool, BLANK_TILE);
 		if(a!= NULL)
 			this->tileLookUp->setFrequency(BLANK_TILE, this->tileLookUp->getFrequency(BLANK_TILE) - 1);
@@ -49,7 +54,6 @@ void MonteCarlo::createAvaliableLetters()
 		}
 
 		delete this->tileLookUp;
-		delete  a;
 		delete b; 
 		
 

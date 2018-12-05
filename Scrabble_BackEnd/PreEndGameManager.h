@@ -4,18 +4,22 @@
 #include "Board.h"
 #include "Heuristics.h"
 #include "ScoreManager.h"
+#include "Gaddag.h"
+#include <math.h>
 class PreEndGameManager
 {
 	ScoreManager *scoreManager;
 	Heuristics * Heu;
-	vector<double> blockingCosts;
+	Gaddag * MG;
+	TileLookUp * TP;
+
 public:
-	PreEndGameManager();
+
+	PreEndGameManager(TileLookUp * Tp, Gaddag * GD);
 	~PreEndGameManager();
 	Move GenerateMove();
-	void  Blocking(Move  movesList[], Rack* Rack, Board b, ProbabilityManager *pm);
-	Move * Fishing();
+	Move  Blocking(vector<Move> movesList, Rack* Rack, Board b, ProbabilityManager *pm);
+	double Fishing(const Move & move, const Board & B, const vector<char>& RackLeave, Gaddag * MG, TileLookUp * Tup);
 	Move * GoodEndGame();
 
 };
-

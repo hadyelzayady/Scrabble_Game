@@ -1,6 +1,8 @@
 #pragma once
 
 #include "GaddagNode.h"
+#include "move.h"
+#include "Board.h"
 #include <fstream>
 #include <chrono>
 
@@ -19,6 +21,21 @@ public:
 
 	std::vector<std::string> traverse(GaddagNode* root);
 
+	std::vector<Move> findWords(std::vector<char> rack, Board* board);
+
+	void findHorizontal(int offset, int anchorx, int anchory, Move inMove, std::vector<char> rack,
+		GaddagNode* currNode, Board* board, std::vector<Move>& moves);
+
+	void goOnHorizontal(int offset, int anchorx, int anchory, char letter, Move inMove, std::vector<char> rack,
+		GaddagNode* currNode, GaddagNode* nextNode, Board* board, std::vector<Move>& moves);
+
+	void findVertical(int offset, int anchorx, int anchory, Move inMove, std::vector<char> rack, GaddagNode* currNode,
+		Board * board, std::vector<Move>& moves);
+
+	void goOnVertical(int offset, int anchorx, int anchory, char letter, Move inMove, std::vector<char> rack,
+		GaddagNode* currNode, GaddagNode* nextNode, Board * board, std::vector<Move>& moves);
 
 
+	void eraseElementFromVector(std::vector<char> &vec, char value);
+	
 };

@@ -66,6 +66,18 @@
     <ClCompile Include="Heuristics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PreEndGameManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MidGameManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MonteCarlo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Square.h">
@@ -117,6 +129,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Heuristics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndSimulation.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PreEndGameManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MidGameManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MonteCarlo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

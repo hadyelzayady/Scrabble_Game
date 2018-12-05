@@ -4,12 +4,13 @@ using namespace std;
 class Play
 {
 
-private:
+
+
+public:
 	char Letter;
+	int Index;
 	pair<int, int> coordinates;
 	bool Blank;
-	int Index;
-public:
 	pair<int, int> get_Coordinates();
 	void set_Coordinates(pair<int, int> coordinates);
 	void set_Letter(char Letter,int index,bool blank = false);

@@ -33,7 +33,8 @@ Move::Move()
 
 Move::Move(const Move& other)
 {
-	Plays = other.Plays;
+	for (int i = 0; i < other.Plays.size(); i++)
+		this->Plays.push_back(other.Plays[i]);
 	isBingo = other.isBingo;
 }
 
@@ -43,7 +44,6 @@ void Move::setBingo(bool bingo) {
 bool Move::getBingo() {
 	return isBingo;
 }
-
 
 
 Move::~Move()
