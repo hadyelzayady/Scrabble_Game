@@ -163,15 +163,30 @@ double Heuristics::Double_RL(Move move, vector<char>  leave, vector<char> uniqle
 			synergy = calculateDRL(leave);
 			synergy += calculateDRL(uniqleave);
 
+
+			bool Q = false;
+			bool U = false;
+			bool Z = false;
+			bool X = false;
 			// TODO handle the Q
 			bool holding_bad_tile = false;
-			for (int i = 0; i < move.Plays.size(); i++)
+			for (int i = 0; i < uniqleave.size(); i++)
 			{
-				if (t.getScore(move.Plays[i].get_Letter()) > 7)
+
+				if (uniqleave[i] == 'U') U = true;
+				if (uniqleave[i]=='Q' || uniqleave[i] == 'X'|| uniqleave[i] == 'Z')
 				{
+					if (uniqleave[i] == 'Q') Q = true;
+					if (uniqleave[i] == 'X') X = true;
+					if (uniqleave[i] == 'Z') Z = true;
 					holding_bad_tile = true;
 				}
 			}
+
+			if ( Q == true && U == true && X == false && Z == false)holding_bad_tile = false;
+
+
+
 			if ((synergy > 3.0) && !holding_bad_tile) {
 				synergy = synergy + 1.5 * (synergy - 3.0);
 			}
