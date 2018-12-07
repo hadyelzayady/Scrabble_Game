@@ -252,7 +252,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, 
 	if (ismax) {
 		double maxOptm = -1;
 		double maxaltern = -2;
-		for (size_t i = 0; i < 10 and moves.size()>10; i++)
+		for (size_t i = 0;i< moves.size(); i++)
 		{
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 			board.commitMove(moves[i]);//commit new move
@@ -291,9 +291,10 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, 
 			double minaltern = DBL_MAX;
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 			board.commitMove(moves[i]);
+			double moveScore = ScoreManager::calculateScore(moves[i], board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(myRack.getRackTiles(), moves[i], {}, {}, pess, optm);
-			BStarNode node(optm, pess, cache.size() + cachevector.size(), moves[i]);
+			BStarNode node(optm+moveScore, pess+moveScore, cache.size() + cachevector.size(), moves[i]);
 			cachevector.push_back(node);
 			if (optm < minOptm)
 			{
