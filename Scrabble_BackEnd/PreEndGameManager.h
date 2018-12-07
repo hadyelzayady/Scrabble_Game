@@ -5,6 +5,7 @@
 #include "Heuristics.h"
 #include "ScoreManager.h"
 #include "Gaddag.h"
+#include <math.h>
 class PreEndGameManager
 {
 	ScoreManager *scoreManager;
@@ -17,7 +18,7 @@ public:
 	PreEndGameManager(TileLookUp * Tp, Gaddag * GD);
 	~PreEndGameManager();
 	Move GenerateMove();
-	Move  Blocking(Move  movesList[], Rack* Rack, Board b, ProbabilityManager *pm);
+	Move  Blocking(vector<Move> movesList, Rack* Rack, Board b, ProbabilityManager *pm);
 	Move * GoodEndGame();
 
 };
@@ -28,7 +29,8 @@ inline double  Fishing(Move move, Board B, vector<char>RackLeave,Gaddag* MG,Tile
 	vector<Move> moveList = MG->findWords(RackLeave, newBoard);
 	double maxScorePerMove = 0.0f;
 	int sizeMoveList = moveList.size();
-	for (int i = 0; i < sizeMoveList; i++) {
+	sizeMoveList = (sizeMoveList > 100)?  100:sizeMoveList;
+	for (int i = 0; i < sizeMoveList; i++) {   //eb2a zabtha le el Size !!!
 		double score = ScoreManager::calculateScore(moveList[i], newBoard, Tup);
 		maxScorePerMove = (maxScorePerMove < score) ? score : maxScorePerMove;
 

@@ -34,7 +34,7 @@ public:
 	//TODO in B* simu: the node is board state and the arch is the move
 
 	//Timon Updates
-	void computeCrossSets(Board& board, GaddagNode* g);  /// g is the root in gaddag class 
+	void computeCrossSets( GaddagNode* g);  /// g is the root in gaddag class 
 
 	void computeHorizontalSet(int i, int j, GaddagNode* root);
 	void computeVerticalSet(int i, int j, GaddagNode* root);

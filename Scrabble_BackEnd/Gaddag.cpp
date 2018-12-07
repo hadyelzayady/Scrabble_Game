@@ -121,7 +121,7 @@ void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, s
 		char l = board.getLetter(anchory, anchorx + offset);
 		GaddagNode* nextNode = currNode->getChildren(l);
 		Move newMove(inMove);
-		newMove.addPlay(anchorx + offset, anchory, l);
+		//newMove.addPlay(anchorx + offset, anchory, l);
 		goOnHorizontal(offset, anchorx, anchory, l, newMove, rack, currNode, nextNode, board, moves);	//move on to the next square
 	}
 	else if (rack.size()!=0) {	//else if we still have letters we can play
@@ -178,7 +178,7 @@ void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, s
 				inMove.isBingo = true;
 			moves.push_back(inMove);
 		}
-		if (nextNode != NULL && board.isEmptySquare(anchory,anchorx+offset+1)) {
+		if (nextNode != NULL /*&& board.isEmptySquare(anchory,anchorx+offset+1)*/) {
 			//continue trying to generate suffixes
 			findHorizontal(offset + 1, anchorx, anchory, inMove, rack, nextNode, board, moves);
 		}
@@ -195,7 +195,7 @@ void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, s
 		 char l = board.getLetter(anchory + offset, anchorx);
 		 GaddagNode* nextNode = currNode->getChildren(l);
 		 Move newMove(inMove);
-		 newMove.addPlay(anchorx, anchory + offset, l);
+		 //newMove.addPlay(anchorx, anchory + offset, l);
 		 goOnVertical(offset, anchorx, anchory, l, newMove, rack, currNode, nextNode, board, moves);	//move on to the next square
 	 }
 	 else if (rack.size()!=0) {	//else if we still have letters we can play
@@ -243,11 +243,11 @@ void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, s
 	 else if (offset > 0) {	//else if making suffix
 		 //if its a valid move ending record it
 		 if (currNode->hasCharAsEnd(letter) && board.isEmptySquare(anchory + offset + 1, anchorx )) {
-			 if (rack.size())
+			 if (rack.size()==0)
 				 inMove.isBingo = true;
 			 moves.push_back(inMove);
 		 }
-		 if (nextNode != NULL && board.isEmptySquare(anchory + offset + 1, anchorx)) {
+		 if (nextNode != NULL /*&& board.isEmptySquare(anchory + offset + 1, anchorx)*/) {
 			 //continue trying to generate suffixes
 			 findVertical(offset + 1, anchorx, anchory, inMove, rack, nextNode, board, moves);
 		 }
