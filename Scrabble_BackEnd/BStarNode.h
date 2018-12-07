@@ -5,12 +5,12 @@ class BStarNode
 {
 
 	public:
-		int optm;
-		int pess;
+		double optm;
+		double pess;
 		int id;
 		Move move;//move that lead to this node from parent
 		bool closed = false;
-		BStarNode(int opt, int pess, int id,const Move& move);
+		BStarNode(double opt, double pess, int id,const Move& move);
 		BStarNode();
 		~BStarNode();
 };
