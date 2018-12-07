@@ -93,9 +93,9 @@ int main()
 
 	ProbabilityManager * Pm = new ProbabilityManager();
 	TileLookUp * TL = new TileLookUp();
-	Gaddag *g = new Gaddag("../Text/SOWPODS.txt");
-	PreEndGameManager * PreEndManager = new PreEndGameManager(TL,g);
-	vector <Move> MoveList = g->findWords(rack->getRackTiles(),b);
+	Gaddag *g1 = new Gaddag("../Text/SOWPODS.txt");
+	PreEndGameManager * PreEndManager = new PreEndGameManager(TL,g1);
+	vector <Move> MoveList = g1->findWords(rack->getRackTiles(),b);
 
 	Move * M = &PreEndManager->Blocking(MoveList,rack,b,Pm);
 //	cout << (M->Plays.begin())->Letter << endl;
