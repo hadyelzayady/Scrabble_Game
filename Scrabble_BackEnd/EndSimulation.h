@@ -3,31 +3,31 @@
 #include "Rack.h"
 #include "ScoreManager.h"
 #include "move.h"
-
-/*
-=> removeMoveTiles  : maynf3sh t3'er fe el rack 
-*/
-
-
+#include "BStarNode.h"
+#include "Gaddag.h"
+#include "Heuristics.h"
 class EndSimulation
 {
 	ScoreManager *scoreManager;
 
-public:
+  public:
 	//var for test only
 	int i = 0;
-	vector<Move>mymoves,opmoves;
+	Gaddag * MG;
+	Heuristics* hr;
+	vector<Move>moves;// moves from parent to node
+	vector<Move> mymoves, opmoves;
 	vector<Move> getplays();
 	//
+	TileLookUp *tileLookup;
 	Rack opponetRack;
 	Rack myRack;
 	Board board;
-	/*
-	pair<int,Move> minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
-	pair<int, Move> start();
-	EndSimulation(const Board&board, ScoreManager *scoreManager, Rack opponentRack, Rack myRack);
+	vector<BStarNode>* getChildren(const BStarNode& node,Rack&rack, bool ismax, vector<BStarNode *>& bestFirstAndSecond);
+	pair<int, Move> minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
+	BStarNode BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack myrack,Rack oprack);
+	Move start();
+	EndSimulation(const Board &board, TileLookUp*tl, Rack opponentRack, Rack myRack, Gaddag* GD, Heuristics* hr);
 	//test construcotr
-	EndSimulation(const Board&board,ScoreManager *scoreManager, Rack opponentRack, Rack myRack,vector<Move>opmoves,vector<Move>mymoves);
 	~EndSimulation();
-	*/
-}; 
+};
