@@ -15,6 +15,7 @@ class EndSimulation
 	int i = 0;
 	Gaddag * MG;
 	Heuristics* hr;
+	vector<Move>moves;// moves from parent to node
 	vector<Move> mymoves, opmoves;
 	vector<Move> getplays();
 	//

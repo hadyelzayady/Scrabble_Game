@@ -15,6 +15,7 @@ public:
 	Square m_board[ROWS_COUNT][COLUMNS_COUNT];
 	const string& getBoardLetters();
 	void commitMove(const Move& move);
+	void commitMoves(const vector<Move>& moves);
 	static Board  commitMoveSim(const Move & move, Board board);
 	Board  commitMoveSimB(const Move& move);
 	void  commitMoveSimC(const Move& move,Board& newBoard);

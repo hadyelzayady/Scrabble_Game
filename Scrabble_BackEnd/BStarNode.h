@@ -8,10 +8,9 @@ class BStarNode
 		int optm;
 		int pess;
 		int id;
-		Board board;
-		Move move;
+		Move move;//move that lead to this node from parent
 		bool closed = false;
-		BStarNode(int opt, int pess, int id, Board board, Move move);
+		BStarNode(int opt, int pess, int id,const Move& move);
 		BStarNode();
 		~BStarNode();
 };

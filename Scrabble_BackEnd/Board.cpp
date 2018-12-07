@@ -93,6 +93,21 @@ void Board::commitMove(const Move &move)
 		LettersOnBoard+=letter;
 	}
 }
+void Board::commitMoves(const vector<Move> &moves)
+{
+	for (Move move : moves) 
+	{
+		vector<Play>plays = move.Plays;
+		for (size_t i = 0; i < plays.size(); i++)
+		{
+			char letter = plays[i].get_Letter();
+			pair<int, int> position = plays[i].get_Coordinates();
+			setTile(letter, position.second, position.first);
+			//
+			LettersOnBoard += letter;
+		}
+	}	
+}
 //?we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
 Board Board::commitMoveSimB(const Move &move)
 {
