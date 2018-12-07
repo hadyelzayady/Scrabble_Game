@@ -256,6 +256,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, 
 		{
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 			board.commitMove(moves[i]);//commit new move
+			board.computeCrossSets(board, MG->root);
 			double moveScore = ScoreManager::calculateScore(moves[i], board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(myRack.getRackTiles(), moves[i], {}, {}, optm, pess);
@@ -282,6 +283,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, 
 					alternBStarNode = &cachevector.back();
 			}
 			board.UnCommitMove(moves[i]);
+			board.computeCrossSets(board, MG->root);
 		}
 	}
 	else {
@@ -291,6 +293,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, 
 			double minaltern = DBL_MAX;
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 			board.commitMove(moves[i]);
+			board.computeCrossSets(board, MG->root);
 			double moveScore = ScoreManager::calculateScore(moves[i], board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(myRack.getRackTiles(), moves[i], {}, {}, pess, optm);
@@ -316,6 +319,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& rack, 
 					alternBStarNode = &cachevector.back();
 			}
 			board.UnCommitMove(moves[i]);
+			board.computeCrossSets(board, MG->root);
 
 		}
 	}
@@ -370,8 +374,10 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			Rack newrack = myrack;
 			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
 			board.commitMove(bestFirstAndSecond[0]->move);
+			board.computeCrossSets(board, MG->root);
 			int id = BStar(*bestFirstAndSecond[0], depth + 1, false, newrack, oprack).id;
 			board.UnCommitMove(bestFirstAndSecond[0]->move);
+			board.computeCrossSets(board, MG->root);
 			if ( id == -1)
 				continue;
 			else
@@ -382,8 +388,10 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			Rack newrack = myrack;
 			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
 			board.commitMove(bestFirstAndSecond[0]->move);
+			board.computeCrossSets(board, MG->root);
 			int id = BStar(*bestFirstAndSecond[0], depth + 1, false, newrack, oprack).id;
 			board.UnCommitMove(bestFirstAndSecond[0]->move);
+			board.computeCrossSets(board, MG->root);
 			if (id == -1)
 				continue;
 			else
@@ -430,8 +438,10 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			Rack newrack = oprack;
 			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
 			board.commitMove(bestFirstAndSecond[0]->move);
+			board.computeCrossSets(board, MG->root);
 			int id = BStar(*bestFirstAndSecond[0], depth + 1, true, myrack, newrack).id;
 			board.UnCommitMove(bestFirstAndSecond[0]->move);
+			board.computeCrossSets(board, MG->root);
 			if (id == -1)
 				continue;
 			else
@@ -442,8 +452,10 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			Rack newrack = oprack;
 			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
 			board.commitMove(bestFirstAndSecond[0]->move);
+			board.computeCrossSets(board, MG->root);
 			int id=BStar(*bestFirstAndSecond[0], depth + 1, true, myrack, newrack).id;
 			board.UnCommitMove(bestFirstAndSecond[0]->move);
+			board.computeCrossSets(board, MG->root);
 			if (id== -1)
 			{
 				continue;

@@ -150,7 +150,7 @@ Board Board::commitMoveSim(const Move & move, Board board)
 	{
 		return m_board[row][column].isEmpty();
 	}
-	return false;
+	return true;
 }
 
 
