@@ -25,6 +25,29 @@ Board parsefile()
 
 	return board;
 }
+void  writeBoardToFile(const Board&board)
+{
+	std::ofstream myfile;
+
+	myfile.open("board_status.txt", std::ios_base::app);
+	if (myfile.is_open())
+	{
+		myfile << "===================================================\n";
+		for (size_t i = 0; i < 15; i++)
+		{
+			string line="";
+			for (size_t j = 0; j < 15; j++)
+			{
+				if (board.m_board[i][j].isEmpty())
+					line += "*";
+				else
+					line += board.m_board[i][j].letter;
+			}
+			myfile << line<<"\n";
+		}
+		myfile.close();
+	}
+}
 int main()
 {
 
@@ -44,6 +67,8 @@ int main()
 	Heuristics hr;
 	EndSimulation ends(board, &tl, oprack, myrack, g, &hr);
 	Move best=ends.start();
+	board.commitMove(best);
+	writeBoardToFile(board);
 //	MonteCarlo * M = new MonteCarlo(r,c,Pm);
 	// M->simulation(100);
 //	 Utilities * u =new  Utilities();
