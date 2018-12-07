@@ -134,9 +134,10 @@ void Board::UnCommitMove(const Move & move)
 }
 Board Board::commitMoveSim(const Move & move, Board board)
 {
-	Board  * B = new Board(board);
-	B->commitMove(move);
-	return *B;
+	Board   B(board);
+	B.commitMove(move);
+	return B;
+
 }
 
  const char &Board::getLetter(unsigned short row, unsigned short column) const
@@ -248,17 +249,19 @@ Board::~Board()
 {
 }
 
- void Board::computeCrossSets(Board& board, GaddagNode* g) {
+
+ void Board::computeCrossSets(GaddagNode* g) {
 
 	 for (int j = 0; j < COLUMNS_COUNT; j++) {
 		 for (int i = 0; i < ROWS_COUNT; i++) {
-			 if (board.isAnchor(i, j)) {
-				 if (!board.isEmptySquare(i + 1, j) || !board.isEmptySquare(i - 1, j)) {
-					 board.m_board[i][j].verticalSet.clear();
+			 if (isAnchor(i, j)) {
+				 if (!isEmptySquare(i + 1, j) || !isEmptySquare(i - 1, j)) {
+					 m_board[i][j].verticalSet.clear();
 					 computeVerticalSet(i, j, g);
 				 }
-				 if (!board.isEmptySquare(i, j + 1) || !board.isEmptySquare(i, j - 1)) {
-					 board.m_board[i][j].horizontalSet.clear();
+				 if (!isEmptySquare(i, j + 1) || !isEmptySquare(i, j - 1)) {
+					 m_board[i][j].horizontalSet.clear();
+
 					 computeHorizontalSet(i, j, g);
 				 }
 			 }
@@ -317,7 +320,8 @@ Board::~Board()
 			 current->getOnesPositions(current->end, positions);
 			 int iter, ilen;
 			 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
-				 m_board[i][j].verticalSet.insert(mapping[iter]);
+				 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+
 			 }
 		 }
 		 //else if it has a tile down
@@ -339,7 +343,8 @@ Board::~Board()
 		 current->getOnesPositions(current->end, positions);
 		 int iter, ilen;
 		 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
-			 m_board[i][j].verticalSet.insert(mapping[iter]);
+			 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+
 		 }
 	 }
  }
@@ -394,7 +399,7 @@ Board::~Board()
 			 current->getOnesPositions(current->end, positions);
 			 int iter, ilen;
 			 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
-				 m_board[i][j].verticalSet.insert(mapping[iter]);
+				 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
 			 }
 		 }
 		 //else if it has a tile to the right
@@ -416,7 +421,8 @@ Board::~Board()
 		 current->getOnesPositions(current->end, positions);
 		 int iter, ilen;
 		 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
-			 m_board[i][j].verticalSet.insert(mapping[iter]);
+			 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+
 		 }
 	 }
  }

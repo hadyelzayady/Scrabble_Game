@@ -12,11 +12,11 @@ class Rack
 {
 	enum { RACKSIZE = 7 };	//Max Size of List
 private:
-	vector <char> list;
+	
 
 public:
 
-
+	vector <char> list;
 	void addTile(char x);
 	void removeTile(char x);
 	int getSize();

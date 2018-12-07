@@ -45,6 +45,8 @@ int TileLookUp::getFrequency(char c)
 
 int TileLookUp::getScore(char c)
 {
+
+//	cout << c << endl;
 	return letterMap.find(c)->second[1];
 }
 

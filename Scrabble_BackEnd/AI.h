@@ -4,6 +4,7 @@
 #include "TileLookUp.h"
 #include "MonteCarlo.h"
 #include "ScoreManager.h"
+#include "PreEndGameManager.h"
 class AI
 {
 public:
