@@ -119,7 +119,7 @@ Board Board::commitMoveSim(const Move & move, Board board)
 	{
 		return m_board[row][column].isEmpty();
 	}
-	return false;
+	return true;
 	//throw EXCEPTION_OUT_OF_BOUND;
 }
 
@@ -349,7 +349,7 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 			 current->getOnesPositions(current->end, positions);
 			 int iter, ilen;
 			 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
-				 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+				 m_board[i][j].horizontalSet.insert(mapping[positions[iter]]);
 			 }
 		 }
 		 //else if it has a tile to the right
@@ -371,10 +371,11 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 		 current->getOnesPositions(current->end, positions);
 		 int iter, ilen;
 		 for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
-			 m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
+			 m_board[i][j].horizontalSet.insert(mapping[positions[iter]]);
 		 }
 	 }
  }
+
 
  bool Board::checkCharInHorizontalSet(int i, int j, char l) const {
 
