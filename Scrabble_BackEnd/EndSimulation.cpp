@@ -163,21 +163,18 @@ void getBest2MovesMax(vector<BStarNode> &moves, vector<BStarNode *> &best2nodes)
 //return index of best move
 int getBestMove(vector<BStarNode> &moves)
 {
-	if (moves.size() != 1)
+
+	//if 2 nodes have same optimistic values choose node with smallest range (best node)
+	BStarNode *bestBStarNode = &moves[0];
+	int bestNodeIndex = 0;
+		//get first best optm
+	for (int i = bestNodeIndex + 1; i < moves.size() && moves[i].optm==moves[0].optm; i++)
 	{
-		//if 2 nodes have same optimistic values choose node with smallest range (best node)
-		BStarNode *bestBStarNode = &moves[0];
-		int bestNodeIndex = 0;
-			//get first best optm
-		for (int i = bestNodeIndex + 1; i < moves.size() && moves[i].optm==moves[0].optm; i++)
-		{
-			if (moves[i].pess > bestBStarNode->pess)// check smaller range
-				bestNodeIndex;
-		}
-		return bestNodeIndex;
+		if (moves[i].pess > bestBStarNode->pess)// check smaller range
+			bestNodeIndex;
 	}
-	else
-		return 0;
+	return bestNodeIndex;
+
 }
 void getBest2MovesMin(vector<BStarNode> &moves, vector<BStarNode *> &best2moves)
 {
@@ -234,12 +231,92 @@ double getBestPessimisticMin(vector<BStarNode> moves)
 	}
 	return min;
 }
+void getBestFirstAndSecondMax(vector<BStarNode>&moves, vector<BStarNode *>& bestFirstAndSecond)
+{
+	double maxOptm = -1;
+	double maxaltern = -2;
+	BStarNode *bestBStarNode = NULL;
+	BStarNode *alternBStarNode = NULL;
+	for (size_t i = 0; i < moves.size(); i++)
+	{
+		if (!moves[i].closed)
+		{
+			if (moves[i].optm > maxOptm)
+			{
+				maxOptm = moves[i].optm;
+				bestBStarNode = &moves[i];
+			}
+			else if (moves[i].optm == maxOptm)
+			{
+				if (moves[i].pess > bestBStarNode->pess)// check smaller range
+					bestBStarNode = &moves[i];
+			}
+			else if (moves[i].optm > maxaltern)
+			{
+				maxaltern = moves[i].optm;
+				alternBStarNode = &moves[i];
+			}
+			else if (moves[i].optm == maxaltern)
+			{
+				if (moves[i].optm > alternBStarNode->pess)// check smaller range
+					alternBStarNode = &moves[i];
+			}
+		}
+	}
+	if (bestBStarNode != NULL)
+		bestFirstAndSecond.push_back(bestBStarNode);
+	if (alternBStarNode != NULL)
+		bestFirstAndSecond.push_back(alternBStarNode);
 
+}
+void getBestFirstAndSecondMin(vector<BStarNode>&moves, vector<BStarNode *>& bestFirstAndSecond)
+{
+	double minOptm = DBL_MAX - 1;
+	double minaltern = DBL_MAX;
+	BStarNode *bestBStarNode = NULL;
+	BStarNode *alternBStarNode = NULL;
+	for (size_t i = 0; i < moves.size(); i++)
+	{
+		if (!moves[i].closed)
+		{
+			if (moves[i].optm < minOptm)
+			{
+				minOptm = moves[i].optm;
+				bestBStarNode = &moves[i];
+			}
+			else if (moves[i].optm == minOptm)
+			{
+				if (moves[i].pess < bestBStarNode->pess)// check smaller range
+					bestBStarNode = &moves[i];
+			}
+			else if (moves[i].optm < minaltern) {//altern node
+				minaltern = moves[i].optm;
+				alternBStarNode = &moves[i];
+			}
+			else if (moves[i].optm == minaltern)
+			{
+				if (moves[i].pess < alternBStarNode->pess)// check smaller range
+					alternBStarNode = &moves[i];
+			}
+		}
+	}
+	if (bestBStarNode != NULL)
+		bestFirstAndSecond.push_back(bestBStarNode);
+	if (alternBStarNode != NULL)
+		bestFirstAndSecond.push_back(alternBStarNode);
+
+}
 vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack,Rack&oprack, bool ismax, vector<BStarNode *>& bestFirstAndSecond)
 {
 	if (cache.find(node.id) != cache.end()) //node expanded before
 	{
 		//TODO:set bestfirstandsecond by iterating over cache vector and get max not closed nodes
+		vector<BStarNode>& moves = cache[node.id];
+		if(ismax)
+			getBestFirstAndSecondMax(moves,bestFirstAndSecond);
+		else
+			getBestFirstAndSecondMin(moves, bestFirstAndSecond);
+		//
 		return &cache[node.id]; //? check if children have the same vector by reference
 	}
 	//node first expand
@@ -252,17 +329,18 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 	//? what if all nodes have same optim value what altern will be?
 	if (ismax) {
 		vector<Move> moves = MG->findWords(myrack.getRackTiles(), board);
-		double maxOptm = -1;
-		double maxaltern = -2;
+		double maxOptm = -10000;
+		double maxaltern = -2000000;
 		for (size_t i = 0;i< moves.size(); i++)
 		{
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 			board.commitMove(moves[i]);//commit new move
-			board.computeCrossSets( MG->root);
 			double moveScore = ScoreManager::calculateScore(moves[i], board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], {}, {}, optm, pess);
-			BStarNode node(optm + moveScore, pess + moveScore, (int)cache.size() + (int)cachevector.size(), moves[i]);
+			optm += moveScore;
+			pess += moveScore;
+			BStarNode node(optm, pess, (int)cache.size() + (int)cachevector.size(), moves[i]);
 			cachevector.push_back(node);
 			if (optm > maxOptm)
 			{
@@ -285,7 +363,6 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 					alternBStarNode = &cachevector.back();
 			}
 			board.UnCommitMove(moves[i]);
-			board.computeCrossSets( MG->root);
 		}
 	}
 	else {
@@ -297,11 +374,12 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 			double minaltern = DBL_MAX;
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 			board.commitMove(moves[i]);
-			board.computeCrossSets( MG->root);
 			double moveScore = ScoreManager::calculateScore(moves[i], board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], {}, {}, pess, optm);
-			BStarNode node(optm+moveScore, pess+moveScore, (int)cache.size() + (int)cachevector.size(), moves[i]);
+			pess += pess;
+			optm += optm;
+			BStarNode node(optm, pess, (int)cache.size() + (int)cachevector.size(), moves[i]);
 			cachevector.push_back(node);
 			if (optm < minOptm)
 			{
@@ -323,7 +401,6 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 					alternBStarNode = &cachevector.back();
 			}
 			board.UnCommitMove(moves[i]);
-			board.computeCrossSets(MG->root);
 
 		}
 	}
@@ -353,6 +430,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 				return (*branches)[getBestMove(*branches)];
 			}
 			else {
+				node.closed = true;
 				return BStarNode();//backup as all children are closed
 			}
 		}
