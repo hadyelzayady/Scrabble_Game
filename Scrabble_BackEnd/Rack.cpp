@@ -16,15 +16,15 @@ Rack::Rack(const Rack & R)
 vector<char> Rack::getLeave(Move move)
 {
 	// vector<Play> plays = move.Plays;
-
-	
 	vector<char> leave = this->list;
 	int size = move.Plays.size();
 
 	for (int i = 0; i < size; i++) {
-		leave.erase(std::remove(leave.begin(), leave.end(), move.Plays[i].Letter), leave.end());
-		//this->eraseElementFromVector(leave, move.Plays[i].Letter);
-	}
+		std::vector<char>::iterator position = std::find(leave.begin(), leave.end(), move.Plays[i].Letter);
+		if (position != leave.end()) // == myVector.end() means the element was not found
+			leave.erase(position);
+	} 		// eraseElementFromVector now uses index not value or iterator so USED std::Find instead to get iterator and used erase
+
 	return leave;
 }
 
@@ -32,8 +32,11 @@ void Rack::commitMove(Move * move)
 {
 	int size = move->Plays.size();
 	for (int i = 0; i < size; i++) {
-		this->list.erase(std::remove(this->list.begin(), this->list.end(), move->Plays[i].Letter), this->list.end()); // eraseElementFromVector now uses index not value so USED STD::REMOVE instead
-		//this->eraseElementFromVector(this->list, move->Plays[i].Letter);
+
+		std::vector<char>::iterator position = std::find(this->list.begin(), this->list.end(), move->Plays[i].Letter);
+		if (position != this->list.end()) // == myVector.end() means the element was not found
+			this->list.erase(position);
+		// eraseElementFromVector now uses index not value or iterator so USED std::Find instead to get iterator and used erase
 	}
 }
 
