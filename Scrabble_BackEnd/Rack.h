@@ -25,6 +25,17 @@ public:
 	vector<char> getLeave(Move move);
 	vector<char> getUniqueLeave(Move move);
 
+	// Ahmed Soliman
+	inline void eraseElementFromVector(std::vector<char> &vec, int index) {
+		auto it = vec.begin() + index;
+		*it = std::move(vec.back());
+		vec.pop_back();
+	}	// Ahmed Soliman
+
+	// Bilal
+	void commitMove(Move * move);
+	// Bilal
+
 	Rack();					    //constructor
 	Rack(const Rack &R);		//copy constructor
 	~Rack();				    //destructor
