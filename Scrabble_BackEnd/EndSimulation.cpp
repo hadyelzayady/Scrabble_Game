@@ -159,14 +159,14 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 	//max node
 	//? what if all nodes have same optim value what altern will be?
 	if (ismax) {
-		vector<Move> moves = MG->findWords(myrack.getRackTiles(), board);
+		vector<Move> moves = MG->findWords(myrack.getRackTiles(), &board);
 		double maxOptm = -10000;
 		double maxaltern = -2000000;
 		for (size_t i = 0;i< moves.size(); i++)
 		{
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 			board.commitMove(moves[i]);//commit new move
-			double moveScore = ScoreManager::calculateScore(moves[i], board, tileLookup);
+			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], {}, {}, optm, pess);
 			optm += moveScore;
@@ -175,7 +175,9 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 			cachevector.push_back(tempnode);
 			if (optm > maxOptm)
 			{
+				maxaltern = maxOptm;
 				maxOptm = optm;
+				alternBStarNodeindex = bestBStarNodeindex;
 				bestBStarNodeindex = cachevector.size()-1;
 			}
 			else if (optm == maxOptm)
@@ -188,24 +190,19 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 				maxaltern = optm;
 				alternBStarNodeindex = cachevector.size() - 1;
 			}
-			else if (optm == maxaltern)
-			{
-				if (pess > cachevector[alternBStarNodeindex].pess)// check smaller range
-					alternBStarNodeindex = cachevector.size() - 1;
-			}
 			board.UnCommitMove(moves[i]);
 		}
 	}
 	else {
 
-		vector<Move> moves = MG->findWords(oprack.getRackTiles(), board);
+		vector<Move> moves = MG->findWords(oprack.getRackTiles(), &board);
 		for (size_t i = 0; i < moves.size(); i++)
 		{
 			double minOptm = DBL_MAX-1;
 			double minaltern = DBL_MAX;
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 			board.commitMove(moves[i]);
-			double moveScore = ScoreManager::calculateScore(moves[i], board, tileLookup);
+			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], {}, {}, pess, optm);
 			pess += moveScore;
@@ -214,7 +211,9 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 			cachevector.push_back(tempnode);
 			if (optm < minOptm)
 			{
+				minaltern = minOptm;
 				minOptm = optm;
+				alternBStarNodeindex = bestBStarNodeindex;
 				bestBStarNodeindex = cachevector.size() - 1;
 			}
 			else if (optm == minOptm)
@@ -225,11 +224,6 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 			else if (optm < minaltern) {//altern node
 				minaltern = optm;
 				alternBStarNodeindex = cachevector.size() - 1;
-			}
-			else if (optm == minaltern)
-			{
-				if (pess < cachevector[alternBStarNodeindex].pess)// check smaller range
-					alternBStarNodeindex = cachevector.size() - 1;
 			}
 			board.UnCommitMove(moves[i]);
 

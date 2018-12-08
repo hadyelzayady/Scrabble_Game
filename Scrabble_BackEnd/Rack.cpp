@@ -13,6 +13,16 @@ Rack::Rack(const Rack & R)
 	this->list = R.list;
 }
 
+
+void Rack::removeMoveTiles(const Move & move)
+{
+	vector<Play> plays = move.getPlaysPointer();
+	for (size_t i = 0; i < plays.size(); i++)
+	{
+		removeTile(plays[i].get_Letter());
+	}
+}
+
 vector<char> Rack::getLeave(Move move)
 {
 	// vector<Play> plays = move.Plays;
@@ -20,7 +30,7 @@ vector<char> Rack::getLeave(Move move)
 	int size = move.Plays.size();
 
 	for (int i = 0; i < size; i++) {
-		if (move.Plays[i].isBlank == true) {
+		if (move.Plays[i].isBlank() == true) {
 			std::vector<char>::iterator position = std::find(leave.begin(), leave.end(), BLANK_TILE);
 			if (position != leave.end()) // == myVector.end() means the element was not found
 				leave.erase(position);
@@ -40,7 +50,7 @@ void Rack::commitMove(Move * move)
 {
 	int size = move->Plays.size();
 	for (int i = 0; i < size; i++) {
-		if (move->Plays[i].isBlank == true) {
+		if (move->Plays[i].isBlank() == true) {
 			std::vector<char>::iterator position = std::find(this->list.begin(), this->list.end(), BLANK_TILE);
 			if (position != this->list.end()) // == myVector.end() means the element was not found
 				this->list.erase(position);
