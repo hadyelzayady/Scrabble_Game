@@ -6,6 +6,7 @@
 #include "BStarNode.h"
 #include "Gaddag.h"
 #include "Heuristics.h"
+#include "TileLookUp.h"
 class EndSimulation
 {
 	ScoreManager *scoreManager;
@@ -17,7 +18,6 @@ class EndSimulation
 	Heuristics* hr;
 	vector<Move>moves;// moves from parent to node
 	vector<Move> mymoves, opmoves;
-	vector<Move> getplays();
 	unordered_map<int, vector<BStarNode>> cache;
 
 	//
@@ -25,8 +25,8 @@ class EndSimulation
 	Rack opponetRack;
 	Rack myRack;
 	Board board;
+	void getOpRack();
 	vector<BStarNode>* getChildren(const BStarNode& node, Rack& myrack, Rack&oprac, bool ismax, vector<BStarNode *>& bestFirstAndSecond);
-	pair<int, Move> minimax(Board board, int score, int alpha, int beta, bool maximizingPlayer);
 	BStarNode BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack myrack,Rack oprack);
 	Move start();
 	EndSimulation(const Board &board, TileLookUp*tl, Rack opponentRack, Rack myRack, Gaddag* GD, Heuristics* hr);

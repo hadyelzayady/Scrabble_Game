@@ -128,9 +128,9 @@ void Board::UnCommitMove(const Move & move)
 	{
 		pair<int, int> position = plays[i].get_Coordinates();
 		removeTile(position.second, position.first);
-		moveLetters += plays[i].get_Letter();//TODO: remove move letters from board
+		size_t start = LettersOnBoard.find_first_of(plays[i].Letter);
+		LettersOnBoard.erase(start, 1);
 	}
-	
 }
 Board Board::commitMoveSim(const Move & move, Board board)
 {

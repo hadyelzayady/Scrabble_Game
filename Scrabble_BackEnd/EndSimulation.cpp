@@ -124,6 +124,17 @@ void getBestFirstAndSecondMin(vector<BStarNode>&moves, vector<BStarNode *>& best
 		bestFirstAndSecond.push_back(alternBStarNode);
 
 }
+void EndSimulation::getOpRack()
+{
+	//TileLookUp tl;
+	//unordered_map<char, int>lookup;
+	//int frq=0;
+	//for (const char&letter : board.getBoardLetters())
+	//{
+	//	frq=tl.getFrequency(letter);
+
+	//}
+}
 vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack,Rack&oprack, bool ismax, vector<BStarNode *>& bestFirstAndSecond)
 {
 	if (cache.find(node.id) != cache.end()) //node expanded before

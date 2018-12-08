@@ -58,17 +58,17 @@ int main()
 	myrack.addTile('N');
 	myrack.addTile('R');
 	myrack.addTile('A');
-	//myrack.addTile('B');
-	//myrack.addTile('C');
-	//myrack.addTile('D');
+	myrack.addTile('B');
+	myrack.addTile('C');
+	myrack.addTile('D');
 
 	oprack.addTile('B');
 	oprack.addTile('O');
 	oprack.addTile('U');
 	oprack.addTile('G');
-	//oprack.addTile('H');
-	//oprack.addTile('P');
-	//oprack.addTile('L');
+	oprack.addTile('H');
+	oprack.addTile('P');
+	oprack.addTile('L');
 
 	TileLookUp tl;
 	Heuristics hr;
