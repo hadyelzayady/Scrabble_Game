@@ -57,18 +57,40 @@ int main()
 	myrack.addTile('E');
 	myrack.addTile('N');
 	myrack.addTile('R');
-	myrack.addTile('T');
+	myrack.addTile('A');
+	//myrack.addTile('B');
+	//myrack.addTile('C');
+	//myrack.addTile('D');
 
 	oprack.addTile('B');
 	oprack.addTile('O');
 	oprack.addTile('U');
-	oprack.addTile('W');
+	oprack.addTile('G');
+	//oprack.addTile('H');
+	//oprack.addTile('P');
+	//oprack.addTile('L');
+
 	TileLookUp tl;
 	Heuristics hr;
+
 	EndSimulation ends(board, &tl, oprack, myrack, g, &hr);
 	Move best=ends.start();
 	board.commitMove(best);
 	writeBoardToFile(board);
+	myrack.removeMoveTiles(best);
+
+	EndSimulation ends2(board, &tl, myrack, oprack, g, &hr);
+	best = ends2.start();
+	board.commitMove(best);
+	writeBoardToFile(board);
+	oprack.removeMoveTiles(best);
+
+
+	EndSimulation ends3(board, &tl, oprack, myrack, g, &hr);
+	best = ends3.start();
+	board.commitMove(best);
+	writeBoardToFile(board);
+	myrack.removeMoveTiles(best);
 //	MonteCarlo * M = new MonteCarlo(r,c,Pm);
 	// M->simulation(100);
 //	 Utilities * u =new  Utilities();

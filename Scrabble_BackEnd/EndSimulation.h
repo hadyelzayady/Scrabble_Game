@@ -18,6 +18,8 @@ class EndSimulation
 	vector<Move>moves;// moves from parent to node
 	vector<Move> mymoves, opmoves;
 	vector<Move> getplays();
+	unordered_map<int, vector<BStarNode>> cache;
+
 	//
 	TileLookUp *tileLookup;
 	Rack opponetRack;
