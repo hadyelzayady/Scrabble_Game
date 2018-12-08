@@ -7,8 +7,9 @@
 #include <algorithm>
 
 
-bool myfunctionmax(BStarNode i, BStarNode j) { return (i.optm > j.optm); }
+bool myfunctionmax(BStarNode i, BStarNode j) { return (i.optm > j.optm && !i.closed || (i.optm == j.optm && i.pess > j.pess)); }
 bool myfunctionmin(BStarNode i, BStarNode j) { return (i.optm < j.optm); }
+bool isaltern(BStarNode i, BStarNode j) { return (i.optm > j.optm); }
 
 
 //get best move when depth=0 and terminating condition not met with all branches visited
@@ -49,6 +50,7 @@ double getBestPessimisticMin(vector<BStarNode> moves)
 	}
 	return min;
 }
+
 void getBestFirstAndSecondMax(vector<BStarNode>&moves, vector<BStarNode *>& bestFirstAndSecond)
 {
 	double maxOptm = -1;
@@ -206,8 +208,8 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 			double moveScore = ScoreManager::calculateScore(moves[i], board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], {}, {}, pess, optm);
-			pess += pess;
-			optm += optm;
+			pess += moveScore;
+			optm += moveScore;
 			BStarNode tempnode(optm, pess, (int)cache.size() + (int)cachevector.size(), moves[i]);
 			cachevector.push_back(tempnode);
 			if (optm < minOptm)
