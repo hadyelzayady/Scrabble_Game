@@ -5,6 +5,7 @@
 #include "MonteCarlo.h"
 #include "ScoreManager.h"
 #include "PreEndGameManager.h"
+#include "MidGameManager.h"
 class AI
 {
 public:

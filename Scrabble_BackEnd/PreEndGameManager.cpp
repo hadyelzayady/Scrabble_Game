@@ -44,14 +44,18 @@ Move  PreEndGameManager::Blocking(vector<Move>  movesList, Rack* Rack, Board b, 
 		long double weightestimated = 0;
 
 		//MY SCORE 
-		long double myScore = ScoreManager::calculateScore(movesList[i], b,this->TP);
+		long double myScore = ScoreManager::calculateScore(movesList[i], &b,this->TP);
 
 		// Future
 		long double futureScore = (double)this->Heu->preEnd(movesList[i], Rack->getLeave(movesList[i]), Rack->getUniqueLeave(movesList[i]));
 		Board B = Board::commitMoveSim(movesList[i], b);
+		B.computeCrossSets(MG->root);
 		long double weightedAverageOpponentScore = 0;
 		long double Weights = 0;
 		long double fishingFuture = 0.0f;
+		vector<char> rackleave;
+		rackleave.reserve(7);
+		rackleave = Rack->getLeave(movesList[i]);
 		for (int rackIndex = 0; rackIndex < estimatedRackCost.size(); rackIndex++)
 		{
 			pair<vector<char>, double>rack = estimatedRackCost[rackIndex];
@@ -61,18 +65,15 @@ Move  PreEndGameManager::Blocking(vector<Move>  movesList, Rack* Rack, Board b, 
 			long double max = 0.0f;
 			long double weightes = 0.0f;
 			//thread 
-		vector<Move> MovesGenerated = this->MG->findWords((rack).first, B); //1sec
-		
-			for (int moveindex = 0; moveindex < MovesGenerated.size(); moveindex++) {  // loop khale be el index 
+		vector<Move> MovesGenerated = this->MG->findWords((rack).first, &B); //1sec
+		int MoveGenSize = (MovesGenerated.size() > 100) ? MovesGenerated.size() : MovesGenerated.size();
+			for (int moveindex = 0; moveindex < MoveGenSize; moveindex++) {  // loop khale be el index 
 				//todo changed with Rackleave
-				vector<char> rackleave;
-				rackleave.reserve(7);
-				rackleave = Rack->getLeave(MovesGenerated[moveindex]);
 				//ha thread we call 
-				fishingscore += 0;//Fishing((MovesGenerated[moveindex]), B, rackleave,this->MG,this->TP);
+				fishingscore +=   Fishing((MovesGenerated[moveindex]), B, rackleave, this->MG, this->TP);
 				//ha join 
 
-				long double scoreMax = ScoreManager::calculateScore(MovesGenerated[moveindex], B, this->TP);
+				long double scoreMax = ScoreManager::calculateScore(MovesGenerated[moveindex], &B, this->TP);
 				max = (max > (scoreMax)) ? max : scoreMax;
 			}
 			fishingscore /= MovesGenerated.size();
@@ -94,6 +95,24 @@ Move  PreEndGameManager::Blocking(vector<Move>  movesList, Rack* Rack, Board b, 
 	return *BestMove;
 
 }
+ double   PreEndGameManager::Fishing( const Move &move,const Board & B,const vector<char> &RackLeave, Gaddag* MG, TileLookUp* Tup)
+{
+	 
+	Board newBoard = Board::commitMoveSim(move, B);
+
+	vector<Move> moveList = MG->findWords(RackLeave, &newBoard);
+	double maxScorePerMove = 0.0f;
+	int sizeMoveList = moveList.size();
+	sizeMoveList = (sizeMoveList > 10) ? 10 : sizeMoveList;
+	for (int i = 0; i < sizeMoveList; i++) {   //eb2a zabtha le el Size !!!
+		double score = ScoreManager::calculateScore(moveList[i], &newBoard, Tup);
+		maxScorePerMove = (maxScorePerMove < score) ? score : maxScorePerMove;
+
+	}
+	return  maxScorePerMove;
+}
+
+
 
 
 Move * PreEndGameManager::GoodEndGame()

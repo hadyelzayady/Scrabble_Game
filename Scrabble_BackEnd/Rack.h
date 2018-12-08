@@ -5,18 +5,18 @@
 #include "move.h"
 #include <map>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 
 class Rack
 {
 	enum { RACKSIZE = 7 };	//Max Size of List
-private:
-	
 
 public:
 
 	vector <char> list;
+
 	void addTile(char x);
 	void removeTile(char x);
 	int getSize();
@@ -24,7 +24,18 @@ public:
 	vector<char> getRackTiles();
 	vector<char> getLeave(Move move);
 	vector<char> getUniqueLeave(Move move);
-	void removeMoveTiles(const Move & move);
+
+	// Ahmed Soliman
+	inline void eraseElementFromVector(std::vector<char> &vec, int index) {
+		auto it = vec.begin() + index;
+		*it = std::move(vec.back());
+		vec.pop_back();
+	}	// Ahmed Soliman
+
+	// Bilal
+	void commitMove(Move * move);
+	// Bilal
+
 	Rack();					    //constructor
 	Rack(const Rack &R);		//copy constructor
 	~Rack();				    //destructor

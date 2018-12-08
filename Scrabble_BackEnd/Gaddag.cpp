@@ -95,12 +95,12 @@ std::vector<std::string> Gaddag::traverse(GaddagNode* root) {
 }
 
 
-std::vector<Move> Gaddag::findWords(std::vector<char> rack, const Board& board) {
+std::vector<Move> Gaddag::findWords(std::vector<char> rack, Board* board) {
 	std::vector<Move> moves;
-	
+
 	for (int j = 0; j < ROWS_COUNT; j++) {
 		for (int i = 0; i < COLUMNS_COUNT; i++) {
-			if (board.isAnchor(i,j) ){	
+			if (board->isAnchor(i, j)) {
 				Move z;
 				Move y;
 				findHorizontal(0, j, i, z, rack, root, board, moves);
@@ -112,32 +112,45 @@ std::vector<Move> Gaddag::findWords(std::vector<char> rack, const Board& board) 
 }
 
 void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, std::vector<char> rack,
-	GaddagNode* currNode, const Board& board, std::vector<Move>& moves) {
+	GaddagNode* currNode, Board* board, std::vector<Move>& moves) {
 
 	if (anchorx + offset >= COLUMNS_COUNT || anchorx + offset < 0)
 		return;
 
-	if (!board.isEmptySquare(anchory,anchorx+offset )) {		//if there is a tile in the square to the left we must include this in the current move
-		char l = board.getLetter(anchory, anchorx + offset);
+	if (!board->isEmptySquare(anchory, anchorx + offset)) {		//if there is a tile in the square to the left we must include this in the current move
+		char l = board->getLetter(anchory, anchorx + offset);
 		GaddagNode* nextNode = currNode->getChildren(l);
 		Move newMove(inMove);
 		//newMove.addPlay(anchorx + offset, anchory, l);
 		goOnHorizontal(offset, anchorx, anchory, l, newMove, rack, currNode, nextNode, board, moves);	//move on to the next square
 	}
-	else if (rack.size()!=0) {	//else if we still have letters we can play
-		int i, ilen ;
+	else if (rack.size() != 0) {	//else if we still have letters we can play
+		int i, ilen;
 		for (i = 0, ilen = rack.size(); i < ilen; ++i) {
-			if (rack[i] != BLANK_TILE && board.checkCharInVerticalSet(anchory, anchorx + offset,rack[i])) {	//if not blank + is legal to play in next square
-				std::vector<char> newRack = rack;
-				eraseElementFromVector(newRack, rack[i]);
-				GaddagNode* nextNode = currNode->getChildren(rack[i]);
-				Move newMove(inMove);
-				newMove.addPlay(anchorx + offset, anchory, rack[i]);
-				goOnHorizontal(offset, anchorx, anchory, rack[i], newMove, newRack, currNode, nextNode, board, moves);
+			if (rack[i] != BLANK_TILE) {
+				if (board->checkCharInVerticalSet(anchory, anchorx + offset, rack[i])) {	//if not blank + is legal to play in next square
+					std::vector<char> newRack = rack;
+					eraseElementFromVector(newRack, i);
+					GaddagNode* nextNode = currNode->getChildren(rack[i]);
+					Move newMove(inMove);
+					newMove.addPlay(anchorx + offset, anchory, rack[i]);
+					goOnHorizontal(offset, anchorx, anchory, rack[i], newMove, newRack, currNode, nextNode, board, moves);
+				}
+
 			}
 			else
 			{
-				/// to be implemented
+				int z;
+				for (z = 0; z < 26; ++z) {
+					if (board->checkCharInVerticalSet(anchory, anchorx + offset, mapping[z])) {
+						std::vector<char> newRack = rack;
+						eraseElementFromVector(newRack, i);
+						GaddagNode* nextNode = currNode->getChildren(mapping[z]);
+						Move newMove(inMove);
+						newMove.addPlay(anchorx + offset, anchory, mapping[z], true);
+						goOnHorizontal(offset, anchorx, anchory, mapping[z], newMove, newRack, currNode, nextNode, board, moves);
+					}
+				}
 			}
 
 		}
@@ -150,12 +163,12 @@ void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, s
 
 
 
- void Gaddag::goOnHorizontal(int offset, int anchorx, int anchory, char letter, Move inMove, std::vector<char> rack,
-	 GaddagNode* currNode, GaddagNode* nextNode, const Board& board, std::vector<Move>& moves){
+void Gaddag::goOnHorizontal(int offset, int anchorx, int anchory, char letter, Move inMove, std::vector<char> rack,
+	GaddagNode* currNode, GaddagNode* nextNode, Board * board, std::vector<Move>& moves) {
 	if (offset <= 0) {	//if making prefix
 		//if its a valid move ending record it
-		if (currNode->hasCharAsEnd(letter) && board.isEmptySquare(anchory,anchorx+offset-1)&& board.isEmptySquare(anchory, anchorx + 1)) {
-			if (rack.size()==0)
+		if (currNode->hasCharAsEnd(letter) && board->isEmptySquare(anchory, anchorx + offset - 1) && board->isEmptySquare(anchory, anchorx + 1)) {
+			if (rack.size() == 0)
 				inMove.isBingo = true;
 			moves.push_back(inMove);
 		}
@@ -166,15 +179,15 @@ void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, s
 
 			//if we can start making suffixes do so
 			nextNode = nextNode->getChildren('[');  /// msh mesta5dem el const 3shan da el mafrood yb2a delimeter msh blank bas homa nafs el char 3shan el ma3na msh aktar 
-			if (nextNode != NULL && board.isEmptySquare(anchory,anchorx+offset-1)) {
+			if (nextNode != NULL && board->isEmptySquare(anchory, anchorx + offset - 1)) {
 				findHorizontal(1, anchorx, anchory, inMove, rack, nextNode, board, moves);
 			}
 		}
 	}
 	else if (offset > 0) {	//else if making suffix
 		//if its a valid move ending record it
-		if (currNode->hasCharAsEnd(letter) && board.isEmptySquare(anchory, anchorx + offset + 1)) {
-			if (rack.size()==0)
+		if (currNode->hasCharAsEnd(letter) && board->isEmptySquare(anchory, anchorx + offset + 1)) {
+			if (rack.size() == 0)
 				inMove.isBingo = true;
 			moves.push_back(inMove);
 		}
@@ -185,88 +198,86 @@ void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, s
 	}
 }
 
- void Gaddag::findVertical(int offset, int anchorx, int anchory, Move inMove, std::vector<char> rack, GaddagNode* currNode,
-	 const Board & board, std::vector<Move>& moves) {
+void Gaddag::findVertical(int offset, int anchorx, int anchory, Move inMove, std::vector<char> rack, GaddagNode* currNode,
+	Board * board, std::vector<Move>& moves) {
 
-	 if (anchory + offset >= ROWS_COUNT || anchory + offset < 0)
-		 return;
+	if (anchory + offset >= ROWS_COUNT || anchory + offset < 0)
+		return;
 
-	 if (!board.isEmptySquare(anchory+offset,anchorx)) {		//if there is a tile in the square to the left we must include this in the current move
-		 char l = board.getLetter(anchory + offset, anchorx);
-		 GaddagNode* nextNode = currNode->getChildren(l);
-		 Move newMove(inMove);
-		 //newMove.addPlay(anchorx, anchory + offset, l);
-		 goOnVertical(offset, anchorx, anchory, l, newMove, rack, currNode, nextNode, board, moves);	//move on to the next square
-	 }
-	 else if (rack.size()!=0) {	//else if we still have letters we can play
-		 int i, ilen;
-		 for (i = 0, ilen = rack.size(); i < ilen; ++i) {
-			 if (rack[i] != BLANK_TILE && board.checkCharInHorizontalSet(anchory + offset, anchorx,rack[i] )) {	//if not blank + is legal to play in next square
-				 std::vector<char> newRack = rack;
-				 eraseElementFromVector(newRack, rack[i]);
-				 GaddagNode* nextNode = currNode->getChildren(rack[i]);
-				 Move newMove(inMove);
-				 newMove.addPlay(anchorx, anchory + offset, rack[i]);
-				 goOnVertical(offset, anchorx, anchory, rack[i], newMove, newRack, currNode, nextNode, board, moves);
-			 }
-			 else{
-				 /// to be implemented
-		 }
-
-	 }
+	if (!board->isEmptySquare(anchory + offset, anchorx)) {		//if there is a tile in the square to the left we must include this in the current move
+		char l = board->getLetter(anchory + offset, anchorx);
+		GaddagNode* nextNode = currNode->getChildren(l);
+		Move newMove(inMove);
+		//newMove.addPlay(anchorx, anchory + offset, l);
+		goOnVertical(offset, anchorx, anchory, l, newMove, rack, currNode, nextNode, board, moves);	//move on to the next square
 	}
- }
+	else if (rack.size() != 0) {	//else if we still have letters we can play
+		int i, ilen;
+		for (i = 0, ilen = rack.size(); i < ilen; ++i) {
+			if (rack[i] != BLANK_TILE) {
+				if (board->checkCharInHorizontalSet(anchory + offset, anchorx, rack[i])) {	//if not blank + is legal to play in next square
+					std::vector<char> newRack = rack;
+					eraseElementFromVector(newRack, i);
+					GaddagNode* nextNode = currNode->getChildren(rack[i]);
+					Move newMove(inMove);
+					newMove.addPlay(anchorx, anchory + offset, rack[i]);
+					goOnVertical(offset, anchorx, anchory, rack[i], newMove, newRack, currNode, nextNode, board, moves);
+				}
+			}
+			else {
+				int z;
+				for (z = 0; z < 26; ++z) {
+					if (board->checkCharInHorizontalSet(anchory + offset, anchorx, mapping[z])) {
+						std::vector<char> newRack = rack;
+						eraseElementFromVector(newRack, i);
+						GaddagNode* nextNode = currNode->getChildren(mapping[z]);
+						Move newMove(inMove);
+						newMove.addPlay(anchorx, anchory + offset, mapping[z], true);
+						goOnHorizontal(offset, anchorx, anchory, mapping[z], newMove, newRack, currNode, nextNode, board, moves);
+					}
+				}
+			}
 
- void Gaddag::goOnVertical(int offset, int anchorx, int anchory, char letter, Move inMove, std::vector<char> rack,
-	 GaddagNode* currNode, GaddagNode* nextNode, const Board& board, std::vector<Move>& moves) {
+		}
+	}
+}
 
-	 if (offset <= 0) {	//if making prefix
-			//if its a valid move ending record it			
-		 if (currNode->hasCharAsEnd(letter) && board.isEmptySquare(anchory + offset - 1, anchorx) && board.isEmptySquare(anchory+1,anchorx)) {
-			 if (rack.size()==0)
-				 inMove.isBingo = true;
-			 moves.push_back(inMove);
-		 }
+void Gaddag::goOnVertical(int offset, int anchorx, int anchory, char letter, Move inMove, std::vector<char> rack,
+	GaddagNode* currNode, GaddagNode* nextNode, Board* board, std::vector<Move>& moves) {
 
-		 //continue trying to generate prefixes passing nextNode as currNode
-		 if (nextNode != NULL) {
-			 findVertical(offset - 1, anchorx, anchory, inMove, rack, nextNode, board, moves);
+	if (offset <= 0) {	//if making prefix
+		   //if its a valid move ending record it			
+		if (currNode->hasCharAsEnd(letter) && board->isEmptySquare(anchory + offset - 1, anchorx) && board->isEmptySquare(anchory + 1, anchorx)) {
+			if (rack.size() == 0)
+				inMove.isBingo = true;
+			moves.push_back(inMove);
+		}
 
-			 //if we can start making suffixes do so
-			 nextNode = nextNode->getChildren('[');
-			 if (nextNode != NULL && board.isEmptySquare(anchory + offset - 1, anchorx )) {
-				 findVertical(1, anchorx, anchory, inMove, rack, nextNode, board, moves);
+		//continue trying to generate prefixes passing nextNode as currNode
+		if (nextNode != NULL) {
+			findVertical(offset - 1, anchorx, anchory, inMove, rack, nextNode, board, moves);
 
-			 }
-		 }
-	 }
-	 else if (offset > 0) {	//else if making suffix
-		 //if its a valid move ending record it
-		 if (currNode->hasCharAsEnd(letter) && board.isEmptySquare(anchory + offset + 1, anchorx )) {
-			 if (rack.size()==0)
-				 inMove.isBingo = true;
-			 moves.push_back(inMove);
-		 }
-		 if (nextNode != NULL /*&& board.isEmptySquare(anchory + offset + 1, anchorx)*/) {
-			 //continue trying to generate suffixes
-			 findVertical(offset + 1, anchorx, anchory, inMove, rack, nextNode, board, moves);
-		 }
-	 }
- }
+			//if we can start making suffixes do so
+			nextNode = nextNode->getChildren('[');
+			if (nextNode != NULL && board->isEmptySquare(anchory + offset - 1, anchorx)) {
+				findVertical(1, anchorx, anchory, inMove, rack, nextNode, board, moves);
+
+			}
+		}
+	}
+	else if (offset > 0) {	//else if making suffix
+		//if its a valid move ending record it
+		if (currNode->hasCharAsEnd(letter) && board->isEmptySquare(anchory + offset + 1, anchorx)) {
+			if (rack.size() == 0)
+				inMove.isBingo = true;
+			moves.push_back(inMove);
+		}
+		if (nextNode != NULL /*&& board.isEmptySquare(anchory + offset + 1, anchorx)*/) {
+			//continue trying to generate suffixes
+			findVertical(offset + 1, anchorx, anchory, inMove, rack, nextNode, board, moves);
+		}
+	}
+}
 
 
 
- void Gaddag::eraseElementFromVector(std::vector<char> &vec, char value)
- {
-	 // get the range in 2*log2(N), N=vec.size()
-	 auto bounds = std::equal_range(vec.begin(), vec.end(), value);
-
-	 // calculate the index of the first to be deleted O(1)
-	 auto last = vec.end() - std::distance(bounds.first, bounds.second);
-
-	 // swap the 2 ranges O(equals) , equal = std::distance(bounds.first, bounds.last)
-	 std::swap_ranges(bounds.first, bounds.second, last);
-
-	 // erase the victims O(equals)
-	 vec.erase(last, vec.end());
- }
