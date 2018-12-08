@@ -52,48 +52,80 @@ int main()
 	//rack->addTile('I');
 	//ProbabilityManager * Pm = new ProbabilityManager();*/
 
-	
+
 	cout << "Initialising TileLookup...";
 	TileLookUp * TL = new TileLookUp();
 	cout << "Done" << endl;
-	
-	
+
+
 	cout << "Building GADDAG..." << endl;
 	Gaddag *g = new Gaddag("../Text/SOWPODS.txt");
 	cout << "Done" << endl;
-	
-	
+
+
 	cout << "Initialising Board and Bag..." << endl;
 	Board * b = new Board();
-	b->m_board[7][7].letter = 'C';
 	b->computeCrossSets(g->root);
 	BagOfLetters * bag = new BagOfLetters();
 	cout << "Done" << endl;
-	
-	
+
+
 	cout << "Distributing Racks..." << endl;
+
+
 	for (int i = 0; i < playerCount; i++) {
 		players[i]->rack = new Rack();
-		for (int j = 0; j < RACK_SIZE; j++) {
+		//players[i]->rack->addTile('[');
+		while (players[i]->rack->list.size() < RACK_SIZE) {
 			players[i]->rack->addTile(bag->draw());
 		}
 	}
 	cout << "Done" << endl;
 
-	MidGameManager * midMan = new MidGameManager(TL,g);
+	MidGameManager * midMan = new MidGameManager(TL, g);
 	Logger logger;
 
 	int turn = 0;
 	while (1) {
-		logger.DisplayBoard(b->m_board);
+		logger.DisplayRack(players[1]->rack);
+		logger.DisplayBoard(b);
+		logger.DisplayRack(players[0]->rack);
 		int playerTurn = turn % playerCount;
 		vector <Move> MoveList = g->findWords(players[playerTurn]->rack->getRackTiles(), b);
 		int selectedMoveIndex = midMan->getBestMove(turn == 0, MoveList, players[playerTurn]->rack, b);
+		cout << "Move Chosen: ";
+		logger.PrintMove(&MoveList[selectedMoveIndex]);
 		b->commitMove(MoveList[selectedMoveIndex]);
-		for (int i = 0; i < MoveList[selectedMoveIndex].Plays.size(); i++) {
+		players[playerTurn]->rack->commitMove(&MoveList[selectedMoveIndex]);
+		while (players[playerTurn]->rack->list.size() < RACK_SIZE) {
 			players[playerTurn]->rack->addTile(bag->draw());
 		}
-		b->computeCrossSets(g->root);
+
+		//Board * b = new Board();
+		//b->m_board[7][7].letter = 'H';
+		//b->m_board[8][7].letter = 'U';
+		//b->m_board[9][7].letter = 'B';
+		//b->m_board[10][7].letter = 'B';
+		//b->m_board[11][7].letter = 'L';
+		//b->m_board[12][7].letter = 'Y';
+		//b->m_board[9][4].letter = 'Z';
+		//b->m_board[9][5].letter = 'A';
+		//b->m_board[9][6].letter = 'M';
+		//b->m_board[9][8].letter = 'U';
+		//b->m_board[9][9].letter = 'K';
+
+		//std::vector<char> rack;
+		//rack.push_back('G');
+		//rack.push_back('A');
+		//rack.push_back('L');
+		//rack.push_back('A');
+		//rack.push_back('I');
+		//rack.push_back('Y');
+		//rack.push_back('A');
+
+		//b->computeCrossSets(g->root);
+		//std::vector<Move> movestest = g->findWords(rack, b);
+
 		turn++;
 		system("pause");
 	}
@@ -106,11 +138,11 @@ int main()
 	//	 Utilities * u =new  Utilities();
 
 	Intiating  instance tileLookUp from TileLookUp class
-	
+
 	//TileLookUp * tileLookUp = new TileLookUp();
 	//GameManager * gameManager = new GameManager(tileLookUp, playerCount, playerNames);
 	//gameManager->simulateGame();
 	cout << "finished" << endl;*/
-	system("pause");
-	return 0;
-} 
+		system("pause");
+		return 0;
+	}

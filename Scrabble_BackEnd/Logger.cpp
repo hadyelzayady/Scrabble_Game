@@ -2,8 +2,8 @@
 
 
 
-void Logger::DisplayBoard(Square m_board[ROWS_COUNT][COLUMNS_COUNT]) {
-	Board* board = new Board(m_board);
+
+void Logger::DisplayBoard(Board * board) {
 	cout << endl;
 	for (int i = 0; i < ROWS_COUNT; i++) {
 
@@ -37,6 +37,28 @@ void Logger::DisplayBoard(Square m_board[ROWS_COUNT][COLUMNS_COUNT]) {
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	cout << " Please get me Out" << endl;
 }
+
+
+void Logger::DisplayRack(Rack * rack) {
+	int size = rack->list.size();
+	cout << size << " Tiles: ";
+
+	for (int i = 0; i < size; ++i) {
+		cout << rack->list[i] << " ";
+	}
+	cout << endl;
+}
+
+void Logger::PrintMove(Move * move)
+{
+	int size = move->Plays.size();
+	cout << size << " Plays: ";
+	for (int i = 0; i < size; i++) {
+		cout << '(' << move->Plays[i].coordinates.first << ',' << move->Plays[i].coordinates.second << ") => " << move->Plays[i].Letter << " - ";
+	}
+	cout << endl;
+}
+
 
 Logger::Logger()
 {

@@ -16,8 +16,9 @@ Rack::Rack(const Rack & R)
 vector<char> Rack::getLeave(Move move)
 {
 	// vector<Play> plays = move.Plays;
-	vector<char> leave = this->list;
 
+	
+	vector<char> leave = this->list;
 	int size = move.Plays.size();
 
 	for (int i = 0; i < size; i++) {
