@@ -140,11 +140,10 @@ void  writeBoardToFile(const Board&board)
 			string line="";
 			for (size_t j = 0; j < 15; j++)
 			{
-				/*if (board.m_board[i][j].isEmpty())
+				if (board.m_board[i][j].isEmpty())
 					line += "*";
 				else
-					line += board.m_board[i][j].letter;*/
-				line += board.m_board[i][j].bonusType + " ";
+					line += board.m_board[i][j].letter;
 			}
 			myfile << line<<"\n";
 		}

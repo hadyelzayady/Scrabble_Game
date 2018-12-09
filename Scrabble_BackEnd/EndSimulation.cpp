@@ -63,6 +63,8 @@ void getBestFirstAndSecondMax(vector<BStarNode>&moves, vector<BStarNode *>& best
 		{
 			if (moves[i].optm > maxOptm)
 			{
+				maxaltern = maxOptm;
+				alternBStarNode = bestBStarNode;
 				maxOptm = moves[i].optm;
 				bestBStarNode = &moves[i];
 			}
@@ -75,11 +77,6 @@ void getBestFirstAndSecondMax(vector<BStarNode>&moves, vector<BStarNode *>& best
 			{
 				maxaltern = moves[i].optm;
 				alternBStarNode = &moves[i];
-			}
-			else if (moves[i].optm == maxaltern)
-			{
-				if (moves[i].optm > alternBStarNode->pess)// check smaller range
-					alternBStarNode = &moves[i];
 			}
 		}
 	}
@@ -101,6 +98,8 @@ void getBestFirstAndSecondMin(vector<BStarNode>&moves, vector<BStarNode *>& best
 		{
 			if (moves[i].optm < minOptm)
 			{
+				minaltern = minOptm;
+				alternBStarNode = bestBStarNode;
 				minOptm = moves[i].optm;
 				bestBStarNode = &moves[i];
 			}
@@ -112,11 +111,6 @@ void getBestFirstAndSecondMin(vector<BStarNode>&moves, vector<BStarNode *>& best
 			else if (moves[i].optm < minaltern) {//altern node
 				minaltern = moves[i].optm;
 				alternBStarNode = &moves[i];
-			}
-			else if (moves[i].optm == minaltern)
-			{
-				if (moves[i].pess < alternBStarNode->pess)// check smaller range
-					alternBStarNode = &moves[i];
 			}
 		}
 	}
