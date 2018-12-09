@@ -94,9 +94,7 @@ std::vector<std::string> Gaddag::traverse(GaddagNode* root) {
 	return words;
 }
 
-
-std::vector<Move> Gaddag::findWords(std::vector<char> rack, Board* board) {
-	std::vector<Move> moves;
+void Gaddag::findWords(std::vector<char> rack, std::vector<Move>& moves, Board* board) {
 
 	for (int j = 0; j < ROWS_COUNT; j++) {
 		for (int i = 0; i < COLUMNS_COUNT; i++) {
@@ -108,7 +106,6 @@ std::vector<Move> Gaddag::findWords(std::vector<char> rack, Board* board) {
 			}
 		}
 	}
-	return moves;
 }
 
 void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, std::vector<char> rack,

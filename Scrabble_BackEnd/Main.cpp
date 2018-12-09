@@ -91,7 +91,8 @@ int main()
 		logger.DisplayBoard(b);
 		logger.DisplayRack(players[0]->rack);
 		int playerTurn = turn % playerCount;
-		vector <Move> MoveList = g->findWords(players[playerTurn]->rack->getRackTiles(), b);
+		vector <Move> MoveList;
+		g->findWords(players[playerTurn]->rack->getRackTiles(), MoveList, b);
 		int selectedMoveIndex = midMan->getBestMove(turn == 0, MoveList, players[playerTurn]->rack, b);
 		cout << "Move Chosen: ";
 		logger.PrintMove(&MoveList[selectedMoveIndex]);

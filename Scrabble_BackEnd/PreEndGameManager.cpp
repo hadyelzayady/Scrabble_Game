@@ -65,7 +65,8 @@ Move  PreEndGameManager::Blocking(vector<Move>  movesList, Rack* Rack, Board b, 
 			long double max = 0.0f;
 			long double weightes = 0.0f;
 			//thread 
-		vector<Move> MovesGenerated = this->MG->findWords((rack).first, &B); //1sec
+			vector<Move> MovesGenerated;
+			this->MG->findWords((rack).first, MovesGenerated, &B); //1sec
 		int MoveGenSize = (MovesGenerated.size() > 100) ? MovesGenerated.size() : MovesGenerated.size();
 			for (int moveindex = 0; moveindex < MoveGenSize; moveindex++) {  // loop khale be el index 
 				//todo changed with Rackleave
@@ -99,8 +100,8 @@ Move  PreEndGameManager::Blocking(vector<Move>  movesList, Rack* Rack, Board b, 
 {
 	 
 	Board newBoard = Board::commitMoveSim(move, B);
-
-	vector<Move> moveList = MG->findWords(RackLeave, &newBoard);
+	vector<Move> moveList;
+	MG->findWords(RackLeave, moveList, &newBoard);
 	double maxScorePerMove = 0.0f;
 	int sizeMoveList = moveList.size();
 	sizeMoveList = (sizeMoveList > 10) ? 10 : sizeMoveList;
