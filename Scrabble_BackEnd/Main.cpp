@@ -65,7 +65,7 @@ int main()
 
 	cout << "Initialising Board and Bag..." << endl;
 	Board * b = new Board();
-	b->computeCrossSets(g->root);
+	//b->computeCrossSets(g->root);
 	BagOfLetters * bag = new BagOfLetters();
 	cout << "Done" << endl;
 
