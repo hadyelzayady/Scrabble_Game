@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include <iostream>
 #include "GaddagNode.h"
+#include "structs.h"
 using namespace std;
 #include <string>
 #include "move.h"
@@ -14,14 +15,17 @@ public:
 	static Square BoardForm[ROWS_COUNT][COLUMNS_COUNT];
 	Square m_board[ROWS_COUNT][COLUMNS_COUNT];
 	const string& getBoardLetters();
-	void commitMove(const Move& move, GaddagNode* g);
+	void commitMove(const Move& move);
 	static Board  commitMoveSim(const Move & move, const Board & board);
 	//Board  commitMoveSimB(const Move& move);
 	const char &getLetter(unsigned short row, unsigned short column) const;
 	bool isEmptySquare(unsigned short row, unsigned short column) const; //same as square.isEmpty just another interface
 	//bool isConnected(const Move);
 	Board(const Square board[ROWS_COUNT][COLUMNS_COUNT]);
+	Board(char board[15][15]);
 	Board();
+	
+
 	Board(const Board & b);
 	void setTile(char letter, unsigned short row, unsigned short column);
 	//static void setTileSim(char letter, unsigned short row, unsigned short column, Square m_board[ROWS_COUNT][COLUMNS_COUNT]);
@@ -37,7 +41,13 @@ public:
 
 	bool checkCharInHorizontalSet(int i, int j, char l) const;
 	bool checkCharInVerticalSet(int i, int j, char l) const;
+	bool isMoveValid(const Move &oponentMove, GaddagNode* root, std::string word);
+	bool checkMoveHorizontal(const Move& move);
+	// Under construction (sorting)
+	void formatMyMove(const Move& move, playMove & moveToBeSent);
 
+
+	string formatOponentMove(const player2Move_formated& move, int& challengeTime, uTime& currentTime, Move &oponentMove, double& score);
 
 	~Board();
 };

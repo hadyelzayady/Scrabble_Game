@@ -96,7 +96,8 @@ int main()
 		int selectedMoveIndex = midMan->getBestMove(turn == 0, MoveList, players[playerTurn]->rack, b);
 		cout << "Move Chosen: ";
 		logger.PrintMove(&MoveList[selectedMoveIndex]);
-		b->commitMove(MoveList[selectedMoveIndex],g->root);
+		b->commitMove(MoveList[selectedMoveIndex]);
+		b->computeCrossSets(g->root);
 		players[playerTurn]->rack->commitMove(&MoveList[selectedMoveIndex]);
 		while (players[playerTurn]->rack->list.size() < RACK_SIZE) {
 			players[playerTurn]->rack->addTile(bag->draw());

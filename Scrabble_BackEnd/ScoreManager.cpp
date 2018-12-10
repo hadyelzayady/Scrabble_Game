@@ -1,10 +1,5 @@
 #include "ScoreManager.h"
 
-
-
-
-
-
 double ScoreManager::calculateScore(const Move & m, Board * board,  TileLookUp * tileLookUp) {
 	double score = 0;
 	int wordMult = 1;
@@ -62,14 +57,11 @@ double ScoreManager::calculateScore(const Move & m, Board * board,  TileLookUp *
 	return (score += wordScore * wordMult);
 }
 
-
-
 ScoreManager::ScoreManager(Board* boardManager, TileLookUp* tileLookUp)
 {
 	this->boardManager = boardManager;
 	this->tileLookUp = tileLookUp;
 }
-
 
 ScoreManager::~ScoreManager()
 {
