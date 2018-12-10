@@ -14,7 +14,7 @@ public:
 	static Square BoardForm[ROWS_COUNT][COLUMNS_COUNT];
 	Square m_board[ROWS_COUNT][COLUMNS_COUNT];
 	const string& getBoardLetters();
-	void commitMove(const Move& move);
+	void commitMove(const Move& move, GaddagNode* g);
 	static Board  commitMoveSim(const Move & move, const Board & board);
 	//Board  commitMoveSimB(const Move& move);
 	const char &getLetter(unsigned short row, unsigned short column) const;

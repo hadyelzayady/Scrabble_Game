@@ -82,7 +82,7 @@ const string &Board::getBoardLetters()
 	return LettersOnBoard;
 }
 //we added board as parameter so we can use it inside commitMoveSim
-void Board::commitMove(const Move &move)
+void Board::commitMove(const Move &move, GaddagNode* g)
 {
 	vector<Play>plays = move.Plays;
 	for (size_t i = 0; i < plays.size(); i++)
@@ -93,6 +93,7 @@ void Board::commitMove(const Move &move)
 		//
 		LettersOnBoard += letter;
 	}
+	this->computeCrossSets(g);
 }
 //?we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
 /*Board Board::commitMoveSimB(const Move &move)
@@ -105,7 +106,7 @@ void Board::commitMove(const Move &move)
 Board Board::commitMoveSim(const Move & move, const Board &board)
 {
 	Board   B(board);
-	B.commitMove(move);
+	//B.commitMove(move);
 	return B;
 }
 
