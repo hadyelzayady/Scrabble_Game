@@ -100,14 +100,13 @@ int main()
 			continue;
 		}
 		if (bag->getSize() > 7 || !bag->hasLetters()) {
-			 selectedMoveIndex = midMan->getBestMove(turn == 0, MoveList, players[playerTurn]->rack, b);
+			 selectedMoveIndex = midMan->getBestMove(MoveList, players[playerTurn]->rack, b);
 
 		}
 		else {
 			cout << " PreEnd" << endl;
 			selectedMoveIndex = preEndMan->Blocking(&MoveList, players[playerTurn]->rack, b, PM);
-			system("pause");
-
+		
 		}
 		
 		cout << "Move Chosen: ";
@@ -120,7 +119,7 @@ int main()
 			players[playerTurn]->rack->addTile(bag->draw());
 		}
 
-
+		system("pause");
 		turn++;
 	}
 
