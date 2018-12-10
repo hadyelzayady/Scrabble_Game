@@ -400,6 +400,34 @@ bool Board::checkCharInVerticalSet(int i, int j, char l) const {
 	return false;
 }
 
+void Board::uncommitMove(const Move &move)
+{
+	vector<Play>plays = move.Plays;
+	for (size_t i = 0; i < plays.size(); i++)
+	{
+		pair<int, int> position = plays[i].get_Coordinates();
+		unsetTile(position.second, position.first);
+
+	}
+}
+
+void Board::unsetTile(unsigned short row, unsigned short column)
+{
+	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
+	{
+		m_board[row][column].letter = EMPTY_SQUARE;
+		return;
+	}
+	//throw EXCEPTION_OUT_OF_BOUND;
+}
+
+
+
+
+
+
+
+
 Board::~Board()
 {
 }

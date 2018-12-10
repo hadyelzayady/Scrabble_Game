@@ -20,7 +20,7 @@ int MidGameManager::getBestMove(bool firstTurn, vector<Move>  movesList, Rack* R
 	int size = movesList.size();
 	cout << "Move Count: " << size << endl;
 	int bestMoveIndex = -1;
-	long double BestScore = 0;
+	long double BestScore =LONG_MIN ;
 	//long double EstimatedScore = 0;
 	long double moveScore;
 	long double heuristicScore;
