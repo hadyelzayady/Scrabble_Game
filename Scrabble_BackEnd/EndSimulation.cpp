@@ -65,18 +65,18 @@ void getBestFirstAndSecondMax(vector<BStarNode>&moves, vector<BStarNode *>& best
 			{
 				maxaltern = maxOptm;
 				alternBStarNode = bestBStarNode;
-				maxOptm = moves[i].optm;
-				bestBStarNode = &moves[i];
+maxOptm = moves[i].optm;
+bestBStarNode = &moves[i];
 			}
 			else if (moves[i].optm == maxOptm)
 			{
-				if (moves[i].pess > bestBStarNode->pess)// check smaller range
-					bestBStarNode = &moves[i];
+			if (moves[i].pess > bestBStarNode->pess)// check smaller range
+				bestBStarNode = &moves[i];
 			}
 			else if (moves[i].optm > maxaltern)
 			{
-				maxaltern = moves[i].optm;
-				alternBStarNode = &moves[i];
+			maxaltern = moves[i].optm;
+			alternBStarNode = &moves[i];
 			}
 		}
 	}
@@ -131,7 +131,16 @@ void EndSimulation::getOpRack()
 
 	//}
 }
-vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack,Rack&oprack, bool ismax, vector<BStarNode *>& bestFirstAndSecond)
+bool isRackHaveQ_Z(const Rack&rack)
+{
+	for (size_t i = 0; i < rack.list.size(); i++)
+	{
+		if (rack.list[i] == 'Q' || rack.list.size() == 'Z')
+			return true;
+	}
+	return false;
+}
+vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrack, Rack&oprack, bool ismax, vector<BStarNode *>& bestFirstAndSecond)
 {
 	if ((ismax && myrack.list.size() == 0) || (!ismax && oprack.list.size() == 0))
 	{
@@ -143,8 +152,8 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 	{
 		//TODO:set bestfirstandsecond by iterating over cache vector and get max not closed nodes
 		vector<BStarNode>& moves = cache[node.id];
-		if(ismax)
-			getBestFirstAndSecondMax(moves,bestFirstAndSecond);
+		if (ismax)
+			getBestFirstAndSecondMax(moves, bestFirstAndSecond);
 		else
 			getBestFirstAndSecondMin(moves, bestFirstAndSecond);
 		//
@@ -152,22 +161,25 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 	}
 	//node first expand
 	vector<BStarNode>&cachevector = cache[node.id];
-	int bestBStarNodeindex=-1;
-	int alternBStarNodeindex=-1;
+	int bestBStarNodeindex = -1;
+	int alternBStarNodeindex = -1;
 	//TODO: calc score with heuristic
 	//get max 2 moves
 	//max node
-	vector<pair<int, int>> qPos;//TODO:
-	vector<pair<int, int>> zPos;//TODO:
-	//
-	for (size_t i = 0; i < 15; i++)
+	vector<pair<int, int>> qPos = {};//TODO:
+	vector<pair<int, int>> zPos{};//TODO:
+	//q_z positions are used only if I am max and my op has Q or Z ,same in opposite
+	if ((ismax && isRackHaveQ_Z(oprack)) || (!ismax && isRackHaveQ_Z(myrack)))
 	{
-		for (size_t j = 0; j < 15; j++)
+		for (size_t i = 0; i < 15; i++)
 		{
-			if (board.m_board[i][j].horizontalSet.find('Q') != board.m_board[i][j].horizontalSet.end())
-				qPos.push_back(pair<int, int>(i, j));
-			else if (board.m_board[i][j].horizontalSet.find('Z') != board.m_board[i][j].horizontalSet.end())
-				zPos.push_back(pair<int, int>(i, j));
+			for (size_t j = 0; j < 15; j++)
+			{
+				if (board.m_board[i][j].horizontalSet.find('Q') != board.m_board[i][j].horizontalSet.end())
+					qPos.push_back(pair<int, int>(i, j));
+				else if (board.m_board[i][j].horizontalSet.find('Z') != board.m_board[i][j].horizontalSet.end())
+					zPos.push_back(pair<int, int>(i, j));
+			}
 		}
 	}
 
@@ -220,7 +232,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 			board.commitMove(moves[i]);
 			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
 			double optm, pess;
-			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], {}, {}, pess, optm);
+			hr->endGame2vals(myrack.getRackTiles(),oprack, moves[i], qPos, zPos, pess, optm);
 			pess += moveScore;
 			optm += moveScore;
 			BStarNode tempnode(optm, pess, id++, moves[i]);

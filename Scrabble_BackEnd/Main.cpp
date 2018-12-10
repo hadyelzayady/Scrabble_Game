@@ -161,7 +161,7 @@ int main()
 	myrack.addTile('N');
 	myrack.addTile('R');
 	myrack.addTile('A');
-	myrack.addTile('B');
+	myrack.addTile('K');
 	myrack.addTile('C');
 	myrack.addTile('D');
 
@@ -170,8 +170,8 @@ int main()
 	oprack.addTile('U');
 	oprack.addTile('G');
 	oprack.addTile('H');
-	oprack.addTile('P');
-	oprack.addTile('L');
+	oprack.addTile('J');
+	oprack.addTile('Z');
 
 	TileLookUp tl;
 	Heuristics hr;
