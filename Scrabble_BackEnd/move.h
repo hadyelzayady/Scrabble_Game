@@ -6,6 +6,7 @@ class Move
 	
 public:
 	vector< Play>  Plays;
+	vector<char> chars;
 	bool isBingo;
 	vector<Play> getPlaysPointer() const;
 	void setBingo(bool bingo);

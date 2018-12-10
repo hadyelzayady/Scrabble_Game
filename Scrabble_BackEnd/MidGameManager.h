@@ -5,6 +5,7 @@
 #include "Heuristics.h"
 #include "ScoreManager.h"
 #include "Gaddag.h"
+#include <climits>
 #include <math.h>
 class MidGameManager
 {

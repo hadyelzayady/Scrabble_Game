@@ -33,7 +33,10 @@ public:
 	bool isAnchor(unsigned short row, unsigned short column) const;//empty square on board that has at least one letter around it
 	//TODO in B* simu: the node is board state and the arch is the move
 
-	//Timon Updates
+	////Ahmed osman////
+	void unsetTile(unsigned short row, unsigned short column);	
+	void uncommitMove(const Move & move);
+	//Ahmed Soliman Updates
 	void computeCrossSets(GaddagNode* g);  // g is the root in gaddag class 
 
 	void computeHorizontalSet(int i, int j, GaddagNode* root);
@@ -49,5 +52,9 @@ public:
 
 	string formatOponentMove(const player2Move_formated& move, int& challengeTime, uTime& currentTime, Move &oponentMove, double& score);
 
+
 	~Board();
 };
+
+
+
