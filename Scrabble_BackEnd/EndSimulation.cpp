@@ -5,13 +5,13 @@
 #include <vector>
 #include "Board.h"
 #include <algorithm>
-
+#include <iostream>
 
 bool myfunctionmax(BStarNode i, BStarNode j) { return (i.optm > j.optm && !i.closed || (i.optm == j.optm && i.pess > j.pess)); }
 bool myfunctionmin(BStarNode i, BStarNode j) { return (i.optm < j.optm); }
 bool isaltern(BStarNode i, BStarNode j) { return (i.optm > j.optm); }
 
-
+long EndSimulation::id = 0;
 //get best move when depth=0 and terminating condition not met with all branches visited
 //return index of best move
 int getBestMove(vector<BStarNode> &moves)
@@ -53,8 +53,8 @@ double getBestPessimisticMin(vector<BStarNode> moves)
 
 void getBestFirstAndSecondMax(vector<BStarNode>&moves, vector<BStarNode *>& bestFirstAndSecond)
 {
-	double maxOptm = -1;
-	double maxaltern = -2;
+	double maxOptm = -1000000000000;
+	double maxaltern = -20000000000;
 	BStarNode *bestBStarNode = NULL;
 	BStarNode *alternBStarNode = NULL;
 	for (size_t i = 0; i < moves.size(); i++)
@@ -133,6 +133,12 @@ void EndSimulation::getOpRack()
 }
 vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack,Rack&oprack, bool ismax, vector<BStarNode *>& bestFirstAndSecond)
 {
+	if ((ismax && myrack.list.size() == 0) || (!ismax && oprack.list.size() == 0))
+	{
+		vector<BStarNode>&cachevector = cache[node.id];
+		cachevector = {};
+		return &cachevector;
+	}
 	if (cache.find(node.id) != cache.end()) //node expanded before
 	{
 		//TODO:set bestfirstandsecond by iterating over cache vector and get max not closed nodes
@@ -151,21 +157,37 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 	//TODO: calc score with heuristic
 	//get max 2 moves
 	//max node
+	vector<pair<int, int>> qPos;//TODO:
+	vector<pair<int, int>> zPos;//TODO:
+	//
+	for (size_t i = 0; i < 15; i++)
+	{
+		for (size_t j = 0; j < 15; j++)
+		{
+			if (board.m_board[i][j].horizontalSet.find('Q') != board.m_board[i][j].horizontalSet.end())
+				qPos.push_back(pair<int, int>(i, j));
+			else if (board.m_board[i][j].horizontalSet.find('Z') != board.m_board[i][j].horizontalSet.end())
+				zPos.push_back(pair<int, int>(i, j));
+		}
+	}
+
+	// end q,z
 	//? what if all nodes have same optim value what altern will be?
 	if (ismax) {
 		vector<Move> moves = MG->findWords(myrack.getRackTiles(), &board);
-		double maxOptm = -10000;
+		double maxOptm = -100000;
 		double maxaltern = -2000000;
 		for (size_t i = 0;i< moves.size(); i++)
 		{
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 			//board.commitMove(moves[i]);//commit new move
+
 			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
 			double optm, pess;
-			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], {}, {}, optm, pess);
+			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], qPos, zPos, optm, pess);
 			optm += moveScore;
 			pess += moveScore;
-			BStarNode tempnode(optm, pess, (int)cache.size() + (int)cachevector.size(), moves[i]);
+			BStarNode tempnode(optm, pess, id++, moves[i]);
 			cachevector.push_back(tempnode);
 			if (optm > maxOptm)
 			{
@@ -201,7 +223,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node,Rack& myrack
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], {}, {}, pess, optm);
 			pess += moveScore;
 			optm += moveScore;
-			BStarNode tempnode(optm, pess, (int)cache.size() + (int)cachevector.size(), moves[i]);
+			BStarNode tempnode(optm, pess, id++, moves[i]);
 			cachevector.push_back(tempnode);
 			if (optm < minOptm)
 			{
@@ -303,11 +325,16 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 	{
 		vector<BStarNode>* branches;
 		vector<BStarNode *> bestFirstAndSecond;
+		//if (oprack.list.size()==0)
+		//{
+		//	node.closed = true;
+		//	return BStarNode();
+		//}
 		branches = getChildren(node, myrack,oprack,false, bestFirstAndSecond);
 		if ((*branches).empty())
 		{
 				node.closed = true;
-				return BStarNode();
+				return BStarNode(); 
 		}
 		else if (bestFirstAndSecond.empty())
 		{

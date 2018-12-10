@@ -155,6 +155,7 @@ int main()
 
 	Gaddag* g = new Gaddag("SOWPODS.txt");
 	Board board = parsefile();
+	board.computeCrossSets(g->root);
 	Rack myrack, oprack;
 	myrack.addTile('E');
 	myrack.addTile('N');
@@ -165,7 +166,7 @@ int main()
 	myrack.addTile('D');
 
 	oprack.addTile('B');
-	oprack.addTile('O');
+	oprack.addTile('Q');
 	oprack.addTile('U');
 	oprack.addTile('G');
 	oprack.addTile('H');
@@ -178,12 +179,16 @@ int main()
 	EndSimulation ends(board, &tl, oprack, myrack, g, &hr);
 	Move best=ends.start();
 	board.commitMove(best);
-	writeBoardToFile(board);
+	board.computeCrossSets(g->root);
+
+	writeBoardToFile(board);		
 	myrack.removeMoveTiles(best);
 
 	EndSimulation ends2(board, &tl, myrack, oprack, g, &hr);
 	best = ends2.start();
 	board.commitMove(best);
+	board.computeCrossSets(g->root);
+
 	writeBoardToFile(board);
 	oprack.removeMoveTiles(best);
 
@@ -191,6 +196,8 @@ int main()
 	EndSimulation ends3(board, &tl, oprack, myrack, g, &hr);
 	best = ends3.start();
 	board.commitMove(best);
+	board.computeCrossSets(g->root);
+
 	writeBoardToFile(board);
 	myrack.removeMoveTiles(best);
 //	MonteCarlo * M = new MonteCarlo(r,c,Pm);

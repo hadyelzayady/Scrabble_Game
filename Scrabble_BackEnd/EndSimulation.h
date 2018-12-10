@@ -10,7 +10,7 @@
 class EndSimulation
 {
 	ScoreManager *scoreManager;
-
+	static long id;
   public:
 	//var for test only
 	int i = 0;

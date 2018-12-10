@@ -125,8 +125,8 @@ void Rack::removeTile(char x)
 		{
 
 			list.erase(list.begin() + i);
-
 			break;
+
 		}
 	}
 
