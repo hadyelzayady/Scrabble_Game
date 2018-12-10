@@ -184,6 +184,7 @@ bool Board::checkMoveHorizontal(const Move& move) {
 		return false;
 }
 
+// Under construction
 void Board::formatMyMove(const Move& move, playMove & moveToBeSent) {
 	if (checkMoveHorizontal(move)) {
 		moveToBeSent.direction = 0;
@@ -197,7 +198,7 @@ void Board::formatMyMove(const Move& move, playMove & moveToBeSent) {
 	moveToBeSent.Scolumn = move.Plays[0].coordinates.first; /// x
 	moveToBeSent.Srow = move.Plays[0].coordinates.second;  /// y 
 	int i, ilen;
-	for (i = 0, ilen < move.Plays.size(); i < ilen; ++i) {
+	for (i = 0, ilen = move.Plays.size(); i < ilen; ++i) {
 		moveToBeSent.tiles.push_back(move.Plays[i].Letter);
 	}
 }

@@ -24,7 +24,7 @@ int MidGameManager::getBestMove(vector<Move>  movesList, Rack* Rack, Board * b)
 	//long double EstimatedScore = 0;
 	long double moveScore;
 	long double heuristicScore;
-	bool firstTurn = b->getBoardLetters().length == 0;
+	bool firstTurn = b->getBoardLetters().length() == 0;
 	for (int i = 0; i < size; i++) {
 		
 		// Move Score

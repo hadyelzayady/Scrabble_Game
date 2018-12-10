@@ -247,11 +247,7 @@ player2Move_formated Client::decodePlay(std::vector<uint8_t>& message)
 	bufferOffset += umove.tiles.size();
 	vector<int> v(umove.tiles.begin(), umove.tiles.end());
 	
-	int* blankIndecies = new int[2];
-	blankIndecies[0] = -1;
-	blankIndecies[1] = -1;
-	move.tiles = convertToletters(v,blankIndecies);
-	move.blankIndecies = blankIndecies;
+	move.tiles = convertToletters(v);
 
 	cout << "number of tiles: " << umove.tiles.size() << endl;
 	cout << "tiles recieved: ";

@@ -6,11 +6,10 @@
 using namespace std;
 
 
-vector<char> convertToletters(vector<int>v, int*&blankIndecies)
+vector<char> convertToletters(vector<int>v)
 {
 	vector<char>result;
 	int size = v.size();
-	int k = 0;
 	for (int i = 0; i < size; i++)
 	{
 		if (v[i] == 0)
@@ -21,7 +20,7 @@ vector<char> convertToletters(vector<int>v, int*&blankIndecies)
 			result.push_back((char)v[i] - 101 + 'A');
 		else {
 			result.push_back((char)(v[i] + 'A' - 1));
-			blankIndecies[k++] = i;
+			//blankIndecies[k++] = i;
 		}
 	}
 	return result;
