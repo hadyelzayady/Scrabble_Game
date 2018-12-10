@@ -93,7 +93,7 @@ int main()
 		int playerTurn = turn % playerCount;
 		vector <Move> MoveList;
 		g->findWords(players[playerTurn]->rack->getRackTiles(), MoveList, b);
-		int selectedMoveIndex = midMan->getBestMove(turn == 0, MoveList, players[playerTurn]->rack, b);
+		int selectedMoveIndex = midMan->getBestMove(MoveList, players[playerTurn]->rack, b);
 		cout << "Move Chosen: ";
 		logger.PrintMove(&MoveList[selectedMoveIndex]);
 		b->commitMove(MoveList[selectedMoveIndex]);
