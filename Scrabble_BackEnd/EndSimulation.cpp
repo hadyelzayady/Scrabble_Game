@@ -197,9 +197,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], qPos, zPos, optm, pess);
-			optm += moveScore;
-			pess += moveScore;
-			BStarNode tempnode(optm, pess, id++, moves[i]);
+			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
 			cachevector.push_back(tempnode);
 			if (optm > maxOptm)
 			{
@@ -233,9 +231,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(myrack.getRackTiles(),oprack, moves[i], qPos, zPos, pess, optm);
-			pess += moveScore;
-			optm += moveScore;
-			BStarNode tempnode(optm, pess, id++, moves[i]);
+			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
 			cachevector.push_back(tempnode);
 			if (optm < minOptm)
 			{
@@ -273,11 +269,13 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 		branches = getChildren(node, myrack,oprack,true,bestFirstAndSecond);
 		if ((*branches).empty())//node has no chilren
 		{
+				cout << "Max: branch is empty\n";
 				node.closed = true;
 				return BStarNode();
 		}
 		else if (bestFirstAndSecond.empty() )
 		{
+			cout << "Max: best is empty\n";
 			if (depth == 0)//all root children are closed without terminating condition met
 			{
 				return (*branches)[getBestMove(*branches)];
@@ -287,6 +285,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 				return BStarNode();//backup as all children are closed
 			}
 		}
+		cout << "Max node: " << node.id << "\t depth: " << depth << "\t bestNode: " << bestFirstAndSecond[0]->id << "\t isclosed: " << bestFirstAndSecond[0]->closed << endl;
 		// heuristic is calculated for each move inside this function,!
 		//!sorting according to only optimistic value
 		 //TODO: sort(index sorting) ,or use cache
@@ -330,7 +329,10 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			if (id == -1)
 				continue;
 			else
+			{
+				cout << "break" << endl;
 				break;
+			}
 		}
 	}
 	while (!maximizingPlayer)//min always starts in depth 1 (not working if min is depth 0
@@ -355,9 +357,12 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 				return (*branches)[getBestMove(*branches)];
 			}
 			else {
+				node.closed = true;
 				return BStarNode();//backup as all children are closed
 			}
 		}
+		cout << "Min node: " << node.id << "\t depth: " << depth << "\t bestNode: " << bestFirstAndSecond[0]->id << "\t isclosed: " << bestFirstAndSecond[0]->closed << endl;
+
 		// heuristic is calculated for each move inside this function,!
 		//!sorting according to only optimistic value
 		//getBest2MovesMin((*branches), bestFirstAndSecond);		   //TODO: sort(index sorting) ,or use cache
@@ -409,7 +414,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 
 Move EndSimulation::start()
 {
-	BStarNode root(-100, 100, 0, Move());
+	BStarNode root(-100, 100,0, 0, Move());
 	return BStar(root, 0, true, myRack,opponetRack).move;
 }
 
