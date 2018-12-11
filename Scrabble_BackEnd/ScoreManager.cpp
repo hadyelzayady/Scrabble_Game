@@ -7,7 +7,7 @@ double ScoreManager::calculateScore(const Move & m, Board * board,  TileLookUp *
 	for (int Playi = 0; Playi < m.Plays.size();Playi++ ) {
 		if (!board->isEmptySquare(m.Plays[Playi].coordinates.second, m.Plays[Playi].coordinates.first))	//if square already has a tile skip it, will be counted by its anchor square in case lw haraga3 move feha el 7agat kolha msh el plays bas 
 			continue;
-		else if (!board->isAnchor(m.Plays[Playi].coordinates.second, m.Plays[Playi].coordinates.first)) {
+		else if (board->isAnchor(m.Plays[Playi].coordinates.second, m.Plays[Playi].coordinates.first)) {
 			int tempScore = 0;			//accumulated score of other words this play has made
 			bool otherWords = false;
 			int l = m.Plays[Playi].coordinates.first - 1;
@@ -15,41 +15,55 @@ double ScoreManager::calculateScore(const Move & m, Board * board,  TileLookUp *
 			int u = m.Plays[Playi].coordinates.second - 1;
 			int d = m.Plays[Playi].coordinates.second + 1;
 			while (!board->isEmptySquare(m.Plays[Playi].coordinates.second, l)) {	//while tile to left
-				tempScore += tileLookUp->getScore(m.Plays[Playi].Letter);
-				l--;
-				otherWords = true;
+				if (board->m_board[m.Plays[Playi].coordinates.second][l].blank == false) {
+					tempScore += tileLookUp->getScore(board->m_board[m.Plays[Playi].coordinates.second][l].letter);
+					l--;
+					otherWords = true;
+				}
 			}
 			while (!board->isEmptySquare(m.Plays[Playi].coordinates.second, r)) {	//while tile to right
-				tempScore += tileLookUp->getScore(m.Plays[Playi].Letter);
-				r++;
-				otherWords = true;
+				if (board->m_board[m.Plays[Playi].coordinates.second][r].blank == false) {
+					tempScore += tileLookUp->getScore(board->m_board[m.Plays[Playi].coordinates.second][r].letter);
+					r++;
+					otherWords = true;
+				}
+
 			}
 			while (!board->isEmptySquare(d, m.Plays[Playi].coordinates.first)) {	//while tile to down
-				tempScore += tileLookUp->getScore(m.Plays[Playi].Letter);
-				d++;
-				otherWords = true;
+				if (board->m_board[d][m.Plays[Playi].coordinates.first].blank == false) {
+					tempScore += tileLookUp->getScore(board->m_board[d][m.Plays[Playi].coordinates.first].letter);
+					d++;
+					otherWords = true;
+				}
 			}
 			while (!board->isEmptySquare(u, m.Plays[Playi].coordinates.first)) {	//while tile to up
-				tempScore += tileLookUp->getScore(m.Plays[Playi].Letter);
-				u--;
-				otherWords = true;
+				if (board->m_board[u][m.Plays[Playi].coordinates.first].blank == false) {
+					tempScore += tileLookUp->getScore(board->m_board[u][m.Plays[Playi].coordinates.first].letter);
+					u--;
+					otherWords = true;
+				}
 			}
-			tempScore += tileLookUp->getScore(m.Plays[Playi].Letter) *
-				board->m_board[m.Plays[Playi].coordinates.second][m.Plays[Playi].coordinates.first].getLetterMultiplier();
-			/// assume get Letter multiplier is a function in square that checks bonus type and returns the letter multiplyer if there is any or returns 1 
+			if (m.Plays[Playi].Blank == false) {
+				tempScore += tileLookUp->getScore(m.Plays[Playi].Letter) *
+					board->m_board[m.Plays[Playi].coordinates.second][m.Plays[Playi].coordinates.first].getLetterMultiplier();
+			}
 			if (otherWords) {
 				tempScore *= board->m_board[m.Plays[Playi].coordinates.second][m.Plays[Playi].coordinates.first].getWordMultiplier();
 				score += tempScore;
 			}
 
 			wordMult *= board->m_board[m.Plays[Playi].coordinates.second][m.Plays[Playi].coordinates.first].getWordMultiplier();
-			wordScore += tileLookUp->getScore(m.Plays[Playi].Letter) *
-				board->m_board[m.Plays[Playi].coordinates.second][m.Plays[Playi].coordinates.first].getLetterMultiplier();    // el word ely ana kawenta fe el move msh ba2y el kalemat 
+			if (m.Plays[Playi].Blank == false) {
+				wordScore += tileLookUp->getScore(m.Plays[Playi].Letter) *
+					board->m_board[m.Plays[Playi].coordinates.second][m.Plays[Playi].coordinates.first].getLetterMultiplier();    // el word ely ana kawenta fe el move msh ba2y el kalemat 
+			}
 		}
 		else {
 			wordMult *= board->m_board[m.Plays[Playi].coordinates.second][m.Plays[Playi].coordinates.first].getWordMultiplier();
-			wordScore += tileLookUp->getScore(m.Plays[Playi].Letter) *
-				board->m_board[m.Plays[Playi].coordinates.second][m.Plays[Playi].coordinates.first].getLetterMultiplier();
+			if (m.Plays[Playi].Blank == false) {
+				wordScore += tileLookUp->getScore(m.Plays[Playi].Letter) *
+					board->m_board[m.Plays[Playi].coordinates.second][m.Plays[Playi].coordinates.first].getLetterMultiplier();
+			}
 		}
 	}
 	if (m.isBingo)

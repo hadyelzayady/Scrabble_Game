@@ -1,6 +1,5 @@
 #include "Board.h"
-Square Board::BoardForm[ROWS_COUNT][COLUMNS_COUNT] = {
-		{Square(WordBonusX3),Square(NoBonus),Square(NoBonus),
+Square Board::BoardForm[ROWS_COUNT][COLUMNS_COUNT] = { {Square(WordBonusX3),Square(NoBonus),Square(NoBonus),
 		Square(LetterBonusX2),Square(NoBonus),Square(NoBonus)
 		,Square(NoBonus),Square(WordBonusX3),Square(NoBonus)
 		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX2)
@@ -40,41 +39,41 @@ Square Board::BoardForm[ROWS_COUNT][COLUMNS_COUNT] = {
 		,Square(NoBonus),Square(WordBonusX2),Square(NoBonus)
 		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX2)
 		,Square(NoBonus),Square(NoBonus),Square(WordBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},{
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)},
-	{Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3),
-		Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)
-		,Square(LetterBonusX3),Square(LetterBonusX3),Square(LetterBonusX3)} };
+	{Square(NoBonus),Square(NoBonus),Square(LetterBonusX2),
+		Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX2),Square(NoBonus),Square(LetterBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX2),Square(NoBonus),Square(NoBonus)},
+	{Square(NoBonus),Square(LetterBonusX3),Square(NoBonus),
+		Square(NoBonus),Square(NoBonus),Square(LetterBonusX3)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX3),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(LetterBonusX3),Square(NoBonus)},
+	{Square(NoBonus),Square(NoBonus),Square(NoBonus),
+		Square(NoBonus),Square(WordBonusX2),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(WordBonusX2),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)},
+	{Square(LetterBonusX2),Square(NoBonus),Square(NoBonus),
+		Square(WordBonusX2),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(LetterBonusX2),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(WordBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX2)},
+	{Square(NoBonus),Square(NoBonus),Square(WordBonusX2),
+		Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX2),Square(NoBonus),Square(LetterBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(WordBonusX2),Square(NoBonus),Square(NoBonus)}
+	,{Square(NoBonus),Square(WordBonusX2),Square(NoBonus),
+		Square(NoBonus),Square(NoBonus),Square(LetterBonusX3)
+		,Square(NoBonus),Square(NoBonus),Square(NoBonus)
+		,Square(LetterBonusX3),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(WordBonusX2),Square(NoBonus)},
+		{Square(WordBonusX3),Square(NoBonus),Square(NoBonus),
+		Square(LetterBonusX2),Square(NoBonus),Square(NoBonus)
+		,Square(NoBonus),Square(WordBonusX3),Square(NoBonus)
+		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX2)
+		,Square(NoBonus),Square(NoBonus),Square(WordBonusX3)} };
 //TODO: blank letters should be added in board letter	
 const string &Board::getBoardLetters()
 {
