@@ -7,12 +7,113 @@ import matplotlib.pyplot as plt
 from collections import deque# Ordered collection with ends
 import warnings # This ignore all the warning messages that are normally printed during the training because of skiimage
 warnings.filterwarnings('ignore')
-################################################################
-#TODO:
-#1- Preprocessing for states + actions +score(rewards) + done (optional)
-#2- Ask about simple neural networks/ CNN
-#3- Ask about state size and action size
-#4- Line 127 QS Value is what? when explore probability > exp_exp_tradeoff
+######################################################################################
+A=np.zeros(52)
+B=np.zeros(52)
+C=np.zeros(52)
+D=np.zeros(52)
+E=np.zeros(52)
+F=np.zeros(52)
+G=np.zeros(52)
+H=np.zeros(52)
+I=np.zeros(52)
+J=np.zeros(52)
+K=np.zeros(52)
+L=np.zeros(52)
+M=np.zeros(52)
+N=np.zeros(52)
+O=np.zeros(52)
+P=np.zeros(52)
+Q=np.zeros(52)
+R=np.zeros(52)
+S=np.zeros(52)
+T=np.zeros(52)
+U=np.zeros(52)
+V=np.zeros(52)
+W=np.zeros(52)
+X=np.zeros(52)
+Y=np.zeros(52)
+Z=np.zeros(52)
+A[0]=1
+B[1]=1
+C[2]=1
+D[3]=1
+E[4]=1
+F[5]=1
+G[6]=1
+H[7]=1
+I[8]=1
+J[9]=1
+K[10]=1
+L[11]=1
+M[12]=1
+N[13]=1
+O[14]=1
+P[15]=1
+Q[16]=1
+R[17]=1
+S[18]=1
+T[19]=1
+U[20]=1
+V[21]=1
+W[22]=1
+X[23]=1
+Y[24]=1
+Z[25]=1
+
+A_Blank=np.zeros(52)
+B_Blank=np.zeros(52)
+C_Blank=np.zeros(52)
+D_Blank=np.zeros(52)
+E_Blank=np.zeros(52)
+F_Blank=np.zeros(52)
+G_Blank=np.zeros(52)
+H_Blank=np.zeros(52)
+I_Blank=np.zeros(52)
+J_Blank=np.zeros(52)
+K_Blank=np.zeros(52)
+L_Blank=np.zeros(52)
+M_Blank=np.zeros(52)
+N_Blank=np.zeros(52)
+O_Blank=np.zeros(52)
+P_Blank=np.zeros(52)
+Q_Blank=np.zeros(52)
+R_Blank=np.zeros(52)
+S_Blank=np.zeros(52)
+T_Blank=np.zeros(52)
+U_Blank=np.zeros(52)
+V_Blank=np.zeros(52)
+W_Blank=np.zeros(52)
+X_Blank=np.zeros(52)
+Y_Blank=np.zeros(52)
+Z_Blank=np.zeros(52)
+A_Blank[0]=1
+B_Blank[1]=1
+C_Blank[2]=1
+D_Blank[3]=1
+E_Blank[4]=1
+F_Blank[5]=1
+G_Blank[6]=1
+H_Blank[7]=1
+I_Blank[8]=1
+J_Blank[9]=1
+K_Blank[10]=1
+L_Blank[11]=1
+M_Blank[12]=1
+N_Blank[13]=1
+O_Blank[14]=1
+P_Blank[15]=1
+Q_Blank[16]=1
+R_Blank[17]=1
+S_Blank[18]=1
+T_Blank[19]=1
+U_Blank[20]=1
+V_Blank[21]=1
+W_Blank[22]=1
+X_Blank[23]=1
+Y_Blank[24]=1
+Z_Blank[25]=1
+
 ######################################################################################
 ### MODEL HYPERPARAMETERS
 # Size of State ( Include Board 15x15x52  plus Rack 7x52)
@@ -21,8 +122,8 @@ warnings.filterwarnings('ignore')
 state_size = 12064
 action_size= 11700
 # Array of states and actions
-state=[0]
-action=[0]
+state=np.zeros(state_size)
+action=np.zeros(action_size)
 # Learning Rate ( To be Determined)
 learning_rate =  0.0002
 
@@ -48,6 +149,7 @@ done = False
 ################################################################################################################
 
 def PreProcessing():
+
     pass
 
 class DQNetwork:
@@ -62,7 +164,7 @@ class DQNetwork:
             self.inputs_ = tf.placeholder(tf.float32, [None, state_size], name="inputs")
             self.actions_ = tf.placeholder(tf.float32, [None, action_size], name="actions_")
             # Remember that target_Q is the R(s,a) + ymax Qhat(s', a')
-            self.target_Q = tf.placeholder(tf.float32, [None], name="target")
+            self.target_Q = tf.placeholder(tf.float32, [None,1], name="target")
 
 
             # now declare the weights connecting the input to the hidden layer
@@ -106,9 +208,11 @@ class Memory():
 
     def sample(self, batch_size):
         buffer_size = len(self.buffer)
-        index = np.random.choice(np.arange(buffer_size),
+        print(buffer_size)
+        print(batch_size)
+        index = np.random.choice(np.arange(min(buffer_size,batch_size)),
                                  #batch size instead
-                                 size=buffer_size,
+                                 size=min(buffer_size,batch_size),
                                  replace=False)
 
         return [self.buffer[i] for i in index]
@@ -135,7 +239,9 @@ def predict_Qs(explore_start, explore_stop, decay_rate, decay_step, state, actio
     else:
         # Get action from Q-network (exploitation)
         # Estimate the Qs values state
-        Qs = sess.run(DQNetwork.output, feed_dict={DQNetwork.inputs_: state.reshape((1, state.shape))})
+        state1=np.zeros((1,state_size))
+        state1[0]=state
+        Qs = sess.run(DQNetwork.output, feed_dict={DQNetwork.inputs_: state1})
 
 
     return Qs, explore_probability
@@ -166,7 +272,7 @@ with tf.Session() as sess:
             # Add the reward to total reward
             episode_rewards.append(reward)
             ####TOBECHANGED################################
-            next_state=[0]
+            next_state=np.zeros(state_size)
             # If the game is finished
             if done:
 
@@ -203,7 +309,7 @@ with tf.Session() as sess:
                 target_Qs_batch = []
 
                 # Get Q values for next_state
-                print(next_states_mb)
+                print(states_mb)
                 Qs_next_state = sess.run(DQNetwork.output, feed_dict={DQNetwork.inputs_: next_states_mb})
 
                 # Set Q_target = r if the episode ends at s+1, otherwise set Q_target = r + gamma*maxQ(s', a')
@@ -215,11 +321,11 @@ with tf.Session() as sess:
                         target_Qs_batch.append(rewards_mb[i])
 
                     else:
-                        target = rewards_mb[i] + gamma * np.max(Qs_next_state[i])
+                        target = rewards_mb[i] + gamma * Qs_next_state[i]
                         target_Qs_batch.append(target)
 
                 targets_mb = np.array([each for each in target_Qs_batch])
-
+                print(states_mb.shape)
                 loss, _ = sess.run([DQNetwork.loss, DQNetwork.optimizer],
                                    feed_dict={DQNetwork.inputs_: states_mb,
                                               DQNetwork.target_Q: targets_mb,
