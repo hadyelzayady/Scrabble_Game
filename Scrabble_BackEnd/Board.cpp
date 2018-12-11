@@ -89,6 +89,7 @@ void Board::commitMove(const Move &move)
 		char letter = plays[i].get_Letter();
 		pair<int, int> position = plays[i].get_Coordinates();
 		setTile(letter, position.second, position.first);
+		m_board[position.second][position.first].blank = plays[i].Blank;
 		//
 		LettersOnBoard += letter;
 	}
@@ -517,7 +518,7 @@ void Board::uncommitMove(const Move &move)
 	{
 		pair<int, int> position = plays[i].get_Coordinates();
 		unsetTile(position.second, position.first);
-
+		m_board[position.second][position.first].blank = false;
 	}
 }
 

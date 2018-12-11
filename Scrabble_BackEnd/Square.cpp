@@ -4,6 +4,7 @@ Square::Square(BonusSquareType bType)
 {
 	bonusType = bType;
 	letter = EMPTY_SQUARE;
+	blank = false;
 	int i;
 	for (i = 0; i < 26; ++i)
 	{
