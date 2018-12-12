@@ -197,6 +197,7 @@ bool Board::isHook(unsigned short row, unsigned short column) const
 			;
 	}
 	//throw EXCEPTION_OUT_OF_BOUND;
+	return true;
 }
 
 bool Board::isAnchor(unsigned short row, unsigned short column) const
@@ -286,7 +287,7 @@ void Board::computeVerticalSet(int i, int j, GaddagNode* root) {
 			std::vector<unsigned int> positions;
 			current->getOnesPositions(current->end, positions);
 			int iter, ilen;
-			for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
+			for (iter = 0, ilen =(int) positions.size(); iter < ilen; ++iter) {
 				m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
 			}
 		}
@@ -308,7 +309,7 @@ void Board::computeVerticalSet(int i, int j, GaddagNode* root) {
 		std::vector<unsigned int> positions;
 		current->getOnesPositions(current->end, positions);
 		int iter, ilen;
-		for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
+		for (iter = 0, ilen = (int) positions.size(); iter < ilen; ++iter) {
 			m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
 		}
 	}
@@ -363,7 +364,7 @@ void Board::computeHorizontalSet(int i, int j, GaddagNode* root) {
 			std::vector<unsigned int> positions;
 			current->getOnesPositions(current->end, positions);
 			int iter, ilen;
-			for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
+			for (iter = 0, ilen =(int) positions.size(); iter < ilen; ++iter) {
 				m_board[i][j].horizontalSet.insert(mapping[positions[iter]]);
 			}
 		}
@@ -385,7 +386,7 @@ void Board::computeHorizontalSet(int i, int j, GaddagNode* root) {
 		std::vector<unsigned int> positions;
 		current->getOnesPositions(current->end, positions);
 		int iter, ilen;
-		for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
+		for (iter = 0, ilen =(int) positions.size(); iter < ilen; ++iter) {
 			m_board[i][j].horizontalSet.insert(mapping[positions[iter]]);
 		}
 	}
@@ -412,7 +413,7 @@ bool Board::checkCharInVerticalSet(int i, int j, char l) const {
 bool Board::isMoveValid(const Move &oponentMove, GaddagNode* root, std::string word) {
 	bool hasAnchor = false;
 	int i, ilen;
-	for (i = 0, ilen = oponentMove.Plays.size(); i < ilen; ++i) {
+	for (i = 0, ilen = (int) oponentMove.Plays.size(); i < ilen; ++i) {
 		if (!isEmptySquare(oponentMove.Plays[i].coordinates.second, oponentMove.Plays[i].coordinates.first))
 			return false;
 		else if (isAnchor(oponentMove.Plays[i].coordinates.second, oponentMove.Plays[i].coordinates.first)) {
@@ -455,7 +456,7 @@ void Board::formatMyMove(const Move& move, playMove & moveToBeSent) {
 	moveToBeSent.Scolumn = move.Plays[0].coordinates.first; /// x
 	moveToBeSent.Srow = move.Plays[0].coordinates.second;  /// y 
 	int i, ilen;
-	for (i = 0, ilen = move.Plays.size(); i < ilen; ++i) {
+	for (i = 0, ilen = (int) move.Plays.size(); i < ilen; ++i) {
 		moveToBeSent.tiles.push_back(move.Plays[i].Letter);
 	}
 }
@@ -471,7 +472,7 @@ std::string Board::formatOponentMove(const player2Move_formated& move, int& chal
 		}
 		int i, ilen;
 		int next = move.Scolumn;
-		for (i = 0, ilen = move.tiles.size(); i < ilen; ++i) {
+		for (i = 0, ilen = (int) move.tiles.size(); i < ilen; ++i) {
 			while (!isEmptySquare(y, next)) {
 				word += this->m_board[y][next].letter;
 				next++;
@@ -492,7 +493,7 @@ std::string Board::formatOponentMove(const player2Move_formated& move, int& chal
 		}
 		int i, ilen;
 		int next = move.Srow;
-		for (i = 0, ilen = move.tiles.size(); i < ilen; ++i) {
+		for (i = 0, ilen = (int) move.tiles.size(); i < ilen; ++i) {
 			while (!isEmptySquare(next, x)) {
 				word += this->m_board[next][x].letter;
 				next++;
