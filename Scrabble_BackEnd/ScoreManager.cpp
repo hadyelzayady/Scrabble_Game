@@ -4,7 +4,8 @@ double ScoreManager::calculateScore(const Move & m, Board * board,  TileLookUp *
 	double score = 0;
 	int wordMult = 1;
 	int wordScore = 0;
-	for (int Playi = 0; Playi < m.Plays.size();Playi++ ) {
+	int Playi, playlen;
+	for (Playi = 0, playlen = m.Plays.size(); Playi < playlen ;Playi++ ) {
 		if (!board->isEmptySquare(m.Plays[Playi].coordinates.second, m.Plays[Playi].coordinates.first))	//if square already has a tile skip it, will be counted by its anchor square in case lw haraga3 move feha el 7agat kolha msh el plays bas 
 			continue;
 		else if (board->isAnchor(m.Plays[Playi].coordinates.second, m.Plays[Playi].coordinates.first)) {
@@ -17,31 +18,30 @@ double ScoreManager::calculateScore(const Move & m, Board * board,  TileLookUp *
 			while (!board->isEmptySquare(m.Plays[Playi].coordinates.second, l)) {	//while tile to left
 				if (board->m_board[m.Plays[Playi].coordinates.second][l].blank == false) {
 					tempScore += tileLookUp->getScore(board->m_board[m.Plays[Playi].coordinates.second][l].letter);
-					l--;
-					otherWords = true;
 				}
+				l--;
+				otherWords = true;
 			}
 			while (!board->isEmptySquare(m.Plays[Playi].coordinates.second, r)) {	//while tile to right
 				if (board->m_board[m.Plays[Playi].coordinates.second][r].blank == false) {
 					tempScore += tileLookUp->getScore(board->m_board[m.Plays[Playi].coordinates.second][r].letter);
-					r++;
-					otherWords = true;
 				}
-
+				r++;
+				otherWords = true;
 			}
 			while (!board->isEmptySquare(d, m.Plays[Playi].coordinates.first)) {	//while tile to down
 				if (board->m_board[d][m.Plays[Playi].coordinates.first].blank == false) {
 					tempScore += tileLookUp->getScore(board->m_board[d][m.Plays[Playi].coordinates.first].letter);
-					d++;
-					otherWords = true;
 				}
+				d++;
+				otherWords = true;
 			}
 			while (!board->isEmptySquare(u, m.Plays[Playi].coordinates.first)) {	//while tile to up
 				if (board->m_board[u][m.Plays[Playi].coordinates.first].blank == false) {
 					tempScore += tileLookUp->getScore(board->m_board[u][m.Plays[Playi].coordinates.first].letter);
-					u--;
-					otherWords = true;
 				}
+				u--;
+				otherWords = true;
 			}
 			if (m.Plays[Playi].Blank == false) {
 				tempScore += tileLookUp->getScore(m.Plays[Playi].Letter) *
