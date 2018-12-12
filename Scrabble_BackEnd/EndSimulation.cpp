@@ -214,8 +214,11 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			if (moveHasQ(moves[i]))
 			{
 				cout << "MIN" << optm << " " << pess<<endl;
+				Move move = moves[i];
 				optm *= 20;
 				pess *= 20;
+				cout << move.Plays[0].coordinates.second<<","<< move.Plays[0].coordinates.first<<endl;
+				cout << optm << "," << pess<<endl;
 
 			}
 			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);

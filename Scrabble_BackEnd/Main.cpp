@@ -78,7 +78,7 @@ int main()
 	myrack.addTile('C');
 	myrack.addTile('Z');
 
-	oprack.addTile('Q');
+	oprack.addTile('T');
 	oprack.addTile('U');
 	oprack.addTile('G');
 	oprack.addTile('H');
@@ -87,6 +87,8 @@ int main()
 
 	TileLookUp tl;
 	Heuristics hr;
+	Logger log;
+	log.DisplayBoard(&board);
 
 	EndSimulation ends(&board, &tl, oprack, myrack, g, &hr);
 
@@ -99,6 +101,8 @@ int main()
 		{
 			cout << "score "<<ScoreManager::calculateScore(best, &board, &tl)<<endl;
 			board.commitMove(best);
+			log.DisplayBoard(&board);
+			log.DisplayRack(&myrack);
 			board.computeCrossSets(g->root);
 			writeBoardToFile(board);
 			myrack.commitMove(&best);

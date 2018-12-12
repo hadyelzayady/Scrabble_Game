@@ -18,6 +18,7 @@ class EndSimulation
 	void estimateOPRack();
 	void updateOPRack( Move&move);
 
+
 	unordered_map<int, vector<BStarNode>> cache;
 	TileLookUp *tileLookup;
 	Rack opponetRack;
