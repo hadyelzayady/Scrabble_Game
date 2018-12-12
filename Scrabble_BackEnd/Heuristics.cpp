@@ -237,7 +237,7 @@ double Heuristics::Qsticking(vector<char> estimatedRack, Move move, vector<pair<
 			{
 				if (plays[i].get_Coordinates() == Qpos[k])
 				{
-					quality = quality + 2;
+					quality = quality + 5;
 				}
 
 			}
@@ -249,7 +249,7 @@ double Heuristics::Qsticking(vector<char> estimatedRack, Move move, vector<pair<
 			{
 				if (plays[i].get_Coordinates() == Zpos[k])
 				{
-					quality = quality + 2;
+					quality = quality + 5;
 				}
 
 			}

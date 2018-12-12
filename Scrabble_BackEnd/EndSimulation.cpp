@@ -140,28 +140,15 @@ bool isRackHaveQ_Z(const Rack&rack)
 	}
 	return false;
 }
-void  writeBoardToFile2(const Board&board)
-{
-	std::ofstream myfile;
 
-	myfile.open("board_status2.txt", std::ios_base::app);
-	if (myfile.is_open())
+bool moveHasQ(const Move&move) {
+	for (size_t i = 0; i < move.Plays.size(); i++)
 	{
-		myfile << "===================================================\n";
-		for (size_t i = 0; i < 15; i++)
-		{
-			string line = "";
-			for (size_t j = 0; j < 15; j++)
-			{
-				if (board.m_board[i][j].isEmpty())
-					line += "*";
-				else
-					line += board.m_board[i][j].letter;
-			}
-			myfile << line << "\n";
-		}
-		myfile.close();
+		if (move.Plays[i].Letter == 'Q')
+			return true;
 	}
+	return false;
+
 }
 vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrack, Rack&oprack, bool ismax, vector<BStarNode *>& bestFirstAndSecond)
 {
@@ -221,8 +208,15 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], qPos, zPos, optm, pess);
-			optm += .5*moveScore;
-			pess += .5*moveScore;
+			optm += moveScore;
+			pess += moveScore;
+			if (moveHasQ(moves[i]))
+			{
+				cout << "MIN" << optm << " " << pess<<endl;
+				optm *= 20;
+				pess *= 20;
+
+			}
 			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
 			cachevector.push_back(tempnode);
 			if (optm > maxOptm)
@@ -257,8 +251,15 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(myrack.getRackTiles(),oprack, moves[i], qPos, zPos, pess, optm);
-			optm += .5*moveScore;
-			pess += .5*moveScore;
+			optm += moveScore;
+			pess += moveScore;
+			if (moveHasQ(moves[i]))
+			{
+				cout <<"MIN"<< optm << " " << pess<<endl;
+				optm *= 20;
+				pess *= 20;
+
+			}
 			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
 			cachevector.push_back(tempnode);
 			if (optm < minOptm)
@@ -312,6 +313,11 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 				return BStarNode();//backup as all children are closed
 			}
 		}
+		cout << "Max node: " << node.id << "\t depth: " << depth << "\t bestNode score(" << bestFirstAndSecond[0]->optm << "," <<
+			bestFirstAndSecond[0]->pess << ")";
+		if (bestFirstAndSecond.size() > 1)
+			cout << "\t altern score(" << bestFirstAndSecond[1]->optm << ", " << bestFirstAndSecond[1]->pess << ")";
+		cout << endl;
 		
 		double maxOptimisticValue = bestFirstAndSecond[0]->optm;  //max perssimistic value
 		double maxPessimisticValue = getMaxPessimistic(*branches);//bestPessimisticCache[node.id]; //max perssimistic value
@@ -320,6 +326,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			//backup
 			node.pess = maxOptimisticValue;
 			node.optm = maxPessimisticValue;
+			cout << "backup. " << node.optm << "," << node.pess<<endl;
 			if (depth > 0)
 				return BStarNode(); //TODO what to return
 			//else depth=0
@@ -357,6 +364,11 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 				return BStarNode();//backup as all children are closed
 			}
 		}
+		cout << "Min node: " << node.id << "\t depth: " << depth << "\t bestNode score(" << bestFirstAndSecond[0]->optm << "," <<
+			bestFirstAndSecond[0]->pess << ")";
+		if (bestFirstAndSecond.size() > 1)
+			cout << "\t altern score(" << bestFirstAndSecond[1]->optm << ", " << bestFirstAndSecond[1]->pess << ")";
+		cout << endl;
 		
 		double maxOptimisticValue = bestFirstAndSecond[0]->optm;	  //max perssimistic value
 		double maxPessimisticValue = getBestPessimisticMin(*branches);//bestPessimisticCache[node.id]; //max perssimistic value
