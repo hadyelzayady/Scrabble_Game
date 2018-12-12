@@ -10,6 +10,7 @@ Board parsefile()
 	string line;
 	ifstream myfile("board_status.txt");
 	Board board;
+	board.LettersOnBoard = "";
 	if (myfile.is_open())
 	{
 		for (size_t i = 0; i < 15; i++)
@@ -18,7 +19,11 @@ Board parsefile()
 			for (size_t j = 0; j < 15; j++)
 			{
 				if (line[j] != '*')
+				{
 					board.m_board[i][j].letter = line[j];
+					board.LettersOnBoard += line[j];
+				}
+				
 			}
 		}
 		myfile.close();
@@ -29,7 +34,7 @@ void  writeBoardToFile(const Board&board)
 {
 	std::ofstream myfile;
 
-	myfile.open("board_status.txt", std::ios_base::app);
+	myfile.open("board_status2.txt", std::ios_base::app);
 	if (myfile.is_open())
 	{
 		myfile << "===================================================\n";
@@ -48,22 +53,29 @@ void  writeBoardToFile(const Board&board)
 		myfile.close();
 	}
 }
+void clearfile()
+{
+	std::ofstream myfile;
+
+	myfile.open("board_status2.txt", 'w');
+	myfile << "";
+}
 int main()
 {
 
 	Gaddag* g = new Gaddag("SOWPODS.txt");
 	Board board = parsefile();
+	clearfile();
+	writeBoardToFile(board);
 	board.computeCrossSets(g->root);
 	Rack myrack, oprack;
-	myrack.addTile('E');
+	myrack.addTile('Q');
 	myrack.addTile('N');
-	myrack.addTile('R');
 	myrack.addTile('A');
 	myrack.addTile('K');
 	myrack.addTile('C');
-	myrack.addTile('D');
+	myrack.addTile('Z');
 
-	oprack.addTile('B');
 	oprack.addTile('Q');
 	oprack.addTile('U');
 	oprack.addTile('G');
@@ -74,31 +86,30 @@ int main()
 	TileLookUp tl;
 	Heuristics hr;
 
-	EndSimulation ends(board, &tl, myrack, oprack, g, &hr);
-	Move best=ends.start();
-	board.commitMove(best);
-	board.computeCrossSets(g->root);
+	EndSimulation ends(&board, &tl, oprack, myrack, g, &hr);
 
-	writeBoardToFile(board);		
-	myrack.removeMoveTiles(best);
-	cout << "end simulation\n";
-	//EndSimulation ends2(board, &tl, myrack, oprack, g, &hr);
-	//best = ends2.start();
-	//board.commitMove(best);
-	//board.computeCrossSets(g->root);
+	while (!oprack.getRackTiles().empty() && !myrack.getRackTiles().empty())
+	{
+		EndSimulation ends(&board, &tl, oprack, myrack, g, &hr);
 
-	//writeBoardToFile(board);
-	//oprack.removeMoveTiles(best);
+		Move best = ends.start();
+		if (best.Plays.size() != 0)
+		{
+			board.commitMove(best);
+			board.computeCrossSets(g->root);
+			writeBoardToFile(board);
+			myrack.removeMoveTiles(best);
+			cout << best.Plays[0].coordinates.first << "," << best.Plays[0].coordinates.second << endl;
+		}
+		else
+			cout << "pass\n";
+		//opposite game
+		Rack temp = oprack;
+		oprack=myrack;
+		myrack = temp;
+		cout << "end simulation\n";
+	}
 
-
-	//cout << "end simulation\n";
-	//EndSimulation ends3(board, &tl, oprack, myrack, g, &hr);
-	//best = ends3.start();
-	//board.commitMove(best);
-	//board.computeCrossSets(g->root);
-
-	//writeBoardToFile(board);
-	//myrack.removeMoveTiles(best);
 //	MonteCarlo * M = new MonteCarlo(r,c,Pm);
 	// M->simulation(100);
 //	 Utilities * u =new  Utilities();

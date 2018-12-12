@@ -9,8 +9,8 @@ using namespace std;
 #include "move.h"
 class Board
 {
-	string LettersOnBoard;
 public:
+	string LettersOnBoard;
 	static Square BoardForm[ROWS_COUNT][COLUMNS_COUNT];
 	Square m_board[ROWS_COUNT][COLUMNS_COUNT];
 	const string& getBoardLetters();

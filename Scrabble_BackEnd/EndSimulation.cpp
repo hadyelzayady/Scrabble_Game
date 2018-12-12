@@ -140,6 +140,29 @@ bool isRackHaveQ_Z(const Rack&rack)
 	}
 	return false;
 }
+void  writeBoardToFile2(const Board&board)
+{
+	std::ofstream myfile;
+
+	myfile.open("board_status2.txt", std::ios_base::app);
+	if (myfile.is_open())
+	{
+		myfile << "===================================================\n";
+		for (size_t i = 0; i < 15; i++)
+		{
+			string line = "";
+			for (size_t j = 0; j < 15; j++)
+			{
+				if (board.m_board[i][j].isEmpty())
+					line += "*";
+				else
+					line += board.m_board[i][j].letter;
+			}
+			myfile << line << "\n";
+		}
+		myfile.close();
+	}
+}
 vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrack, Rack&oprack, bool ismax, vector<BStarNode *>& bestFirstAndSecond)
 {
 	if ((ismax && myrack.list.size() == 0) || (!ismax && oprack.list.size() == 0))
@@ -186,20 +209,20 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 	// end q,z
 	//? what if all nodes have same optim value what altern will be?
 	if (ismax) {
+		
 		vector<Move> moves = MG->findWords(myrack.getRackTiles(), &board);
 		double maxOptm = -100000;
-		double maxaltern = -2000000;
+		double maxaltern = -20000;
+		double bestPess = -100000;
 		for (size_t i = 0;i< moves.size(); i++)
 		{
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
-			//board.commitMove(moves[i]);//commit new move
 
 			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], qPos, zPos, optm, pess);
-			optm += moveScore;
-			pess += moveScore;
-
+			optm += .5*moveScore;
+			pess += .5*moveScore;
 			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
 			cachevector.push_back(tempnode);
 			if (optm > maxOptm)
@@ -219,23 +242,23 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 				maxaltern = optm;
 				alternBStarNodeindex = cachevector.size() - 1;
 			}
-			//board.UnCommitMove(moves[i]);
 		}
 	}
 	else {
 
 		vector<Move> moves = MG->findWords(oprack.getRackTiles(), &board);
+		double bestPess = 10000;
+		double minOptm = DBL_MAX - 1;
+		double minaltern = DBL_MAX;
 		for (size_t i = 0; i < moves.size(); i++)
 		{
-			double minOptm = DBL_MAX-1;
-			double minaltern = DBL_MAX;
+
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
-			board.commitMove(moves[i]);
 			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(myrack.getRackTiles(),oprack, moves[i], qPos, zPos, pess, optm);
-			optm += moveScore;
-			pess += moveScore;
+			optm += .5*moveScore;
+			pess += .5*moveScore;
 			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
 			cachevector.push_back(tempnode);
 			if (optm < minOptm)
@@ -254,7 +277,6 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 				minaltern = optm;
 				alternBStarNodeindex = cachevector.size() - 1;
 			}
-			board.UnCommitMove(moves[i]);
 
 		}
 	}
@@ -274,13 +296,13 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 		branches = getChildren(node, myrack,oprack,true,bestFirstAndSecond);
 		if ((*branches).empty())//node has no chilren
 		{
-				cout << "Max: branch is empty\n";
+				//cout << "Max: branch is empty\n";
 				node.closed = true;
 				return BStarNode();
 		}
 		else if (bestFirstAndSecond.empty() )
 		{
-			cout << "Max: best is empty\n";
+			//cout << "Max: best is empty\n";
 			if (depth == 0)//all root children are closed without terminating condition met
 			{
 				return (*branches)[getBestMove(*branches)];
@@ -290,16 +312,9 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 				return BStarNode();//backup as all children are closed
 			}
 		}
-		cout << "Max node: " << node.id << "\t depth: " << depth << "\t bestNode score(" << bestFirstAndSecond[0]->optm << "," <<
-			bestFirstAndSecond[0]->pess << ")";
-		if(bestFirstAndSecond.size()>1)
-			cout<<"\t altern score(" << bestFirstAndSecond[1]->optm << ", " << bestFirstAndSecond[1]->pess<<")";
-		cout << endl;
-		// heuristic is calculated for each move inside this function,!
-		//!sorting according to only optimistic value
-		 //TODO: sort(index sorting) ,or use cache
+		
 		double maxOptimisticValue = bestFirstAndSecond[0]->optm;  //max perssimistic value
-		double maxPessimisticValue = getMaxPessimistic(*branches); //max perssimistic value
+		double maxPessimisticValue = getMaxPessimistic(*branches);//bestPessimisticCache[node.id]; //max perssimistic value
 		if (maxOptimisticValue < node.pess || maxPessimisticValue > node.optm)
 		{
 			//backup
@@ -311,9 +326,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			if (bestFirstAndSecond.size() == 1 || bestFirstAndSecond[0]->pess >= bestFirstAndSecond[1]->optm) //terminating condition
 				return *bestFirstAndSecond[0];
 		}
-		//TODO: till now no diff between if and else code (possible removing of if condition)
-		if (depth == 0)//TODO: if max branch is finished parsing--> mark it as done and start expanding next node
-		{
+		
 			Rack newrack = myrack;
 			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
 			board.commitMove(bestFirstAndSecond[0]->move);
@@ -321,38 +334,12 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			int id = BStar(*bestFirstAndSecond[0], depth + 1, false, newrack, oprack).id;
 			board.UnCommitMove(bestFirstAndSecond[0]->move);
 			board.computeCrossSets( MG->root);
-			if ( id == -1)
-				continue;
-			else
-				break;
-		}
-		else
-		{
-			Rack newrack = myrack;
-			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
-			board.commitMove(bestFirstAndSecond[0]->move);
-			board.computeCrossSets( MG->root);
-			int id = BStar(*bestFirstAndSecond[0], depth + 1, false, newrack, oprack).id;
-			board.UnCommitMove(bestFirstAndSecond[0]->move);
-			board.computeCrossSets( MG->root);
-			if (id == -1)
-				continue;
-			else
-			{
-				cout << "break" << endl;
-				break;
-			}
-		}
 	}
 	while (!maximizingPlayer)//min always starts in depth 1 (not working if min is depth 0
 	{
 		vector<BStarNode>* branches;
 		vector<BStarNode *> bestFirstAndSecond;
-		//if (oprack.list.size()==0)
-		//{
-		//	node.closed = true;
-		//	return BStarNode();
-		//}
+		
 		branches = getChildren(node, myrack,oprack,false, bestFirstAndSecond);
 		if ((*branches).empty())
 		{
@@ -370,16 +357,10 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 				return BStarNode();//backup as all children are closed
 			}
 		}
-		cout << "Min node: " << node.id << "\t depth: " << depth << "\t bestNode score(" << bestFirstAndSecond[0]->optm << "," <<
-			bestFirstAndSecond[0]->pess << ")";
-		if (bestFirstAndSecond.size() > 1)
-			cout << "\t altern score(" << bestFirstAndSecond[1]->optm << ", " << bestFirstAndSecond[1]->pess << ")";
-		cout << endl;
-		// heuristic is calculated for each move inside this function,!
-		//!sorting according to only optimistic value
-		//getBest2MovesMin((*branches), bestFirstAndSecond);		   //TODO: sort(index sorting) ,or use cache
+		
 		double maxOptimisticValue = bestFirstAndSecond[0]->optm;	  //max perssimistic value
-		double maxPessimisticValue = getBestPessimisticMin(*branches); //max perssimistic value
+		double maxPessimisticValue = getBestPessimisticMin(*branches);//bestPessimisticCache[node.id]; //max perssimistic value
+
 		if (maxOptimisticValue > node.pess || maxPessimisticValue < node.optm)
 		{
 			//backup
@@ -390,8 +371,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			if (bestFirstAndSecond.size() == 1 || bestFirstAndSecond[0]->pess <= bestFirstAndSecond[1]->optm)
 				return *bestFirstAndSecond[0];
 		}
-		if (depth == 0)
-		{
+		
 			Rack newrack = oprack;
 			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
 			board.commitMove(bestFirstAndSecond[0]->move);
@@ -399,49 +379,98 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			int id = BStar(*bestFirstAndSecond[0], depth + 1, true, myrack, newrack).id;
 			board.UnCommitMove(bestFirstAndSecond[0]->move);
 			board.computeCrossSets(MG->root);
-			if (id == -1)
-				continue;
-			else
-				break;
-		}
-		else
-		{
-			Rack newrack = oprack;
-			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
-			board.commitMove(bestFirstAndSecond[0]->move);
-			board.computeCrossSets(MG->root);
-			int id=BStar(*bestFirstAndSecond[0], depth + 1, true, myrack, newrack).id;
-			board.UnCommitMove(bestFirstAndSecond[0]->move);
-			board.computeCrossSets( MG->root);
-			if (id== -1)
-			{
-				continue;
-			}
-			else
-				break;
-		}
+		
 	}
 	return BStarNode();
 }
-
 Move EndSimulation::start()
 {
-	BStarNode root(-100, 100,0, 0, Move());
-	return BStar(root, 0, true, myRack,opponetRack).move;
+	cache.clear();
+	
+	EndSimulation::id = 0;
+	BStarNode root(-1000, 1000, 0, 0, Move());
+	return BStar(root, 0, true, myRack, opponetRack).move;
 }
+void EndSimulation::estimateOPRack()
+{
+	string boardLetters = board.getBoardLetters();
+	vector<char> myLetters = myRack.getRackTiles();
 
+	unordered_map<char, int> freq;
+	freq['A'] = tileLookup->getFrequency('A');
+	freq['B'] = tileLookup->getFrequency('B');
+	freq['C'] = tileLookup->getFrequency('C');
+	freq['D'] = tileLookup->getFrequency('D');
+	freq['E'] = tileLookup->getFrequency('E');
+	freq['F'] = tileLookup->getFrequency('F');
+	freq['G'] = tileLookup->getFrequency('G');
+	freq['H'] = tileLookup->getFrequency('H');
+	freq['I'] = tileLookup->getFrequency('I');
+	freq['J'] = tileLookup->getFrequency('J');
+	freq['K'] = tileLookup->getFrequency('K');
+	freq['L'] = tileLookup->getFrequency('L');
+	freq['M'] = tileLookup->getFrequency('M');
+	freq['N'] = tileLookup->getFrequency('N');
+	freq['O'] = tileLookup->getFrequency('O');
+	freq['P'] = tileLookup->getFrequency('P');
+	freq['Q'] = tileLookup->getFrequency('Q');
+	freq['R'] = tileLookup->getFrequency('R');
+	freq['S'] = tileLookup->getFrequency('S');
+	freq['T'] = tileLookup->getFrequency('T');
+	freq['U'] = tileLookup->getFrequency('U');
+	freq['V'] = tileLookup->getFrequency('V');
+	freq['W'] = tileLookup->getFrequency('W');
+	freq['X'] = tileLookup->getFrequency('X');
+	freq['Y'] = tileLookup->getFrequency('Y');
+	freq['Z'] = tileLookup->getFrequency('Z');
+	freq[BLANK_TILE] = tileLookup->getFrequency(BLANK_TILE);
 
-EndSimulation::EndSimulation(const Board &board, TileLookUp*tl, Rack opponentRack, Rack myRack, Gaddag * GD, Heuristics* hr)
+	for (int i = 0; i < boardLetters.size(); i++)
+	{
+		freq[boardLetters[i]]--;
+	}
+
+	for (int i = 0; i < myLetters.size(); i++)
+	{
+		freq[myLetters[i]]--;
+	}
+
+	for (unordered_map<char, int>::iterator it = freq.begin(); it != freq.end(); ++it) {
+		if (it->second != 0)
+			for (size_t i = 0; i < it->second; i++)
+			{
+				opponetRack.addTile(it->first);
+			}
+	}
+}
+void EndSimulation::updateOPRack(const Move & move)
+{
+	opponetRack.removeMoveTiles(move);
+}
+//! for test only constructor
+EndSimulation::EndSimulation(Board* board, TileLookUp*tl, Rack opponentRack, Rack myRack, Gaddag * GD, Heuristics* hr)
 {
 	this->scoreManager = scoreManager;
 	this->opponetRack = opponentRack;
 	this->myRack = myRack;
 	this->tileLookup = tl;
-	this->board = board; //! test implicit copy constructors
+	this->board = *board; //! test implicit copy constructors
 	this->MG = GD;
 	this->hr = hr;
 }
-
+//! for production 
+//EndSimulation::EndSimulation(const Board &board, TileLookUp*tl, Rack myRack, Gaddag * GD, Heuristics* hr)
+//{
+//	this->scoreManager = scoreManager;
+//	this->opponetRack = opponentRack;
+//	this->myRack = myRack;
+//	this->tileLookup = tl;
+//	this->board = board; //! test implicit copy constructors
+//	this->MG = GD;
+//	this->hr = hr;
+//	void estimateOPRack();
+//
+//}
 EndSimulation::~EndSimulation()
 {
 }
