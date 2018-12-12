@@ -31,6 +31,7 @@ public:
 	double Double_RL(const Move& move, const vector<char>& leave, const vector<char>& uniqleave);
 	double Qsticking(const vector<char>& estimatedRack, const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos);
 
+
 	~Heuristics();
 };
 

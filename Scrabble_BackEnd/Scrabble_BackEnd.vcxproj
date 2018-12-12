@@ -118,8 +118,11 @@
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="BagOfLetters.cpp" />
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="BStarNode.cpp" />
+    <ClCompile Include="EndSimulation.cpp" />
     <ClCompile Include="client.cpp" />
     <ClCompile Include="easywsclient.cpp" />
+
     <ClCompile Include="Gaddag.cpp" />
     <ClCompile Include="GaddagNode.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -142,8 +145,10 @@
     <ClInclude Include="AI.h" />
     <ClInclude Include="BagOfLetters.h" />
     <ClInclude Include="Board.h" />
+    <ClInclude Include="BStarNode.h" />
     <ClInclude Include="client.h" />
     <ClInclude Include="communication_server.hpp" />
+
     <ClInclude Include="Constants.h" />
     <ClInclude Include="easywsclient.h" />
     <ClInclude Include="EndSimulation.h" />

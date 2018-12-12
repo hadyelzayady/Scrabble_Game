@@ -1,18 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="AI.cpp" />
+    <ClCompile Include="BagOfLetters.cpp" />
+    <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Gaddag.cpp" />
+    <ClCompile Include="GaddagNode.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="MonteCarlo.cpp" />
+    <ClCompile Include="move.cpp" />
+    <ClCompile Include="Play.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ProbabilityManager.cpp" />
+    <ClCompile Include="Rack.cpp" />
+    <ClCompile Include="ScoreManager.cpp" />
+    <ClCompile Include="Square.cpp" />
+    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="TileLookUp.cpp" />
+    <ClCompile Include="PreEndGameManager.cpp" />
+    <ClCompile Include="Heuristics.cpp" />
+    <ClCompile Include="EndSimulation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -78,6 +86,8 @@
     <ClCompile Include="MonteCarlo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+
+    <ClCompile Include="BStarNode.cpp">
     <ClCompile Include="client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -85,6 +95,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source.cpp">
+
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,6 +166,10 @@
     <ClInclude Include="MonteCarlo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BStarNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PreEndGameManager.h" />
     <ClInclude Include="client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
