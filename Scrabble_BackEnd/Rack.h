@@ -19,12 +19,11 @@ public:
 
 	void addTile(char x);
 	void removeTile(char x);
-	int getSize();
+	int getSize()const;
 
 	vector<char> getRackTiles();
-	vector<char> getLeave(Move move);
-	vector<char> getUniqueLeave(Move move);
-	void removeMoveTiles(const Move & move);
+	vector<char> getLeave(const Move& move)const;
+	vector<char> getUniqueLeave(const Move& move)const;
 
 	// Ahmed Soliman
 	inline void eraseElementFromVector(std::vector<char> &vec, int index) {

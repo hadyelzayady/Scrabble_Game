@@ -5,6 +5,7 @@
 #include "Heuristics.h"
 #include "ScoreManager.h"
 #include "Gaddag.h"
+#include <climits>
 #include <math.h>
 class MidGameManager
 {
@@ -17,6 +18,6 @@ public:
 
 	MidGameManager(TileLookUp * Tp, Gaddag * GD);
 	~MidGameManager();
-	int getBestMove(bool firstTurn, vector<Move>  movesList, Rack* Rack, Board * b);
+	int getBestMove(const vector<Move>&  movesList, Rack* Rack, Board * b);
 
 };

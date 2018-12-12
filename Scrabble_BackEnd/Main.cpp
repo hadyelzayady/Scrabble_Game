@@ -49,9 +49,11 @@ void  writeBoardToFile(const Board&board)
 					line += board.m_board[i][j].letter;
 			}
 			myfile << line<<"\n";
+
 		}
 		myfile.close();
 	}
+
 }
 void clearfile()
 {
@@ -108,18 +110,12 @@ int main()
 		oprack=myrack;
 		myrack = temp;
 		cout << "end simulation\n";
+
 	}
 
-//	MonteCarlo * M = new MonteCarlo(r,c,Pm);
-	// M->simulation(100);
-//	 Utilities * u =new  Utilities();
-/*
-	Intiating  instance tileLookUp from TileLookUp class
-	*/
-	//TileLookUp * tileLookUp = new TileLookUp();
-	//GameManager * gameManager = new GameManager(tileLookUp, playerCount, playerNames);
-	//gameManager->simulateGame();
+
 
 	system("pause");
 	return 0;
 } 
+

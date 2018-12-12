@@ -21,8 +21,8 @@ public:
 
 	std::vector<std::string> traverse(GaddagNode* root);
 
-	std::vector<Move> findWords(std::vector<char> rack,  Board* board);
-
+	void findWords(std::vector<char> rack, std::vector<Move>& moves,  Board* board);
+	
 	void findHorizontal(int offset, int anchorx, int anchory, Move inMove, std::vector<char> rack,
 		GaddagNode* currNode,  Board* board, std::vector<Move>& moves);
 

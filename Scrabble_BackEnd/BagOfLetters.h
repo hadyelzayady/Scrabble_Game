@@ -8,8 +8,9 @@
 class BagOfLetters {
 
 	int bag[27];	//array used to represent the letter bag
-	int size;
+	
 public:
+	int size;
 	//Constructor
 	BagOfLetters();
 

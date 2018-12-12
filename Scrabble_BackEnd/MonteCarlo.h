@@ -5,13 +5,14 @@
 #include <random>
 class MonteCarlo
 {
+	
+public:
 	TileLookUp * tileLookUp;
-	vector <char>  myrackchars; 
+	vector <char>  myrackchars;
 	char * boardPool;
 	ProbabilityManager * Pm;
 	std::vector<char> availableCharacters;
 	std::vector<pair<char, int>> availableFrequinces;
-public:
 	MonteCarlo( Rack * myRack , char * boardPool, ProbabilityManager *pm);
 	void createAvaliableLetters();
 	vector<pair<vector<char>, double>> simulation(int N = 100);

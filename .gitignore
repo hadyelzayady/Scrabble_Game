@@ -4,6 +4,7 @@
 # User-specific files
 *.suo
 *.user
+*.log
 *.userosscache
 *.sln.docstates
 

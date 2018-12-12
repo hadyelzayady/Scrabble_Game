@@ -8,7 +8,7 @@ class Square
 
 public:
 	char letter = EMPTY_SQUARE;//! blank tile has special character (check in constants file) , empty square equals null
-	
+	bool blank;
 	// ToDo: we can make new class inherits from this class to contain below data members 
 	// as many squares are not prime squares in the boad so we will save space
 	

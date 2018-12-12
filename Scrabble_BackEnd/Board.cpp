@@ -83,12 +83,13 @@ const string &Board::getBoardLetters()
 //we added board as parameter so we can use it inside commitMoveSim
 void Board::commitMove(const Move &move)
 {
-	vector<Play>plays = move.Plays;
-	for (size_t i = 0; i < plays.size(); i++)
+	
+	for (size_t i = 0; i < move.Plays.size(); i++)
 	{
-		char letter = plays[i].get_Letter();
-		pair<int, int> position = plays[i].get_Coordinates();
+		char letter = move.Plays[i].Letter;
+		pair<int, int> position = move.Plays[i].coordinates;
 		setTile(letter, position.second, position.first);
+		m_board[position.second][position.first].blank = move.Plays[i].Blank;
 		//
 		LettersOnBoard += letter;
 	}
@@ -147,7 +148,7 @@ const char &Board::getLetter(unsigned short row, unsigned short column) const
 
 bool Board::isEmptySquare(unsigned short row, unsigned short column) const
 {
-	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
+	if ((row < ROWS_COUNT && row >= 0) && (column < COLUMNS_COUNT && column >= 0))
 	{
 		return m_board[row][column].isEmpty();
 	}
@@ -170,6 +171,15 @@ Board::Board(const Square board[ROWS_COUNT][COLUMNS_COUNT])
 	catch (...)
 	{
 		//throw "error in board init";
+	}
+}
+
+Board::Board(char board[15][15])
+{
+	for (int i = 0; i < 15; i++) {
+		for (int j = 0; j < 15; j++) {
+			m_board[i][j].letter = board[i][j];
+		}
 	}
 }
 
@@ -230,6 +240,7 @@ void Board::removeTile(unsigned short row, unsigned short column)
 			;
 	}
 	//throw EXCEPTION_OUT_OF_BOUND;
+	return true;
 }
 
 bool Board::isAnchor(unsigned short row, unsigned short column) const
@@ -290,7 +301,7 @@ void Board::computeVerticalSet(int i, int j, GaddagNode* root) {
 			int k;
 			for (k = 0; k < 26; ++k) {
 				current = base;
-				current = current->getChildren(mapping[i]);
+				current = current->getChildren(mapping[k]);
 				y = i + 1;
 				while (current != NULL && !isEmptySquare(y + 1, j)) {	//while there is a letter down and haven't reached a null node
 					current = current->getChildren(getLetter(y, j));
@@ -320,7 +331,7 @@ void Board::computeVerticalSet(int i, int j, GaddagNode* root) {
 			std::vector<unsigned int> positions;
 			current->getOnesPositions(current->end, positions);
 			int iter, ilen;
-			for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
+			for (iter = 0, ilen =(int) positions.size(); iter < ilen; ++iter) {
 				m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
 			}
 		}
@@ -342,7 +353,7 @@ void Board::computeVerticalSet(int i, int j, GaddagNode* root) {
 		std::vector<unsigned int> positions;
 		current->getOnesPositions(current->end, positions);
 		int iter, ilen;
-		for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
+		for (iter = 0, ilen = (int) positions.size(); iter < ilen; ++iter) {
 			m_board[i][j].verticalSet.insert(mapping[positions[iter]]);
 		}
 	}
@@ -366,7 +377,7 @@ void Board::computeHorizontalSet(int i, int j, GaddagNode* root) {
 			int k;
 			for (k = 0; k < 26; ++k) {
 				current = base;
-				current = current->getChildren(mapping[i]);
+				current = current->getChildren(mapping[k]);
 				x = j + 1;
 				while (current != NULL && !isEmptySquare(i, x + 1)) {
 					current = current->getChildren(getLetter(i, x));
@@ -397,7 +408,7 @@ void Board::computeHorizontalSet(int i, int j, GaddagNode* root) {
 			std::vector<unsigned int> positions;
 			current->getOnesPositions(current->end, positions);
 			int iter, ilen;
-			for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
+			for (iter = 0, ilen =(int) positions.size(); iter < ilen; ++iter) {
 				m_board[i][j].horizontalSet.insert(mapping[positions[iter]]);
 			}
 		}
@@ -419,7 +430,7 @@ void Board::computeHorizontalSet(int i, int j, GaddagNode* root) {
 		std::vector<unsigned int> positions;
 		current->getOnesPositions(current->end, positions);
 		int iter, ilen;
-		for (iter = 0, ilen = positions.size(); iter < ilen; ++iter) {
+		for (iter = 0, ilen =(int) positions.size(); iter < ilen; ++iter) {
 			m_board[i][j].horizontalSet.insert(mapping[positions[iter]]);
 		}
 	}
@@ -441,6 +452,128 @@ bool Board::checkCharInVerticalSet(int i, int j, char l) const {
 		return true;
 	}
 	return false;
+}
+
+bool Board::isMoveValid(const Move &oponentMove, GaddagNode* root, std::string word) {
+	bool hasAnchor = false;
+	int i, ilen;
+	for (i = 0, ilen = (int) oponentMove.Plays.size(); i < ilen; ++i) {
+		if (!isEmptySquare(oponentMove.Plays[i].coordinates.second, oponentMove.Plays[i].coordinates.first))
+			return false;
+		else if (isAnchor(oponentMove.Plays[i].coordinates.second, oponentMove.Plays[i].coordinates.first)) {
+			hasAnchor = true;
+			if (!checkCharInHorizontalSet(oponentMove.Plays[i].coordinates.second, oponentMove.Plays[i].coordinates.first, oponentMove.Plays[i].Letter)
+				|| !checkCharInVerticalSet(oponentMove.Plays[i].coordinates.second, oponentMove.Plays[i].coordinates.first, oponentMove.Plays[i].Letter))
+				return false;
+		}
+	}
+
+
+	return (hasAnchor && root->contains(word));
+}
+
+bool Board::checkMoveHorizontal(const Move& move) {
+	if (move.Plays.size() == 1) {
+		if (!isEmptySquare(move.Plays[0].coordinates.second, move.Plays[0].coordinates.first - 1) ||
+			!isEmptySquare(move.Plays[0].coordinates.second, move.Plays[0].coordinates.first + 1))
+			return true;
+		else
+			return false;
+	}
+	if (move.Plays[0].coordinates.second == move.Plays[1].coordinates.second) // if y = y
+		return true;
+	else
+		return false;
+}
+
+// Under construction
+void Board::formatMyMove(const Move& move, playMove & moveToBeSent) {
+	if (checkMoveHorizontal(move)) {
+		moveToBeSent.direction = 0;
+		/// sort the vector of plays inside the move according to plays[i].coordinates.first not implemented   hena first
+	}
+	else
+	{
+		moveToBeSent.direction = 1;
+		/// sort the vector of plays inside the move according to plays[i].coordinates.second not implemented   hena second		
+	}
+	moveToBeSent.Scolumn = move.Plays[0].coordinates.first; /// x
+	moveToBeSent.Srow = move.Plays[0].coordinates.second;  /// y 
+	int i, ilen;
+	for (i = 0, ilen = (int) move.Plays.size(); i < ilen; ++i) {
+		moveToBeSent.tiles.push_back(move.Plays[i].Letter);
+	}
+}
+
+std::string Board::formatOponentMove(const player2Move_formated& move, int& challengeTime, uTime& currentTime, Move &oponentMove, double& score) {
+	string word = "";
+	if (move.direction == 0) { // if horizontal
+		int y = move.Srow;
+		int prev = move.Scolumn - 1;
+		while (!isEmptySquare(y, prev)) {
+			word.insert(0, 1, this->m_board[y][prev].letter);
+			prev--;
+		}
+		int i, ilen;
+		int next = move.Scolumn;
+		for (i = 0, ilen = (int) move.tiles.size(); i < ilen; ++i) {
+			while (!isEmptySquare(y, next)) {
+				word += this->m_board[y][next].letter;
+				next++;
+			}
+			word += move.tiles[i];
+			if (move.blankIndecies[0] == i || move.blankIndecies[1] == i)
+				oponentMove.addPlay(next, y, move.tiles[i], true);
+			else
+				oponentMove.addPlay(next, y, move.tiles[i]);
+		}
+	}
+	else {
+		int x = move.Scolumn;
+		int prev = move.Srow - 1;
+		while (!isEmptySquare(prev, x)) {
+			word.insert(0, 1, this->m_board[prev][x].letter);
+			prev--;
+		}
+		int i, ilen;
+		int next = move.Srow;
+		for (i = 0, ilen = (int) move.tiles.size(); i < ilen; ++i) {
+			while (!isEmptySquare(next, x)) {
+				word += this->m_board[next][x].letter;
+				next++;
+			}
+			word += move.tiles[i];
+			if (move.blankIndecies[0] == i || move.blankIndecies[1] == i)
+				oponentMove.addPlay(x, next, move.tiles[i], true);
+			else
+				oponentMove.addPlay(x, next, move.tiles[i]);
+		}
+	}
+	challengeTime = move.challengeTime;
+	currentTime = move.time;
+	score = (double)move.score;
+	return word;
+
+}
+
+void Board::uncommitMove(const Move &move)
+{
+	for (size_t i = 0; i < move.Plays.size(); i++)
+	{
+		pair<int, int> position = move.Plays[i].coordinates;
+		unsetTile(position.second, position.first);
+		m_board[position.second][position.first].blank = false;
+	}
+}
+
+void Board::unsetTile(unsigned short row, unsigned short column)
+{
+	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
+	{
+		m_board[row][column].letter = EMPTY_SQUARE;
+		return;
+	}
+	//throw EXCEPTION_OUT_OF_BOUND;
 }
 
 Board::~Board()

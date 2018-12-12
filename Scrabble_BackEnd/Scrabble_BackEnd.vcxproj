@@ -120,6 +120,9 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="BStarNode.cpp" />
     <ClCompile Include="EndSimulation.cpp" />
+    <ClCompile Include="client.cpp" />
+    <ClCompile Include="easywsclient.cpp" />
+
     <ClCompile Include="Gaddag.cpp" />
     <ClCompile Include="GaddagNode.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -134,6 +137,7 @@
     <ClCompile Include="ProbabilityManager.cpp" />
     <ClCompile Include="Rack.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="Square.cpp" />
     <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
@@ -142,8 +146,15 @@
     <ClInclude Include="BagOfLetters.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="BStarNode.h" />
+    <ClInclude Include="client.h" />
+    <ClInclude Include="communication_server.hpp" />
+
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="easywsclient.h" />
     <ClInclude Include="EndSimulation.h" />
+    <ClInclude Include="enums.h" />
+    <ClInclude Include="functions.h" />
+    <ClInclude Include="functions2.h" />
     <ClInclude Include="Gaddag.h" />
     <ClInclude Include="GaddagNode.h" />
     <ClInclude Include="GameManager.h" />
@@ -161,6 +172,8 @@
     <ClInclude Include="Square.h" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="TileLookUp.cpp" />
+    <ClInclude Include="structs.h" />
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileLookUp.h" />

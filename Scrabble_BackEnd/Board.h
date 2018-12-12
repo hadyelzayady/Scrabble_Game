@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include <iostream>
 #include "GaddagNode.h"
+#include "structs.h"
 using namespace std;
 #include <string>
 #include "move.h"
@@ -24,7 +25,10 @@ public:
 	bool isEmptySquare(unsigned short row, unsigned short column) const; //same as square.isEmpty just another interface
 	//bool isConnected(const Move);
 	Board(const Square board[ROWS_COUNT][COLUMNS_COUNT]);
+	Board(char board[15][15]);
 	Board();
+	
+
 	Board(const Board & b);
 	void setTile(char letter, unsigned short row, unsigned short column);
 	void removeTile(unsigned short row, unsigned short column);
@@ -33,7 +37,10 @@ public:
 	bool isAnchor(unsigned short row, unsigned short column) const;//empty square on board that has at least one letter around it
 	//TODO in B* simu: the node is board state and the arch is the move
 
-	//Timon Updates
+	////Ahmed osman////
+	void unsetTile(unsigned short row, unsigned short column);	
+	void uncommitMove(const Move & move);
+	//Ahmed Soliman Updates
 	void computeCrossSets(GaddagNode* g);  // g is the root in gaddag class 
 
 	void computeHorizontalSet(int i, int j, GaddagNode* root);
@@ -41,7 +48,17 @@ public:
 
 	bool checkCharInHorizontalSet(int i, int j, char l) const;
 	bool checkCharInVerticalSet(int i, int j, char l) const;
+	bool isMoveValid(const Move &oponentMove, GaddagNode* root, std::string word);
+	bool checkMoveHorizontal(const Move& move);
+	// Under construction (sorting)
+	void formatMyMove(const Move& move, playMove & moveToBeSent);
+
+
+	string formatOponentMove(const player2Move_formated& move, int& challengeTime, uTime& currentTime, Move &oponentMove, double& score);
 
 
 	~Board();
 };
+
+
+

@@ -23,14 +23,17 @@ void Rack::removeMoveTiles(const Move & move)
 	}
 }
 
-vector<char> Rack::getLeave(Move move)
+vector<char> Rack::getLeave(const Move& move)const
+
 {
 	// vector<Play> plays = move.Plays;
 	vector<char> leave = this->list;
 	int size = move.Plays.size();
 
 	for (int i = 0; i < size; i++) {
-		if (move.Plays[i].isBlank() == true) {
+
+		if (move.Plays[i].Blank == true) {
+
 			std::vector<char>::iterator position = std::find(leave.begin(), leave.end(), BLANK_TILE);
 			if (position != leave.end()) // == myVector.end() means the element was not found
 				leave.erase(position);
@@ -50,7 +53,7 @@ void Rack::commitMove(Move * move)
 {
 	int size = move->Plays.size();
 	for (int i = 0; i < size; i++) {
-		if (move->Plays[i].isBlank() == true) {
+		if (move->Plays[i].Blank == true) {
 			std::vector<char>::iterator position = std::find(this->list.begin(), this->list.end(), BLANK_TILE);
 			if (position != this->list.end()) // == myVector.end() means the element was not found
 				this->list.erase(position);
@@ -68,23 +71,10 @@ void Rack::commitMove(Move * move)
 
 
 
-// TODO: Optimise to use eraseElementFromVector functon
-vector<char> Rack::getUniqueLeave(Move move)
+vector<char> Rack::getUniqueLeave(const Move& move) const
 {
 
-	vector<Play> plays = move.getPlaysPointer();
-	vector<char> leave = this->list;
-
-
-	for (int i = 0; i < plays.size(); i++)
-	{
-		for (int k = 0; k < leave.size(); k++)
-		{
-			if (leave[k] == plays[i].get_Letter())
-				leave.erase(leave.begin() + k);
-		}
-
-	}
+	vector<char> leave = getLeave(move);
 
 
 	for (int i = 0; i < leave.size(); i++)
@@ -94,7 +84,6 @@ vector<char> Rack::getUniqueLeave(Move move)
 			if (leave[i] == leave[k])
 				leave.erase(leave.begin() + k);
 		}
-
 	}
 
 	return leave;
@@ -133,7 +122,7 @@ void Rack::removeTile(char x)
 }
 
 
-int Rack::getSize()
+int Rack::getSize()const
 {
 	return list.size();
 }

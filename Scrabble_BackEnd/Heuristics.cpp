@@ -11,10 +11,12 @@ const float vcvalues[8][8] =
 	{-23.5,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0},
 };
 
+
 Heuristics::Heuristics()
 {
 
-	ReadMap("double_RL.txt");
+
+	ReadMap("double_RL.log");
 	Read_Leave_DP();
 
 
@@ -48,8 +50,9 @@ void Heuristics::ReadMap(string inDirectory)
 
 }
 void Heuristics::Read_Leave_DP()
+
 {
-	ifstream input("leave_DP.txt");
+	ifstream input("leave_DP.log");
 	if (!input) cout << "Error occured while opening the file" << endl;
 	else
 	{
@@ -65,14 +68,15 @@ void Heuristics::Read_Leave_DP()
 		input.close();
 	}
 }
-void Heuristics::saveToFile(vector<char> data, double cost)
+void Heuristics::saveToFile(vector<pair<vector<char>, double>> tobesaved)
 {
 
 	fstream myfile;
 
-	myfile.open("leave_DP.txt", ios::app);
+	myfile.open("leave_DP.log", ios::app);
 
-	if (!myfile.is_open()) {
+	if (!myfile.is_open())
+	{
 
 		cout << "Error occured while opening the file";
 
@@ -81,43 +85,44 @@ void Heuristics::saveToFile(vector<char> data, double cost)
 	else
 
 	{
-		for (int i = 0; i < data.size(); i++)
+		int inL = tobesaved.size();
+		for (int i = 0; i < inL; i++)
 		{
-			myfile << data[i];
+			int inL2 = tobesaved[i].first.size();
+			for (int j = 0; j < inL2; j++)
+			{
+				myfile << tobesaved[i].first[j];
+			}
+
+			myfile << " " << tobesaved[i].second << endl;
 		}
-
-		myfile << " " << cost << endl;
-
 		myfile.close();
 
 	}
 
 }
 
-
 //to  call heuristics randomly
-double Heuristics::getHeuristics(bool first_turn, vector<char> estimatedRack, Rack  current, Move  move, BagOfLetters bag, vector < pair<int, int>>  Qpos, vector < pair<int, int> > Zpos)
+double Heuristics::getHeuristics(bool first_turn, const vector<char>& estimatedRack, const Rack&  current, const Move&  move, const BagOfLetters& bag, const vector < pair<int, int>>&  Qpos, const vector < pair<int, int> >& Zpos)
 {
 
 	vector<char> leave = current.getLeave(move);
 	vector<char> uniqleave = current.getUniqueLeave(move);
 
-	if (bag.getSize() == 0) return endGame(estimatedRack, current.getSize(), move, Qpos, Zpos);
-	else if (bag.getSize() < 10 && bag.getSize() > 0) return preEnd(move, leave, uniqleave);
+	if (bag.size == 0) return endGame(estimatedRack, current.getSize(), move, Qpos, Zpos);
+	else if (bag.size < 10 && bag.size > 0) return preEnd(move, leave, uniqleave);
 	else return midGame(first_turn, move, leave, uniqleave);
 
 }
 
-
-
-///algorithms
-double Heuristics::calculateDRL(vector<char> leave)
+// algorithms
+double Heuristics::calculateDRL(const vector<char>& leave)
 {
 	double cost = 0.0;
-
-	for (int i = 0; i < leave.size(); i++)
+	int i, ilen;
+	for (i = 0, ilen = leave.size(); i < ilen; i++)
 	{
-		for (int j = i + 1; j < leave.size(); j++)
+		for (int j = i + 1; j < ilen; j++)
 		{
 			string x;
 			string y;
@@ -154,7 +159,9 @@ double Heuristics::calculateDRL(vector<char> leave)
 	return cost;
 
 }
+
 double Heuristics::Double_RL(Move move, vector<char>  leave, vector<char> uniqleave)
+
 {
 	double synergy = 0;
 	if (!leave.empty())
@@ -170,7 +177,9 @@ double Heuristics::Double_RL(Move move, vector<char>  leave, vector<char> uniqle
 		bool X = false;
 		// TODO handle the Q
 		bool holding_bad_tile = false;
-		for (int i = 0; i < uniqleave.size(); i++)
+
+		int i, ilen;
+		for (i = 0, ilen = uniqleave.size(); i < ilen; i++)
 		{
 
 			if (uniqleave[i] == 'U') U = true;
@@ -193,13 +202,17 @@ double Heuristics::Double_RL(Move move, vector<char>  leave, vector<char> uniqle
 	}
 	return synergy;
 }
-double Heuristics::VowelCons(vector<char> leave)
+
+double Heuristics::VowelCons(const vector<char>& leave)
+
 {
 
 	int vowels = 0;
 	int cons = 0;
 
-	for (int i = 0; i < leave.size(); i++)
+	int i, ilen;
+	for (i = 0, ilen = leave.size(); i < ilen; i++)
+
 	{
 		if (leave[i] != BLANK_TILE)
 		{
@@ -215,29 +228,35 @@ double Heuristics::SlowEndGame(int currentRack_size, int move_size)
 {
 	return (currentRack_size - move_size); //short word move better than long word move
 }
-double Heuristics::Qsticking(vector<char> estimatedRack, Move move, vector<pair<int, int>>  Qpos, vector<pair<int, int>>  Zpos)
+double Heuristics::Qsticking(const vector<char>& estimatedRack, const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos)
 {
 
-	vector<Play> plays = move.Plays;
+	//vector<Play> plays = move.Plays;
 	bool hasQ = false;
 	bool hasZ = false;
 	double quality = 1;
+	int i, ilen;
+	for (i = 0, ilen = estimatedRack.size(); i < ilen; i++)
 
-	for (int i = 0; i < estimatedRack.size(); i++)
 	{
 		if (estimatedRack[i] == 'Q')hasQ = true;
 		if (estimatedRack[i] == 'Z')hasZ = true;
 	}
 
-	for (int i = 0; i < plays.size(); i++)
+
+	for (i = 0, ilen = move.Plays.size(); i < ilen; i++)
+
 	{
 		if (hasQ)
 		{
-			for (int k = 0; k < Qpos.size(); k++)
+			int k, klen;
+			for (k = 0, klen = Qpos.size(); k < klen; k++)
 			{
-				if (plays[i].get_Coordinates() == Qpos[k])
+				if (move.Plays[i].coordinates == Qpos[k])
 				{
-					quality = quality + 5;
+
+					quality = quality + 2;
+
 				}
 
 			}
@@ -245,11 +264,14 @@ double Heuristics::Qsticking(vector<char> estimatedRack, Move move, vector<pair<
 		}
 		if (hasZ)
 		{
-			for (int k = 0; k < Zpos.size(); k++)
+			int k, klen;
+			for (k = 0, klen = Zpos.size(); k < klen; k++)
 			{
-				if (plays[i].get_Coordinates() == Zpos[k])
+				if (move.Plays[i].coordinates == Zpos[k])
 				{
-					quality = quality + 5;
+
+					quality = quality + 2;
+
 				}
 
 			}
@@ -258,17 +280,19 @@ double Heuristics::Qsticking(vector<char> estimatedRack, Move move, vector<pair<
 	return quality;
 }
 
-//heuristics modes
-double Heuristics::endGame(vector<char> estimatedRack, int currentRack_size, Move move, vector<pair<int, int>>  Qpos, vector<pair<int, int>>  Zpos)
+
+// heuristics modes
+double Heuristics::endGame(const vector<char>& estimatedRack, int currentRack_size, const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos)
 {
 	double cost = 0.0;
-	vector<Play> plays = move.Plays;
+	//vector<Play> plays = move.Plays;
+
 	double val1 = Qsticking(estimatedRack, move, Qpos, Zpos);
 	double val2 = SlowEndGame(currentRack_size, move.Plays.size());
 	cost = val1 + val2;
 	return cost;
 }
-double Heuristics::preEnd(Move move, vector<char>  leave, vector<char> uniqleave)
+double Heuristics::preEnd(const Move& move, vector<char>  leave, const vector<char>& uniqleave)
 {
 
 	double cost = 0.0;
@@ -285,17 +309,24 @@ double Heuristics::preEnd(Move move, vector<char>  leave, vector<char> uniqleave
 		double synergy = Double_RL(move, leave, uniqleave);
 		cost = cost + synergy;
 		cost += VowelCons(leave);
-		saveToFile(leave, cost);
+
+		pair<vector<char>, double> pair;
+		pair.first = leave;
+		pair.second = cost;
+		SaveDP.push_back(pair);
+
 	}
 	return cost;
 }
-double Heuristics::midGame(bool first_turn, Move  move, vector<char> leave, vector<char> uniqleave)
+double Heuristics::midGame(bool first_turn, const Move&  move, vector<char> leave, const vector<char>& uniqleave)
 {
 	double cost = 0.0;
-	vector<Play> plays = move.Plays;
+
+	//vector<Play> plays = move.Plays;
+
 	if (first_turn == true)
 	{
-		if (plays.size() == 7)
+		if (move.Plays.size() == 7)
 		{
 			cost -= 50;
 		}
@@ -313,13 +344,15 @@ double Heuristics::midGame(bool first_turn, Move  move, vector<char> leave, vect
 		double synergy = Double_RL(move, leave, uniqleave);
 		cost = cost + synergy;
 		cost += VowelCons(leave);
+
 		saveToFile(leave, cost);
 	}
 	return cost;
 }
 
+
 // for hady 
-void Heuristics::endGame2vals(vector<char> estimatedRack, Rack current, Move move, vector<pair<int, int>>  Qpos, vector<pair<int, int>>  Zpos, double &maxVal, double &minVal)
+void Heuristics::endGame2vals(const vector<char>& estimatedRack, const Rack& current, const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos, double &maxVal, double &minVal)
 {
 	// need to add the score with the heuristic -> check with them
 	// calculate double rack leave -> value
@@ -348,13 +381,14 @@ void Heuristics::endGame2vals(vector<char> estimatedRack, Rack current, Move mov
 	x = max(x, val3);
 	x = max(x, val4);
 	maxVal = x;
-
 }
 
 
 
 Heuristics::~Heuristics()
 {
+	saveToFile(SaveDP);
+
 }
 
 
