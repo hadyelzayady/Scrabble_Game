@@ -116,7 +116,7 @@ const char &Board::getLetter(unsigned short row, unsigned short column) const
 
 bool Board::isEmptySquare(unsigned short row, unsigned short column) const
 {
-	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
+	if ((row < ROWS_COUNT && row >= 0) && (column < COLUMNS_COUNT && column >= 0))
 	{
 		return m_board[row][column].isEmpty();
 	}
