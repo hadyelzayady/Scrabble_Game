@@ -225,7 +225,7 @@ double Heuristics::Qsticking(const vector<char>& estimatedRack, const Move& move
 	//vector<Play> plays = move.Plays;
 	bool hasQ = false;
 	bool hasZ = false;
-	double quality = 1;
+	double quality = 10;
 	int i, ilen;
 	for (i = 0, ilen = estimatedRack.size(); i < ilen; i++)
 	{
@@ -242,7 +242,7 @@ double Heuristics::Qsticking(const vector<char>& estimatedRack, const Move& move
 			{
 				if (move.Plays[i].coordinates == Qpos[k])
 				{
-					quality = quality + 2;
+					quality = quality + 1;
 				}
 
 			}
@@ -255,7 +255,7 @@ double Heuristics::Qsticking(const vector<char>& estimatedRack, const Move& move
 			{
 				if (move.Plays[i].coordinates == Zpos[k])
 				{
-					quality = quality + 2;
+					quality = quality + 1;
 				}
 
 			}

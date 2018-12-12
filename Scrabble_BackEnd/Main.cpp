@@ -71,15 +71,15 @@ int main()
 	writeBoardToFile(board);
 	board.computeCrossSets(g->root);
 	Rack myrack, oprack;
-	myrack.addTile('Q');
-	myrack.addTile('N');
+	myrack.addTile('T');
+	myrack.addTile('B');
 	myrack.addTile('A');
-	myrack.addTile('K');
+	myrack.addTile('S');
 	myrack.addTile('C');
 	myrack.addTile('Z');
 
 	oprack.addTile('T');
-	oprack.addTile('U');
+	oprack.addTile('Q');
 	oprack.addTile('G');
 	oprack.addTile('H');
 	oprack.addTile('J');
@@ -89,14 +89,21 @@ int main()
 	Heuristics hr;
 	Logger log;
 	log.DisplayBoard(&board);
-
+	bool h = true;
 	EndSimulation ends(&board, &tl, oprack, myrack, g, &hr);
-
 	while (!oprack.getRackTiles().empty() && !myrack.getRackTiles().empty())
 	{
 		EndSimulation ends(&board, &tl, oprack, myrack, g, &hr);
-
 		Move best = ends.start();
+		if (best.Plays.empty())
+		{
+			if (h == true)
+				break;
+			h = true;
+		}
+		else
+			h = false;
+			
 		if (best.Plays.size() != 0)
 		{
 			cout << "score "<<ScoreManager::calculateScore(best, &board, &tl)<<endl;

@@ -150,6 +150,45 @@ bool moveHasQ(const Move&move) {
 	return false;
 
 }
+double Qsticking(const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos)
+{
+
+	//vector<Play> plays = move.Plays;
+	bool hasQ = false;
+	bool hasZ = false;
+	double quality = 1;
+	int i, ilen;
+
+	for (i = 0, ilen = move.Plays.size(); i < ilen; i++)
+	{
+		if (hasQ)
+		{
+			int k, klen;
+			for (k = 0, klen = Qpos.size(); k < klen; k++)
+			{
+				if (move.Plays[i].coordinates == Qpos[k])
+				{
+					quality = quality + 10;
+				}
+
+			}
+
+		}
+		/*if (hasZ)
+		{
+			int k, klen;
+			for (k = 0, klen = Zpos.size(); k < klen; k++)
+			{
+				if (move.Plays[i].coordinates == Zpos[k])
+				{
+					quality = quality + 1;
+				}
+
+			}
+		}*/
+	}
+	return quality;
+}
 vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrack, Rack&oprack, bool ismax, vector<BStarNode *>& bestFirstAndSecond)
 {
 	if ((ismax && myrack.list.size() == 0) || (!ismax && oprack.list.size() == 0))
@@ -211,17 +250,33 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], qPos, zPos, optm, pess);
 			optm += moveScore;
 			pess += moveScore;
+			Move move = moves[i];
+			double test = optm;
+			if (moves[i].Plays[0].Letter == 'T' && moves[i].Plays.size()==1)
+				cout << "T move:" << optm;
 			if (moveHasQ(moves[i]))
 			{
 				cout << "MIN" << optm << " " << pess<<endl;
-				Move move = moves[i];
-				optm *= 20;
-				pess *= 20;
+				optm *= HASQVAL;
+				pess *= HASQVAL;
 				cout << move.Plays[0].coordinates.second<<","<< move.Plays[0].coordinates.first<<endl;
 				cout << optm << "," << pess<<endl;
 
 			}
+			else if (qPos.size() != 0)
+			{
+				int val = Qsticking(moves[i], qPos, zPos);
+				cout << "val: "<<val;
+				optm *= val;
+				pess *= val;
+				int x=moves[i].Plays[0].coordinates.second;
+				int y = moves[i].Plays[0].coordinates.first;
+
+				cout <<"row,col " <<moves[i].Plays[0].coordinates.second << "," << moves[i].Plays[0].coordinates.first << endl;
+				cout << optm << "," << pess << endl;
+			}
 			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
+			cout << test;
 			cachevector.push_back(tempnode);
 			if (optm > maxOptm)
 			{
@@ -261,8 +316,15 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			if (moveHasQ(moves[i]))
 			{
 				cout <<"MIN"<< optm << " " << pess<<endl;
-				optm *= 20;
-				pess *= 20;
+				optm *= HASQVAL;
+				pess *= HASQVAL;
+
+			}
+			else if (qPos.size() != 0)
+			{
+				int val = Qsticking(moves[i], qPos, zPos);
+				optm *= val;
+				pess *= val;
 
 			}
 			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
@@ -318,11 +380,11 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 				return BStarNode();//backup as all children are closed
 			}
 		}
-		cout << "Max node: " << node.id << "\t depth: " << depth << "\t bestNode score(" << bestFirstAndSecond[0]->optm << "," <<
+		/*cout << "Max node: " << node.id << "\t depth: " << depth << "\t bestNode score(" << bestFirstAndSecond[0]->optm << "," <<
 			bestFirstAndSecond[0]->pess << ")";
 		if (bestFirstAndSecond.size() > 1)
 			cout << "\t altern score(" << bestFirstAndSecond[1]->optm << ", " << bestFirstAndSecond[1]->pess << ")";
-		cout << endl;
+		cout << endl;*/
 		
 		double maxOptimisticValue = bestFirstAndSecond[0]->optm;  //max perssimistic value
 		double maxPessimisticValue = getMaxPessimistic(*branches);//bestPessimisticCache[node.id]; //max perssimistic value
@@ -369,11 +431,11 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 				return BStarNode();//backup as all children are closed
 			}
 		}
-		cout << "Min node: " << node.id << "\t depth: " << depth << "\t bestNode score(" << bestFirstAndSecond[0]->optm << "," <<
+		/*cout << "Min node: " << node.id << "\t depth: " << depth << "\t bestNode score(" << bestFirstAndSecond[0]->optm << "," <<
 			bestFirstAndSecond[0]->pess << ")";
 		if (bestFirstAndSecond.size() > 1)
 			cout << "\t altern score(" << bestFirstAndSecond[1]->optm << ", " << bestFirstAndSecond[1]->pess << ")";
-		cout << endl;
+		cout << endl;*/
 		
 		double maxOptimisticValue = bestFirstAndSecond[0]->optm;	  //max perssimistic value
 		double maxPessimisticValue = getBestPessimisticMin(*branches);//bestPessimisticCache[node.id]; //max perssimistic value

@@ -11,6 +11,7 @@ class EndSimulation
 {
 	ScoreManager *scoreManager;
 	static long id;
+	const int HASQVAL = 50;
   public:
 	//var for test only
 	Gaddag * MG;
