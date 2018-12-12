@@ -125,7 +125,7 @@ void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, s
 		int i, ilen;
 		for (i = 0, ilen = rack.size(); i < ilen; ++i) {
 			if (rack[i] != BLANK_TILE) {
-				if (board->checkCharInVerticalSet(anchory, anchorx + offset, rack[i])) {	//if not blank + is legal to play in next square
+				if (board->checkCharInVerticalSet(anchory, anchorx + offset, rack[i]) /*&& board->checkCharInHorizontalSet(anchory,anchorx + offset,rack[i])*/) {	//if not blank + is legal to play in next square
 					std::vector<char> newRack = rack;
 					eraseElementFromVector(newRack, i);
 					GaddagNode* nextNode = currNode->getChildren(rack[i]);
@@ -139,7 +139,7 @@ void Gaddag::findHorizontal(int offset, int anchorx, int anchory, Move inMove, s
 			{
 				int z;
 				for (z = 0; z < 26; ++z) {
-					if (board->checkCharInVerticalSet(anchory, anchorx + offset, mapping[z])) {
+					if (board->checkCharInVerticalSet(anchory, anchorx + offset, mapping[z]) /*&& board->checkCharInHorizontalSet(anchory,anchorx+offset,mapping[z])*/) {
 						std::vector<char> newRack = rack;
 						eraseElementFromVector(newRack, i);
 						GaddagNode* nextNode = currNode->getChildren(mapping[z]);
@@ -212,7 +212,7 @@ void Gaddag::findVertical(int offset, int anchorx, int anchory, Move inMove, std
 		int i, ilen;
 		for (i = 0, ilen = rack.size(); i < ilen; ++i) {
 			if (rack[i] != BLANK_TILE) {
-				if (board->checkCharInHorizontalSet(anchory + offset, anchorx, rack[i])) {	//if not blank + is legal to play in next square
+				if (board->checkCharInHorizontalSet(anchory + offset, anchorx, rack[i]) /*&& board->checkCharInVerticalSet(anchory+offset,anchorx,rack[i])*/) {	//if not blank + is legal to play in next square
 					std::vector<char> newRack = rack;
 					eraseElementFromVector(newRack, i);
 					GaddagNode* nextNode = currNode->getChildren(rack[i]);
@@ -224,13 +224,13 @@ void Gaddag::findVertical(int offset, int anchorx, int anchory, Move inMove, std
 			else {
 				int z;
 				for (z = 0; z < 26; ++z) {
-					if (board->checkCharInHorizontalSet(anchory + offset, anchorx, mapping[z])) {
+					if (board->checkCharInHorizontalSet(anchory + offset, anchorx, mapping[z]) /*&& board->checkCharInVerticalSet(anchory+offset,anchorx,mapping[z])*/) {
 						std::vector<char> newRack = rack;
 						eraseElementFromVector(newRack, i);
 						GaddagNode* nextNode = currNode->getChildren(mapping[z]);
 						Move newMove(inMove);
 						newMove.addPlay(anchorx, anchory + offset, mapping[z], true);
-						goOnHorizontal(offset, anchorx, anchory, mapping[z], newMove, newRack, currNode, nextNode, board, moves);
+						goOnVertical(offset, anchorx, anchory, mapping[z], newMove, newRack, currNode, nextNode, board, moves);
 					}
 				}
 			}
