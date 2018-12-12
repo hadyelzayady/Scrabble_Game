@@ -13,7 +13,7 @@ Rack::Rack(const Rack & R)
 	this->list = R.list;
 }
 
-vector<char> Rack::getLeave(Move move)
+vector<char> Rack::getLeave(const Move& move)const
 {
 	// vector<Play> plays = move.Plays;
 	vector<char> leave = this->list;
@@ -59,7 +59,7 @@ void Rack::commitMove(Move * move)
 
 
 // TODO: Optimise to use eraseElementFromVector functon
-vector<char> Rack::getUniqueLeave(Move move)
+vector<char> Rack::getUniqueLeave(const Move& move) const
 {
 
 	vector<Play> plays = move.getPlaysPointer();

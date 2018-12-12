@@ -22,8 +22,8 @@ public:
 	int getSize();
 
 	vector<char> getRackTiles();
-	vector<char> getLeave(Move move);
-	vector<char> getUniqueLeave(Move move);
+	vector<char> getLeave(const Move& move)const;
+	vector<char> getUniqueLeave(const Move& move)const;
 
 	// Ahmed Soliman
 	inline void eraseElementFromVector(std::vector<char> &vec, int index) {

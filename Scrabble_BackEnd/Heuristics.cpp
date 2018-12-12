@@ -49,11 +49,11 @@ void Heuristics::ReadMap(string inDirectory)
 	}
 
 }
-double Heuristics::calculateDRL(vector<char> leave)
+double Heuristics::calculateDRL(const vector<char>& leave)
 {
 	double cost = 0.0;
-
-	for (int i = 0; i < leave.size(); i++)
+	int i, ilen;
+	for ( i=0,ilen=leave.size(); i < ilen; i++)
 	{
 		for (int j = i + 1; j < leave.size(); j++)
 		{
@@ -92,38 +92,39 @@ double Heuristics::calculateDRL(vector<char> leave)
 	return cost;
 
 }
-double Heuristics::getHeuristics(bool first_turn, vector<char> estimatedRack, Rack  current, Move  move, BagOfLetters bag, vector < pair<int, int>>  Qpos, vector < pair<int, int> > Zpos)
+double Heuristics::getHeuristics(bool first_turn, const vector<char>& estimatedRack, const Rack&  current,const Move&  move,const BagOfLetters& bag, const vector < pair<int, int>>&  Qpos, const vector < pair<int, int>> & Zpos)
 {
 	
 	vector<char> leave = current.getLeave(move); 
 	vector<char> uniqleave = current.getUniqueLeave(move);
 
-	if (bag.getSize() == 0) return endGame(estimatedRack, move, Qpos, Zpos);
-	else if (bag.getSize() < 10 && bag.getSize() > 0) return preEnd(move, leave,uniqleave);
+	if (bag.size == 0) return endGame(estimatedRack, move, Qpos, Zpos);
+	else if (bag.size < 10 && bag.size > 0) return preEnd(move, leave,uniqleave);
 	else return midGame(first_turn, move, leave, uniqleave);
 
 }
-double Heuristics::endGame(vector<char> estimatedRack, Move move, vector<pair<int, int>>  Qpos, vector<pair<int, int>>  Zpos)
+double Heuristics::endGame(const  vector<char>& estimatedRack, const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos)
 {
 	double cost = 0.0;
-	vector<Play> plays = move.getPlaysPointer();
+	//vector<Play> plays = move.getPlaysPointer();
 	bool hasQ = false;
 	bool hasZ = false;
 	TileLookUp t;
-
-	for (int i = 0; i < estimatedRack.size(); i++)
+	int i, ilen;
+	for (i = 0,ilen= estimatedRack.size(); i < ilen; i++)
 	{
 		if (estimatedRack[i] == 'Q')hasQ = true;
 		if (estimatedRack[i] == 'Z')hasZ = true;
 	}
 	int priority = 1;
-	for (int i = 0; i < plays.size(); i++)
+	for ( i = 0,ilen=move.Plays.size(); i < ilen; i++)
 	{
 		if (hasQ)
 		{
-			for (int k = 0; k < Qpos.size(); k++)
+			int k, klen;
+			for ( k = 0,klen= Qpos.size(); k < klen; k++)
 			{
-				if (plays[i].get_Coordinates() == Qpos[k])
+				if (move.Plays[i].coordinates == Qpos[k])
 				{
 					priority = priority + 0.2;
 				}
@@ -133,9 +134,10 @@ double Heuristics::endGame(vector<char> estimatedRack, Move move, vector<pair<in
 		}
 		if (hasZ)
 		{
-			for (int k = 0; k < Zpos.size(); k++)
+			int k, klen;
+			for ( k = 0,klen=Zpos.size(); k < klen; k++)
 			{
-				if (plays[i].get_Coordinates() == Zpos[k])
+				if (move.Plays[i].coordinates == Zpos[k])
 				{
 					priority = priority + 0.2;
 				}
@@ -143,16 +145,16 @@ double Heuristics::endGame(vector<char> estimatedRack, Move move, vector<pair<in
 			}
 		}
 
-		cost += t.getScore(plays[i].get_Letter());
+		cost += t.getScore(move.Plays[i].Letter);
 
 	}
 
 	cost = cost * priority;
-	cost = cost * (1 - (plays.size() / 7)); //short word move has less cost than long word move
+	cost = cost * (1 - (move.Plays.size() / 7)); //short word move has less cost than long word move
 
 	return cost;
 }
-double Heuristics::preEnd(Move move, vector<char>  leave, vector<char> uniqleave)
+double Heuristics::preEnd(const Move& move, const vector<char>&  leave, const vector<char>& uniqleave)
 {
 
 	double cost = 0.0;
@@ -160,8 +162,8 @@ double Heuristics::preEnd(Move move, vector<char>  leave, vector<char> uniqleave
 	int cons = 0;
 	if (!leave.empty())
 	{
-
-		for (int i = 0; i < leave.size(); i++)
+		int i, ilen;
+		for ( i = 0,ilen=leave.size(); i < ilen; i++)
 		{
 			if (leave[i] != BLANK_TILE)
 			{
@@ -181,9 +183,9 @@ double Heuristics::preEnd(Move move, vector<char>  leave, vector<char> uniqleave
 
 		// TODO handle the Q
 		bool holding_bad_tile = false;
-		for (int i = 0; i < move.getPlaysPointer().size(); i++)
+		for ( i = 0,ilen=move.Plays.size(); i < ilen; i++)
 		{
-			if (t.getScore(move.getPlaysPointer()[i].get_Letter()) > 7)
+			if (t.getScore(move.Plays[i].Letter) > 7)
 			{
 				holding_bad_tile = true;
 			}
@@ -199,13 +201,13 @@ double Heuristics::preEnd(Move move, vector<char>  leave, vector<char> uniqleave
 
 	return cost;
 }
-double Heuristics::midGame(bool first_turn, Move  move, vector<char> leave, vector<char> uniqleave)
+double Heuristics::midGame(bool first_turn, const Move&  move, const vector<char>& leave, const vector<char>& uniqleave)
 {
 	double cost = 0.0;
-	vector<Play> plays = move.getPlaysPointer();
+	//vector<Play> plays = move.getPlaysPointer();
 	if ( first_turn ==true)
 	{
-		if (plays.size() == 7)
+		if (move.Plays.size() == 7)
 		{
 			cost -= 50;
 		}
@@ -215,8 +217,8 @@ double Heuristics::midGame(bool first_turn, Move  move, vector<char> leave, vect
 
 	if (!leave.empty())
 	{
-
-		for (int i = 0; i < leave.size(); i++)
+		int i, ilen;
+		for ( i = 0,ilen= leave.size(); i < ilen; i++)
 		{
 			if (leave[i] != BLANK_TILE)
 			{
@@ -236,9 +238,10 @@ double Heuristics::midGame(bool first_turn, Move  move, vector<char> leave, vect
 
 		// TODO handle the Q
 		bool holding_bad_tile = false;
-		for (int i = 0; i < move.getPlaysPointer().size(); i++)
+
+		for (i = 0,ilen= move.Plays.size(); i < ilen; i++)
 		{
-			if (t.getScore(move.getPlaysPointer()[i].get_Letter()) > 7)
+			if (t.getScore(move.Plays[i].Letter) > 7)
 			{
 				holding_bad_tile = true;
 			}
