@@ -58,23 +58,10 @@ void Rack::commitMove(Move * move)
 
 
 
-// TODO: Optimise to use eraseElementFromVector functon
 vector<char> Rack::getUniqueLeave(const Move& move) const
 {
 
-	vector<Play> plays = move.getPlaysPointer();
-	vector<char> leave = this->list;
-
-
-	for (int i = 0; i < plays.size(); i++)
-	{
-		for (int k = 0; k < leave.size(); k++)
-		{
-			if (leave[k] == plays[i].get_Letter())
-				leave.erase(leave.begin() + k);
-		}
-
-	}
+	vector<char> leave = getLeave(move);
 
 
 	for (int i = 0; i < leave.size(); i++)
@@ -84,7 +71,6 @@ vector<char> Rack::getUniqueLeave(const Move& move) const
 			if (leave[i] == leave[k])
 				leave.erase(leave.begin() + k);
 		}
-
 	}
 
 	return leave;
@@ -123,7 +109,7 @@ void Rack::removeTile(char x)
 }
 
 
-int Rack::getSize()
+int Rack::getSize()const
 {
 	return list.size();
 }

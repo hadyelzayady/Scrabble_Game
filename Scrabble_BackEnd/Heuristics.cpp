@@ -1,8 +1,4 @@
-
 #include "Heuristics.h"
-
-
-
 const float vcvalues[8][8] =
 {
 	{  0.0,   0.0,  -1.0,  -2.5,  -5.0,  -8.5, -13.5, -18.5},
@@ -19,9 +15,11 @@ Heuristics::Heuristics()
 {
 
 	ReadMap("double_RL.txt");
+	Read_Leave_DP();
 
 
 }
+//Read from  and write to files
 void Heuristics::ReadMap(string inDirectory)
 {
 	ifstream input(inDirectory);
@@ -49,13 +47,76 @@ void Heuristics::ReadMap(string inDirectory)
 	}
 
 }
+void Heuristics::Read_Leave_DP()
+{
+	ifstream input("leave_DP.txt");
+	if (!input) cout << "Error occured while opening the file" << endl;
+	else
+	{
+
+		while (!input.eof())
+		{
+			string x;
+			input >> x;
+			double cost;
+			input >> cost;
+			leave_DP[x] = cost;
+		}
+		input.close();
+	}
+}
+void Heuristics::saveToFile(const vector<char>& data, double cost)
+{
+
+	fstream myfile;
+
+	myfile.open("leave_DP.txt", ios::app);
+
+	if (!myfile.is_open()) {
+
+		cout << "Error occured while opening the file";
+
+	}
+
+	else
+
+	{
+		int i, ilen;
+		for ( i = 0,ilen = data.size(); i < ilen; i++)
+		{
+			myfile << data[i];
+		}
+
+		myfile << " " << cost << endl;
+
+		myfile.close();
+
+	}
+
+}
+
+
+//to  call heuristics randomly
+double Heuristics::getHeuristics(bool first_turn,const vector<char>& estimatedRack,const Rack&  current,const Move&  move,const BagOfLetters& bag,const vector < pair<int, int>>&  Qpos,const vector < pair<int, int> >& Zpos)
+{
+
+	vector<char> leave = current.getLeave(move);
+	vector<char> uniqleave = current.getUniqueLeave(move);
+
+	if (bag.size == 0) return endGame(estimatedRack, current.getSize(), move, Qpos, Zpos);
+	else if (bag.size < 10 && bag.size > 0) return preEnd(move, leave, uniqleave);
+	else return midGame(first_turn, move, leave, uniqleave);
+
+}
+
+///algorithms
 double Heuristics::calculateDRL(const vector<char>& leave)
 {
 	double cost = 0.0;
 	int i, ilen;
-	for ( i=0,ilen=leave.size(); i < ilen; i++)
+	for ( i = 0,ilen=leave.size(); i <ilen; i++)
 	{
-		for (int j = i + 1; j < leave.size(); j++)
+		for (int j = i + 1; j < ilen; j++)
 		{
 			string x;
 			string y;
@@ -71,62 +132,113 @@ double Heuristics::calculateDRL(const vector<char>& leave)
 				c2 = '?';
 			}
 
-			
-				x.push_back(c2);
-				x.push_back(c1);
-			
-				y.push_back(c1);
-				y.push_back(c2);
-			
-				if (abs(double_RL[x]) >= abs(double_RL[y]))
-				{
-					cost += double_RL[x];
-				}
-				else
-				{
-					cost += double_RL[y];
-				}
+
+			x.push_back(c2);
+			x.push_back(c1);
+
+			y.push_back(c1);
+			y.push_back(c2);
+
+			if (abs(double_RL[x]) >= abs(double_RL[y]))
+			{
+				cost += double_RL[x];
+			}
+			else
+			{
+				cost += double_RL[y];
+			}
 		}
 	}
 
 	return cost;
 
 }
-double Heuristics::getHeuristics(bool first_turn, const vector<char>& estimatedRack, const Rack&  current,const Move&  move,const BagOfLetters& bag, const vector < pair<int, int>>&  Qpos, const vector < pair<int, int>> & Zpos)
+double Heuristics::Double_RL(const Move& move,const vector<char>&  leave,const vector<char>& uniqleave)
 {
-	
-	vector<char> leave = current.getLeave(move); 
-	vector<char> uniqleave = current.getUniqueLeave(move);
+	double synergy = 0;
+	if (!leave.empty())
+	{
+		TileLookUp t;
+		synergy = calculateDRL(leave);
+		synergy += calculateDRL(uniqleave);
 
-	if (bag.size == 0) return endGame(estimatedRack, move, Qpos, Zpos);
-	else if (bag.size < 10 && bag.size > 0) return preEnd(move, leave,uniqleave);
-	else return midGame(first_turn, move, leave, uniqleave);
 
+		bool Q = false;
+		bool U = false;
+		bool Z = false;
+		bool X = false;
+		// TODO handle the Q
+		bool holding_bad_tile = false;
+		int i, ilen;
+		for ( i = 0,ilen= uniqleave.size(); i < ilen; i++)
+		{
+
+			if (uniqleave[i] == 'U') U = true;
+			if (uniqleave[i] == 'Q' || uniqleave[i] == 'X' || uniqleave[i] == 'Z')
+			{
+				if (uniqleave[i] == 'Q') Q = true;
+				if (uniqleave[i] == 'X') X = true;
+				if (uniqleave[i] == 'Z') Z = true;
+				holding_bad_tile = true;
+			}
+		}
+
+		if (Q == true && U == true && X == false && Z == false)holding_bad_tile = false;
+
+
+
+		if ((synergy > 3.0) && !holding_bad_tile) {
+			synergy = synergy + 1.5 * (synergy - 3.0);
+		}
+	}
+	return synergy;
 }
-double Heuristics::endGame(const  vector<char>& estimatedRack, const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos)
+double Heuristics::VowelCons(const vector<char>& leave)
 {
-	double cost = 0.0;
-	//vector<Play> plays = move.getPlaysPointer();
+
+	int vowels = 0;
+	int cons = 0;
+	int i, ilen;
+	for ( i = 0,ilen=leave.size(); i < ilen; i++)
+	{
+		if (leave[i] != BLANK_TILE)
+		{
+			if (leave[i] == 'A' || leave[i] == 'E' || leave[i] == 'I' || leave[i] == 'O' || leave[i] == 'U')
+				vowels++;
+			else
+				cons++;
+		}
+	}
+	return vcvalues[vowels][cons];
+}
+double Heuristics::SlowEndGame(int currentRack_size, int move_size)
+{
+	return (currentRack_size - move_size); //short word move better than long word move
+}
+double Heuristics::Qsticking(const vector<char>& estimatedRack,const Move& move,const vector<pair<int, int>>&  Qpos,const vector<pair<int, int>>&  Zpos)
+{
+
+	//vector<Play> plays = move.Plays;
 	bool hasQ = false;
 	bool hasZ = false;
-	TileLookUp t;
+	double quality = 1;
 	int i, ilen;
-	for (i = 0,ilen= estimatedRack.size(); i < ilen; i++)
+	for ( i = 0,ilen= estimatedRack.size(); i < ilen; i++)
 	{
 		if (estimatedRack[i] == 'Q')hasQ = true;
 		if (estimatedRack[i] == 'Z')hasZ = true;
 	}
-	int priority = 1;
-	for ( i = 0,ilen=move.Plays.size(); i < ilen; i++)
+
+	for ( i = 0,ilen= move.Plays.size(); i < ilen; i++)
 	{
 		if (hasQ)
 		{
 			int k, klen;
-			for ( k = 0,klen= Qpos.size(); k < klen; k++)
+			for (k=0,klen= Qpos.size(); k < klen; k++)
 			{
 				if (move.Plays[i].coordinates == Qpos[k])
 				{
-					priority = priority + 0.2;
+					quality = quality + 2;
 				}
 
 			}
@@ -139,122 +251,112 @@ double Heuristics::endGame(const  vector<char>& estimatedRack, const Move& move,
 			{
 				if (move.Plays[i].coordinates == Zpos[k])
 				{
-					priority = priority + 0.2;
+					quality = quality + 2;
 				}
 
 			}
 		}
-
-		cost += t.getScore(move.Plays[i].Letter);
-
 	}
+	return quality;
+}
 
-	cost = cost * priority;
-	cost = cost * (1 - (move.Plays.size() / 7)); //short word move has less cost than long word move
-
+//heuristics modes
+double Heuristics::endGame(const vector<char>& estimatedRack, int currentRack_size,const Move& move,const vector<pair<int, int>>&  Qpos,const vector<pair<int, int>>&  Zpos)
+{
+	double cost = 0.0;
+	//vector<Play> plays = move.Plays;
+	double val1 = Qsticking(estimatedRack, move, Qpos, Zpos);
+	double val2 = SlowEndGame(currentRack_size, move.Plays.size());
+	cost = val1 + val2;
 	return cost;
 }
-double Heuristics::preEnd(const Move& move, const vector<char>&  leave, const vector<char>& uniqleave)
+double Heuristics::preEnd(const Move& move, vector<char>  leave,const vector<char>& uniqleave)
 {
 
 	double cost = 0.0;
-	int vowels = 0;
-	int cons = 0;
-	if (!leave.empty())
+
+	sort(leave.begin(), leave.end());
+	string str(leave.begin(), leave.end());
+	if (leave_DP[str] != 0)
 	{
-		int i, ilen;
-		for ( i = 0,ilen=leave.size(); i < ilen; i++)
-		{
-			if (leave[i] != BLANK_TILE)
-			{
-				if (leave[i] == 'A' || leave[i] == 'E' || leave[i] == 'I' || leave[i] == 'O' || leave[i] == 'U')
-					vowels++;
-				else
-					cons++;
-			}
-		}
-		cost += vcvalues[vowels][cons]; //Reward 
-
-
-		TileLookUp t;
-		
-		double synergy = calculateDRL(leave);
-		synergy += calculateDRL(uniqleave);
-
-		// TODO handle the Q
-		bool holding_bad_tile = false;
-		for ( i = 0,ilen=move.Plays.size(); i < ilen; i++)
-		{
-			if (t.getScore(move.Plays[i].Letter) > 7)
-			{
-				holding_bad_tile = true;
-			}
-		}
-		if ((synergy > 3.0) && !holding_bad_tile) {
-			synergy = synergy + 1.5 * (synergy - 3.0);
-		}
-
-		cost = cost + synergy;
+		cost = leave_DP[str];
 	}
+	else
+	{
 
-
-
+		double synergy = Double_RL(move, leave, uniqleave);
+		cost = cost + synergy;
+		cost += VowelCons(leave);
+		saveToFile(leave, cost);
+	}
 	return cost;
 }
-double Heuristics::midGame(bool first_turn, const Move&  move, const vector<char>& leave, const vector<char>& uniqleave)
+double Heuristics::midGame(bool first_turn,const Move&  move, vector<char> leave,const vector<char>& uniqleave)
 {
 	double cost = 0.0;
-	//vector<Play> plays = move.getPlaysPointer();
-	if ( first_turn ==true)
+	//vector<Play> plays = move.Plays;
+	if (first_turn == true)
 	{
 		if (move.Plays.size() == 7)
 		{
 			cost -= 50;
 		}
 	}
-	int vowels = 0;
-	int cons = 0;
 
-	if (!leave.empty())
+	sort(leave.begin(), leave.end());
+	string str(leave.begin(), leave.end());
+	if (leave_DP[str] != 0)
 	{
-		int i, ilen;
-		for ( i = 0,ilen= leave.size(); i < ilen; i++)
-		{
-			if (leave[i] != BLANK_TILE)
-			{
-				if (leave[i] == 'A' || leave[i] == 'E' || leave[i] == 'I' || leave[i] == 'O' || leave[i] == 'U')
-					vowels++;
-				else
-					cons++;
-			}
-		}
-		cost += vcvalues[vowels][cons];
+		cost = leave_DP[str];
+	}
+	else
+	{
 
-
-		TileLookUp t;
-		
-		double synergy = calculateDRL(leave);
-		synergy += calculateDRL(uniqleave);
-
-		// TODO handle the Q
-		bool holding_bad_tile = false;
-
-		for (i = 0,ilen= move.Plays.size(); i < ilen; i++)
-		{
-			if (t.getScore(move.Plays[i].Letter) > 7)
-			{
-				holding_bad_tile = true;
-			}
-		}
-		if ((synergy > 3.0) && !holding_bad_tile) {
-			synergy = synergy + 1.5 * (synergy - 3.0);
-		}
-
+		double synergy = Double_RL(move, leave, uniqleave);
 		cost = cost + synergy;
+		cost += VowelCons(leave);
+		saveToFile(leave, cost);
 	}
 	return cost;
 }
 
+// for hady 
+void Heuristics::endGame2vals(const vector<char>& estimatedRack,const Rack& current,const Move& move,const vector<pair<int, int>>&  Qpos,const vector<pair<int, int>>&  Zpos, double &maxVal, double &minVal)
+{
+	// need to add the score with the heuristic -> check with them
+	// calculate double rack leave -> value
+	// vowel-consonants balance -> value
+	// map # positions that this move blocks for the opponent -> 
+
+	// end manager must:
+	// receive list of moves
+	// call endgame_heuristic_function(...) 
+	// gets 2 values, save them in optimitic/pessimistic
+	vector<char> leave = current.getLeave(move);
+	vector<char> uniqleave = current.getUniqueLeave(move);
+
+	double val1 = Qsticking(estimatedRack, move, Qpos, Zpos);
+	double val2 = SlowEndGame(current.getSize(), move.Plays.size());
+	double val3 = Double_RL(move, leave, uniqleave);
+	double val4 = VowelCons(leave);
+
+
+	double x = min(val1, val2);
+	x = min(x, val3);
+	x = min(x, val4);
+	minVal = x;
+
+	x = max(val1, val2);
+	x = max(x, val3);
+	x = max(x, val4);
+	maxVal = x;
+
+}
+
+
+
 Heuristics::~Heuristics()
 {
 }
+
+

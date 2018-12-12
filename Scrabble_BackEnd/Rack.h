@@ -19,7 +19,7 @@ public:
 
 	void addTile(char x);
 	void removeTile(char x);
-	int getSize();
+	int getSize()const;
 
 	vector<char> getRackTiles();
 	vector<char> getLeave(const Move& move)const;
