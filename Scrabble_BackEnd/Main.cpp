@@ -111,6 +111,9 @@ int main()
 		
 		cout << "Move Chosen: ";
 		logger.PrintMove(&MoveList[selectedMoveIndex]);
+		Move::sortPlaysFirst(MoveList[selectedMoveIndex].Plays);
+		logger.PrintMove(&MoveList[selectedMoveIndex]);
+
 		b->commitMove(MoveList[selectedMoveIndex]);
 		b->computeCrossSets(g->root);
 		players[playerTurn]->rack->commitMove(&MoveList[selectedMoveIndex]);
