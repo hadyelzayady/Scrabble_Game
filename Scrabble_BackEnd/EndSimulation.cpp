@@ -197,7 +197,8 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 	//? what if all nodes have same optim value what altern will be?
 	if (ismax) {
 		
-		vector<Move> moves = MG->findWords(myrack.getRackTiles(), &board);
+		vector<Move> moves;
+		MG->findWords(myrack.getRackTiles(), moves, &board);
 		double maxOptm = -100000;
 		double maxaltern = -20000;
 		double bestPess = -100000;
@@ -240,7 +241,8 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 	}
 	else {
 
-		vector<Move> moves = MG->findWords(oprack.getRackTiles(), &board);
+		vector<Move> moves;
+		MG->findWords(oprack.getRackTiles(),moves, &board);
 		double bestPess = 10000;
 		double minOptm = DBL_MAX - 1;
 		double minaltern = DBL_MAX;
@@ -335,7 +337,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 		}
 		
 			Rack newrack = myrack;
-			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
+			newrack.commitMove(&(bestFirstAndSecond[0]->move));
 			board.commitMove(bestFirstAndSecond[0]->move);
 			board.computeCrossSets(MG->root);
 			int id = BStar(*bestFirstAndSecond[0], depth + 1, false, newrack, oprack).id;
@@ -385,7 +387,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 		}
 		
 			Rack newrack = oprack;
-			newrack.removeMoveTiles(bestFirstAndSecond[0]->move);
+			newrack.commitMove(&bestFirstAndSecond[0]->move);
 			board.commitMove(bestFirstAndSecond[0]->move);
 			board.computeCrossSets( MG->root);
 			int id = BStar(*bestFirstAndSecond[0], depth + 1, true, myrack, newrack).id;
@@ -455,9 +457,9 @@ void EndSimulation::estimateOPRack()
 			}
 	}
 }
-void EndSimulation::updateOPRack(const Move & move)
+void EndSimulation::updateOPRack( Move & move)
 {
-	opponetRack.removeMoveTiles(move);
+	opponetRack.commitMove(&move);
 }
 //! for test only constructor
 EndSimulation::EndSimulation(Board* board, TileLookUp*tl, Rack opponentRack, Rack myRack, Gaddag * GD, Heuristics* hr)

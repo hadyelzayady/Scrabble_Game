@@ -15,7 +15,6 @@ const float vcvalues[8][8] =
 Heuristics::Heuristics()
 {
 
-
 	ReadMap("double_RL.log");
 	Read_Leave_DP();
 
@@ -50,7 +49,6 @@ void Heuristics::ReadMap(string inDirectory)
 
 }
 void Heuristics::Read_Leave_DP()
-
 {
 	ifstream input("leave_DP.log");
 	if (!input) cout << "Error occured while opening the file" << endl;
@@ -159,9 +157,7 @@ double Heuristics::calculateDRL(const vector<char>& leave)
 	return cost;
 
 }
-
-double Heuristics::Double_RL(Move move, vector<char>  leave, vector<char> uniqleave)
-
+double Heuristics::Double_RL(const Move& move, const vector<char>&  leave, const vector<char>& uniqleave)
 {
 	double synergy = 0;
 	if (!leave.empty())
@@ -177,7 +173,6 @@ double Heuristics::Double_RL(Move move, vector<char>  leave, vector<char> uniqle
 		bool X = false;
 		// TODO handle the Q
 		bool holding_bad_tile = false;
-
 		int i, ilen;
 		for (i = 0, ilen = uniqleave.size(); i < ilen; i++)
 		{
@@ -202,17 +197,13 @@ double Heuristics::Double_RL(Move move, vector<char>  leave, vector<char> uniqle
 	}
 	return synergy;
 }
-
 double Heuristics::VowelCons(const vector<char>& leave)
-
 {
 
 	int vowels = 0;
 	int cons = 0;
-
 	int i, ilen;
 	for (i = 0, ilen = leave.size(); i < ilen; i++)
-
 	{
 		if (leave[i] != BLANK_TILE)
 		{
@@ -237,15 +228,12 @@ double Heuristics::Qsticking(const vector<char>& estimatedRack, const Move& move
 	double quality = 1;
 	int i, ilen;
 	for (i = 0, ilen = estimatedRack.size(); i < ilen; i++)
-
 	{
 		if (estimatedRack[i] == 'Q')hasQ = true;
 		if (estimatedRack[i] == 'Z')hasZ = true;
 	}
 
-
 	for (i = 0, ilen = move.Plays.size(); i < ilen; i++)
-
 	{
 		if (hasQ)
 		{
@@ -254,9 +242,7 @@ double Heuristics::Qsticking(const vector<char>& estimatedRack, const Move& move
 			{
 				if (move.Plays[i].coordinates == Qpos[k])
 				{
-
 					quality = quality + 2;
-
 				}
 
 			}
@@ -269,9 +255,7 @@ double Heuristics::Qsticking(const vector<char>& estimatedRack, const Move& move
 			{
 				if (move.Plays[i].coordinates == Zpos[k])
 				{
-
 					quality = quality + 2;
-
 				}
 
 			}
@@ -280,13 +264,11 @@ double Heuristics::Qsticking(const vector<char>& estimatedRack, const Move& move
 	return quality;
 }
 
-
 // heuristics modes
 double Heuristics::endGame(const vector<char>& estimatedRack, int currentRack_size, const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos)
 {
 	double cost = 0.0;
 	//vector<Play> plays = move.Plays;
-
 	double val1 = Qsticking(estimatedRack, move, Qpos, Zpos);
 	double val2 = SlowEndGame(currentRack_size, move.Plays.size());
 	cost = val1 + val2;
@@ -309,21 +291,17 @@ double Heuristics::preEnd(const Move& move, vector<char>  leave, const vector<ch
 		double synergy = Double_RL(move, leave, uniqleave);
 		cost = cost + synergy;
 		cost += VowelCons(leave);
-
 		pair<vector<char>, double> pair;
 		pair.first = leave;
 		pair.second = cost;
 		SaveDP.push_back(pair);
-
 	}
 	return cost;
 }
 double Heuristics::midGame(bool first_turn, const Move&  move, vector<char> leave, const vector<char>& uniqleave)
 {
 	double cost = 0.0;
-
 	//vector<Play> plays = move.Plays;
-
 	if (first_turn == true)
 	{
 		if (move.Plays.size() == 7)
@@ -344,12 +322,13 @@ double Heuristics::midGame(bool first_turn, const Move&  move, vector<char> leav
 		double synergy = Double_RL(move, leave, uniqleave);
 		cost = cost + synergy;
 		cost += VowelCons(leave);
-
-		saveToFile(leave, cost);
+		pair<vector<char>, double> pair;
+		pair.first = leave;
+		pair.second = cost;
+		SaveDP.push_back(pair);
 	}
 	return cost;
 }
-
 
 // for hady 
 void Heuristics::endGame2vals(const vector<char>& estimatedRack, const Rack& current, const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos, double &maxVal, double &minVal)
@@ -381,14 +360,12 @@ void Heuristics::endGame2vals(const vector<char>& estimatedRack, const Rack& cur
 	x = max(x, val3);
 	x = max(x, val4);
 	maxVal = x;
+
 }
-
-
 
 Heuristics::~Heuristics()
 {
 	saveToFile(SaveDP);
-
 }
 
 

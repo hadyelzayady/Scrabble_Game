@@ -97,10 +97,11 @@ int main()
 		Move best = ends.start();
 		if (best.Plays.size() != 0)
 		{
+			cout << "score "<<ScoreManager::calculateScore(best, &board, &tl)<<endl;
 			board.commitMove(best);
 			board.computeCrossSets(g->root);
 			writeBoardToFile(board);
-			myrack.removeMoveTiles(best);
+			myrack.commitMove(&best);
 			cout << best.Plays[0].coordinates.first << "," << best.Plays[0].coordinates.second << endl;
 		}
 		else

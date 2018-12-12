@@ -14,14 +14,14 @@ Rack::Rack(const Rack & R)
 }
 
 
-void Rack::removeMoveTiles(const Move & move)
-{
-	vector<Play> plays = move.getPlaysPointer();
-	for (size_t i = 0; i < plays.size(); i++)
-	{
-		removeTile(plays[i].get_Letter());
-	}
-}
+//void Rack::removeMoveTiles(const Move & move)
+//{
+//	vector<Play> plays = move.getPlaysPointer();
+//	for (size_t i = 0; i < plays.size(); i++)
+//	{
+//		removeTile(plays[i].get_Letter());
+//	}
+//}
 
 vector<char> Rack::getLeave(const Move& move)const
 

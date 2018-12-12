@@ -16,7 +16,7 @@ class EndSimulation
 	Gaddag * MG;
 	Heuristics* hr;
 	void estimateOPRack();
-	void updateOPRack(const Move&move);
+	void updateOPRack( Move&move);
 
 	unordered_map<int, vector<BStarNode>> cache;
 	TileLookUp *tileLookup;
