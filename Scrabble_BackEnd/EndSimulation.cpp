@@ -225,17 +225,17 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 				maxaltern = maxOptm;
 				maxOptm = optm;
 				alternBStarNodeindex = bestBStarNodeindex;
-				bestBStarNodeindex = cachevector.size()-1;
+				bestBStarNodeindex = (int)cachevector.size()-1;
 			}
 			else if (optm == maxOptm)
 			{
 				if (pess > cachevector[bestBStarNodeindex].pess)// check smaller range
-					bestBStarNodeindex = cachevector.size() - 1;
+					bestBStarNodeindex =(int) cachevector.size() - 1;
 			}
 			else if (optm > maxaltern)
 			{
 				maxaltern = optm;
-				alternBStarNodeindex = cachevector.size() - 1;
+				alternBStarNodeindex = (int) cachevector.size() - 1;
 			}
 		}
 	}
@@ -269,16 +269,16 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 				minaltern = minOptm;
 				minOptm = optm;
 				alternBStarNodeindex = bestBStarNodeindex;
-				bestBStarNodeindex = cachevector.size() - 1;
+				bestBStarNodeindex = (int) cachevector.size() - 1;
 			}
 			else if (optm == minOptm)
 			{
 				if (pess < cachevector[bestBStarNodeindex].pess)// check smaller range
-					bestBStarNodeindex = cachevector.size() - 1;
+					bestBStarNodeindex = (int) cachevector.size() - 1;
 			}
 			else if (optm < minaltern) {//altern node
 				minaltern = optm;
-				alternBStarNodeindex = cachevector.size() - 1;
+				alternBStarNodeindex = (int) cachevector.size() - 1;
 			}
 
 		}

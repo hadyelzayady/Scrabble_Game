@@ -9,7 +9,7 @@ using namespace std;
 vector<char> convertToletters(vector<int>v)
 {
 	vector<char>result;
-	int size = v.size();
+	int size = (int) v.size();
 	for (int i = 0; i < size; i++)
 	{
 		if (v[i] == 0)
@@ -30,7 +30,7 @@ vector<char> convertToletters(vector<int>v)
 vector<int> convertToNumbers(vector<char>v)
 {
 	vector<int>result;
-	int size = v.size();
+	int size = (int) v.size();
 	for (int i = 0; i < size; i++)
 	{
 		if (v[i] == '.')
@@ -48,7 +48,7 @@ string timeFormat(int32_t time)
 {
 	string Stime;
 	int sign = (time > 0) ? 1 : ((time < 0) ? -1 : 0);
-	int utime = trunc(time *sign);
+	int utime = (int) trunc(time *sign);
 	cout << "time: " << utime << endl;
 	int ms = utime % 1000;
 	cout << "ms: " << ms << endl;
