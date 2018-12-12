@@ -152,7 +152,6 @@ Board::Board(char board[15][15])
 	}
 }
 
-
 Board::Board()
 {
 	for (size_t i = 0; i < ROWS_COUNT; i++)
@@ -410,7 +409,6 @@ bool Board::checkCharInVerticalSet(int i, int j, char l) const {
 	return false;
 }
 
-
 bool Board::isMoveValid(const Move &oponentMove, GaddagNode* root, std::string word) {
 	bool hasAnchor = false;
 	int i, ilen;
@@ -532,13 +530,6 @@ void Board::unsetTile(unsigned short row, unsigned short column)
 	}
 	//throw EXCEPTION_OUT_OF_BOUND;
 }
-
-
-
-
-
-
-
 
 Board::~Board()
 {
