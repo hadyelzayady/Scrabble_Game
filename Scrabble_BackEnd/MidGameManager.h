@@ -18,6 +18,6 @@ public:
 
 	MidGameManager(TileLookUp * Tp, Gaddag * GD);
 	~MidGameManager();
-	int getBestMove(const vector<Move>&  movesList, Rack* Rack, Board * b);
+	int getBestMove( vector<Move>&  movesList, Rack* Rack, Board * b);
 
 };

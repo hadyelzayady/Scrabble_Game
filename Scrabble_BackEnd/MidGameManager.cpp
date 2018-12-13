@@ -14,7 +14,7 @@ MidGameManager::~MidGameManager()
 {
 }
 
-int MidGameManager::getBestMove(const vector<Move> & movesList, Rack* Rack, Board * b)
+int MidGameManager::getBestMove( vector<Move> & movesList, Rack* Rack, Board * b)
 {
 
 	int size = movesList.size();

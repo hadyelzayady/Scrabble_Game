@@ -443,14 +443,16 @@ bool Board::checkMoveHorizontal(const Move& move) {
 }
 
 // Under construction
-void Board::formatMyMove(const Move& move, playMove & moveToBeSent) {
+void Board::formatMyMove( Move& move, playMove & moveToBeSent) {
 	if (checkMoveHorizontal(move)) {
 		moveToBeSent.direction = 0;
+		move.sortPlaysFirst(move.Plays);
 		/// sort the vector of plays inside the move according to plays[i].coordinates.first not implemented   hena first
 	}
 	else
 	{
 		moveToBeSent.direction = 1;
+		move.sortPlaysSecond(move.Plays);
 		/// sort the vector of plays inside the move according to plays[i].coordinates.second not implemented   hena second		
 	}
 	moveToBeSent.Scolumn = move.Plays[0].coordinates.first; /// x
