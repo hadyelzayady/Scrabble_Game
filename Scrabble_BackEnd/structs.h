@@ -8,7 +8,11 @@ struct uTime
 	int32_t playerTime;
 	int32_t totalTime;
 };
-
+struct fromatedTime
+{
+	std::string playTime;
+	std::string totalTime;
+};
 struct endMove
 {
 	EndReasons reason;
@@ -48,7 +52,17 @@ struct playMove
 	int direction;
 	std::vector<char> tiles;
 	int score;
+
+	void reset() {
+		vector<char> temp;
+		Scolumn = 0;
+		Srow = 0;
+		direction = 0;
+		tiles = temp;
+		score = 0;
+	}
 };
+
 
 struct player2Move
 {
@@ -70,13 +84,19 @@ struct player2Move_formated
 	int score;
 	int challengeTime;
 	uTime time;
-	int*blankIndecies;
 };
 
 struct playerStart
 {
 	std::string PlayerName;
 	std::string connection;
-	//Mode mode;
+	std::string mode;//0 agent 1 player
 };
 
+struct humanMove
+{
+	int Scolumn;
+	int Srow;
+	int direction;
+	std::vector<char> tiles;
+};

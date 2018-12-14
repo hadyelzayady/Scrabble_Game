@@ -10,6 +10,8 @@
 #include "enums.h"
 #include"structs.h"
 #include <iostream>
+#include <string>
+#include <memory>
 using easywsclient::WebSocket;
 using namespace std;
 class Client
@@ -33,7 +35,7 @@ public:
 	void sendNoChallenge(unique_ptr<WebSocket> &ws);
 	void sendChallenge(unique_ptr<WebSocket> &ws);
 	readyStruct_formated decodeReadyState(std::vector<uint8_t>& message);
-	uTime decodeTime(std::vector<uint8_t>& message);
+	fromatedTime decodeTime(std::vector<uint8_t>& message);
 	vector<char>decodeTiles(std::vector<uint8_t>& message);
 	void decodeChallengeRejected(std::vector<uint8_t>& message, vector<char>&tiles, uTime&time);
 	void decodeIdleExchange(std::vector<uint8_t>& message, int &count, uTime&time);

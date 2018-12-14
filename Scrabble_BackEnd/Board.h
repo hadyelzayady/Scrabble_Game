@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include <iostream>
 #include "GaddagNode.h"
+#include "ScoreManager.h"
 #include "structs.h"
 using namespace std;
 #include <string>
@@ -52,9 +53,5 @@ public:
 
 	string formatOponentMove(const player2Move_formated& move, int& challengeTime, uTime& currentTime, Move &oponentMove, double& score);
 
-
 	~Board();
 };
-
-
-

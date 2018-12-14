@@ -86,7 +86,7 @@ int main()
 	cout << "Done" << endl;
 	MidGameManager * midMan = new MidGameManager(TL, g);
 	Logger logger;
-
+	
 	int turn = 0;
 	while (1) {
 		logger.DisplayRack(players[1]->rack);
@@ -101,16 +101,17 @@ int main()
 		}
 		if (bag->getSize() > 7 || !bag->hasLetters()) {
 			 selectedMoveIndex = midMan->getBestMove(MoveList, players[playerTurn]->rack, b);
-
 		}
 		else {
 			cout << " PreEnd" << endl;
 			selectedMoveIndex = preEndMan->Blocking(&MoveList, players[playerTurn]->rack, b, PM);
-		
 		}
 		
 		cout << "Move Chosen: ";
 		logger.PrintMove(&MoveList[selectedMoveIndex]);
+		playMove moveStruct;
+		b->formatMyMove(MoveList[selectedMoveIndex], moveStruct);
+		logger.PrintMoveStruct(moveStruct);
 		b->commitMove(MoveList[selectedMoveIndex]);
 		b->computeCrossSets(g->root);
 		players[playerTurn]->rack->commitMove(&MoveList[selectedMoveIndex]);

@@ -14,14 +14,13 @@ vector<char> convertToletters(vector<int>v)
 	{
 		if (v[i] == 0)
 			result.push_back('.');
-		else if (v[i] == 100)
+		if (v[i] == 100)
 			result.push_back('[]');
 		else if (v[i] > 100)
 			result.push_back((char)v[i] - 101 + 'A');
-		else {
+		else
 			result.push_back((char)(v[i] + 'A' - 1));
-			//blankIndecies[k++] = i;
-		}
+
 	}
 	return result;
 }
@@ -29,6 +28,7 @@ vector<char> convertToletters(vector<int>v)
 
 vector<int> convertToNumbers(vector<char>v)
 {
+	char x;
 	vector<int>result;
 	int size = v.size();
 	for (int i = 0; i < size; i++)

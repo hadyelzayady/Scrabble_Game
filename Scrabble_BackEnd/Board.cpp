@@ -147,7 +147,10 @@ Board::Board(char board[15][15])
 {
 	for (int i = 0; i < 15; i++) {
 		for (int j = 0; j < 15; j++) {
-			m_board[i][j].letter = board[i][j];
+			if (board[i][j] != '.') {
+				m_board[i][j].letter = board[i][j];
+				LettersOnBoard += board[i][j];
+			}
 		}
 	}
 }
@@ -444,17 +447,28 @@ bool Board::checkMoveHorizontal(const Move& move) {
 
 // Under construction
 void Board::formatMyMove(const Move& move, playMove & moveToBeSent) {
+	// TODO: Add score to move object and append it to the playMove struct
 	if (checkMoveHorizontal(move)) {
 		moveToBeSent.direction = 0;
+		/*sort(move.Plays.begin(), move.Plays.end(), [](const Play& lhs, const Play& rhs)
+		{
+			return lhs.coordinates.first < rhs.coordinates.first;
+		});*/
+		//std::sort(move.Plays.begin(), move.Plays.end(), sortFirstCoordinate());
 		/// sort the vector of plays inside the move according to plays[i].coordinates.first not implemented   hena first
 	}
 	else
 	{
 		moveToBeSent.direction = 1;
+		/*sort(move.Plays.begin(), move.Plays.end(), [](const Play& lhs, const Play& rhs)
+		{
+			return lhs.coordinates.second < rhs.coordinates.second;
+		});*/
+		//std::sort(move.Plays.begin(), move.Plays.end(), sortSecondCoordinate());
 		/// sort the vector of plays inside the move according to plays[i].coordinates.second not implemented   hena second		
 	}
 	moveToBeSent.Scolumn = move.Plays[0].coordinates.first; /// x
-	moveToBeSent.Srow = move.Plays[0].coordinates.second;  /// y 
+	moveToBeSent.Srow = move.Plays[0].coordinates.second;  /// y
 	int i, ilen;
 	for (i = 0, ilen = (int) move.Plays.size(); i < ilen; ++i) {
 		moveToBeSent.tiles.push_back(move.Plays[i].Letter);

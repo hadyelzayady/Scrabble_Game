@@ -33,7 +33,7 @@
 #include <queue>
 #include <iostream>
 #include <cstdint>
-#include "communication/asio.hpp"
+#include "communication\asio.hpp"
 #define comm asio::ip
 
 namespace communication
@@ -49,7 +49,7 @@ namespace communication
 		char receive_buffer[buffer_size];
 		char send_buffer[buffer_size];
 		std::queue<std::string> message_queue;
-		
+
 
 	public:
 		//Constructor
@@ -82,14 +82,19 @@ namespace communication
 		bool send_message(std::string message)
 		{
 			std::cout << "Sending message to GUI\n";
-			for(int i=0;i<message.length();i++)
+			for (int i = 0; i < message.length(); i++)
 			{
-				send_buffer[i]=message[i];
+				send_buffer[i] = message[i];
 			}
-			
+
 			bool success = this->send(message.length()); //Send 5 bytes
 
 			return success;
+		}
+
+		bool isConnected()
+		{
+			return this->_socket.is_open();
 		}
 
 		//Waits till a message is received
@@ -103,8 +108,8 @@ namespace communication
 			{
 				std::cout << "Error in communication...\n";
 			}
-			std::cout << "Received a message from GUI: " << std::string(receive_buffer,length) << '\n';
-			return std::string(receive_buffer,length);
+			std::cout << "Received a message from GUI: " << std::string(receive_buffer, length) << '\n';
+			return std::string(receive_buffer, length);
 		}
 
 	private:

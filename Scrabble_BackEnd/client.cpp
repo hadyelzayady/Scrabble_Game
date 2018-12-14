@@ -1,6 +1,6 @@
 #include "Client.h"
 #include"functions.h"
-
+#include <intrin.h>
 
 Client::Client()
 {
@@ -83,25 +83,25 @@ readyStruct_formated Client::decodeReadyState(std::vector<uint8_t>& message)
 
 	memcpy(&ready.score, message.data() + bufferOffset, sizeof(ready.score));
 	bufferOffset += sizeof(ready.score);
-	ready_formated.score = int(ready.score);
+	ready_formated.score = int(_byteswap_ulong(ready.score));
 	cout << "myscore: " << ready.score << endl;
 
 	memcpy(&ready.opponentScore, message.data() + bufferOffset, sizeof(ready.opponentScore));
 	bufferOffset += sizeof(ready.opponentScore);
-	ready_formated.opponentScore = int(ready.opponentScore);
-	cout << "OpponentScore: " << ready.opponentScore<<endl << endl;
+	ready_formated.opponentScore = int(_byteswap_ulong(ready.opponentScore));
+	cout << "OpponentScore: " << ready.opponentScore << endl << endl;
 
 	memcpy(&ready.playerTime, message.data() + bufferOffset, sizeof(ready.playerTime));
 	bufferOffset += sizeof(ready.playerTime);
-	ready_formated.playerTime = int(ready.playerTime);
+	ready_formated.playerTime = int(_byteswap_ulong(ready.playerTime));
 	cout << "myTime: " << ready.playerTime << endl;
-	cout << "my_real_time" << ' ' << timeFormat(ready_formated.playerTime) << endl<<endl;
+	cout << "my_real_time" << ' ' << timeFormat(ready_formated.playerTime) << endl << endl;
 
 	memcpy(&ready.totalTime, message.data() + bufferOffset, sizeof(ready.totalTime));
 	bufferOffset += sizeof(ready.totalTime);
-	ready_formated.playerTime = int(ready.playerTime);
+	ready_formated.totalTime = int(_byteswap_ulong(ready.totalTime));
 	cout << "totalTime: " << ready.totalTime << endl;
-	cout << "my_real_total_time" << ' ' << timeFormat(ready_formated.totalTime) << endl<<endl;
+	cout << "my_real_total_time" << ' ' << timeFormat(ready_formated.totalTime) << endl << endl;
 
 	return ready_formated;
 
@@ -149,26 +149,32 @@ void Client::sendPlay(unique_ptr<WebSocket> &ws, playMove play)
 	vector<uint8_t> uplay = { MessageTypes::PLAY,Scol,Srow,dir };
 	uplay.insert(uplay.end(), utiles.begin(), utiles.end());
 	uplay.push_back(myScore >> 24);
-	uplay.push_back(myScore >> 16);
-	uplay.push_back(myScore >> 8);
-	uplay.push_back(myScore);
+	uplay.push_back((myScore >> 16) & 255);
+	uplay.push_back((myScore >> 8) & 255);
+	uplay.push_back(myScore & 255);
 	vector<int>test(uplay.begin(), uplay.end());
 	displayVector<int>(test);
 	ws->sendBinary(uplay);
 }
 
-uTime Client::decodeTime(std::vector<uint8_t>& message)
+fromatedTime Client::decodeTime(std::vector<uint8_t>& message)
 {
 	uTime time;
+	fromatedTime t;
+	int playTime, totalTime;
 	unsigned int bufferOffset = 1;
 	memcpy(&time.playerTime, message.data() + bufferOffset, sizeof(time.playerTime));
 	bufferOffset += sizeof(time.playerTime);
+	playTime = int(_byteswap_ulong(time.playerTime));
+	t.playTime = to_string(playTime);
 	cout << "from invalid myTime: " << time.playerTime << endl;
 
 	memcpy(&time.totalTime, message.data() + bufferOffset, sizeof(time.totalTime));
+	totalTime = int(_byteswap_ulong(time.totalTime));
+	t.totalTime = to_string(totalTime);
 	bufferOffset += sizeof(time.totalTime);
 	cout << "totalTime: " << time.totalTime << endl;
-	return time;
+	return t;
 
 }
 vector<char> Client::decodeTiles(std::vector<uint8_t>& message)
@@ -246,7 +252,6 @@ player2Move_formated Client::decodePlay(std::vector<uint8_t>& message)
 	memcpy(umove.tiles.data(), message.data() + bufferOffset, 7);
 	bufferOffset += umove.tiles.size();
 	vector<int> v(umove.tiles.begin(), umove.tiles.end());
-	
 	move.tiles = convertToletters(v);
 
 	cout << "number of tiles: " << umove.tiles.size() << endl;

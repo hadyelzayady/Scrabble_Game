@@ -59,6 +59,17 @@ void Logger::PrintMove(Move * move)
 	cout << endl;
 }
 
+void Logger::PrintMoveStruct(const playMove& move) {
+	int size = move.tiles.size();
+	cout << size << " Plays" << endl;
+	cout << "From: (" << move.Scolumn << ',' << move.Srow << ')' << endl;
+	cout << "Tiles: ";
+	for (int i = 0; i < size; i++) {
+		cout << move.tiles[i] << ' ';
+	}
+	cout << endl;
+	cout << "==================================" << endl;
+}
 
 Logger::Logger()
 {

@@ -3,9 +3,6 @@
 using namespace std;
 class Play
 {
-
-
-
 public:
 	char Letter;
 	int Index;
