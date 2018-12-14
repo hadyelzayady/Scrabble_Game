@@ -61,6 +61,9 @@ X[23]=1
 Y[24]=1
 Z[25]=1
 
+dict = {'A': A, 'B': B, 'C': C, 'D': D, 'E': E, 'F': F, 'G': G, 'H': H, 'I': I, 'J': J, 'K': K, 'L': L, 'M': M, 'N': N,
+        'O': O, 'P': P, 'Q': Q, 'R': R, 'S': S, 'T': T, 'U': U, 'V': V, 'W': W, 'X': X, 'Y': Y, 'Z':Z}
+
 A_Blank=np.zeros(52)
 B_Blank=np.zeros(52)
 C_Blank=np.zeros(52)
@@ -121,22 +124,19 @@ Z_Blank[25]=1
 # action_size= [225,52]
 state_size = 12064
 action_size= 11700
-# Array of states and actions
-state=np.zeros(state_size)
-action=np.zeros(action_size)
+
 # Learning Rate ( To be Determined)
-learning_rate =  0.0002
+learning_rate =  5.0
 
 ### TRAINING HYPERPARAMETERS
 # TO BE DETERMINED
-total_episodes = 500        # Total episodes for training
-max_steps = 100              # Max possible steps in an episode
-batch_size = 64
+total_episodes = 100        # Total episodes for training
+batch_size = 20
 
 # Exploration parameters for epsilon greedy strategy
 explore_start = 1.0            # exploration probability at start
-explore_stop = 0.01            # minimum exploration probability
-decay_rate = 0.0001            # exponential decay rate for exploration prob
+explore_stop = 0.1           # minimum exploration probability
+decay_rate = 0.1           # exponential decay rate for exploration prob
 
 # Q learning hyperparameters
 gamma = 0.95               # Discounting rate
@@ -148,9 +148,62 @@ memory_size = 1000          # Number of experiences the Memory can keep
 done = False
 ################################################################################################################
 
-def PreProcessing():
+def PreProcessing(dict):
+    stateList = []
+    actionList = []
+    nextstateList = []
+    reward = []
 
-    pass
+    f = open('ML.txt', 'r')
+    lines = [line.strip() for line in f.readlines()]
+    for i in range(0, len(lines), 4):
+        currentBoard = lines[i].split()
+        rack = lines[i + 1].split()
+        move = lines[i + 2].split()
+        score = int(lines[i + 3])
+
+        state = np.zeros(12064)
+        action = np.zeros(11700)
+        nextstate = np.zeros(12064)
+
+        nextBoard = []
+        for j in range(225):
+            if currentBoard[j] != '_':
+                nextBoard.append(currentBoard[j])
+            else:
+                nextBoard.append(move[j])
+
+        for j in range(len(currentBoard)):
+            if (currentBoard[j] != '_'):
+                state[j * 52: j * 52 + 52] = dict[currentBoard[j]]
+
+        for j in range(len(rack)):
+            if (rack[j] != '_'):
+                index = j + (15 * 15)
+                state[index * 52: index * 52 + 52] = dict[rack[j]]
+
+        for j in range(len(move)):
+            if (move[j] != '_'):
+                action[j * 52: j * 52 + 52] = dict[move[j]]
+
+        for j in range(len(nextBoard)):
+            if (nextBoard[j] != '_'):
+                nextstate[j * 52: j * 52 + 52] = dict[nextBoard[j]]
+
+        for j in range(len(rack)):
+            if (rack[j] != '_'):
+                index = j + (15 * 15)
+                nextstate[index * 52: index * 52 + 52] = dict[rack[j]]
+
+        stateList.append(state)
+        actionList.append(action)
+        nextstateList.append(nextstate)
+        reward.append(score)
+
+    return stateList, actionList, nextstateList, reward
+
+
+
 
 class DQNetwork:
     def __init__(self, state_size, action_size, learning_rate, name='DQNetwork'):
@@ -247,7 +300,6 @@ def predict_Qs(explore_start, explore_stop, decay_rate, decay_step, state, actio
     return Qs, explore_probability
 
 
-
 with tf.Session() as sess:
     # Initialize the variables
     sess.run(tf.global_variables_initializer())
@@ -260,42 +312,24 @@ with tf.Session() as sess:
         step = 0
         # Initialize the rewards of the episode
         episode_rewards = []
-        while step < max_steps:
-            step += 1
+
+        #preprocessing
+        state, action, nextstate, reward = PreProcessing(dict)
+        while step < len(state):
+
             # Increase decay_step
             decay_step += 1
             # Predict the action to take and take it
-            Qs_Value, explore_probability = predict_Qs(explore_start, explore_stop, decay_rate, decay_step, state,
-                                                         action)
+            Qs_Value, explore_probability = predict_Qs(explore_start, explore_stop, decay_rate, decay_step, state[step],
+                                                         action[step])
             # Get Reward from score of game
-            reward=0
             # Add the reward to total reward
-            episode_rewards.append(reward)
-            ####TOBECHANGED################################
-            next_state=np.zeros(state_size)
-            # If the game is finished
-            if done:
+            episode_rewards.append(reward[step])
 
-                # Set step = max_steps to end the episode
-                step = max_steps
+            if step -len(state)==1:
+                done=true
 
-                # Get the total reward of the episode
-                total_reward = np.sum(episode_rewards)
-
-                print('Episode: {}'.format(episode),
-                      'Total reward: {}'.format(total_reward),
-                      'Explore P: {:.4f}'.format(explore_probability),
-                      'Training Loss {:.4f}'.format(loss))
-
-                rewards_list.append((episode, total_reward))
-
-                # Store transition <st,at,rt+1,st+1> in memory D
-                memory.add((state, action, reward, next_state, done))
-
-            else:
-                # Add experience to memory
-
-                memory.add((state, action, reward, next_state, done))
+            memory.add((state[step], action[step], reward[step], nextstate[step], done))
 
             ### LEARNING PART
             # Obtain random mini-batch from memory
@@ -308,8 +342,6 @@ with tf.Session() as sess:
                 dones_mb = np.array([each[4] for each in batch])
                 target_Qs_batch = []
 
-                # Get Q values for next_state
-                print(states_mb)
                 Qs_next_state = sess.run(DQNetwork.output, feed_dict={DQNetwork.inputs_: next_states_mb})
 
                 # Set Q_target = r if the episode ends at s+1, otherwise set Q_target = r + gamma*maxQ(s', a')
@@ -330,4 +362,10 @@ with tf.Session() as sess:
                                    feed_dict={DQNetwork.inputs_: states_mb,
                                               DQNetwork.target_Q: targets_mb,
                                               DQNetwork.actions_: actions_mb})
+            step += 1
+        total_reward = np.sum(episode_rewards)
 
+        print('Episode: {}'.format(episode),
+              'Total reward: {}'.format(total_reward),
+              'Explore P: {:.4f}'.format(explore_probability),
+              'Training Loss {:.4f}'.format(loss))
