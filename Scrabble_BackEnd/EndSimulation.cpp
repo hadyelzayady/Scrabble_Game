@@ -141,10 +141,10 @@ bool isRackHaveQ_Z(const Rack&rack)
 	return false;
 }
 
-bool moveHasQ(const Move&move) {
+bool moveHasLetter2(const Move&move, char letter) {
 	for (size_t i = 0; i < move.Plays.size(); i++)
 	{
-		if (move.Plays[i].Letter == 'Q')
+		if (move.Plays[i].Letter == letter)
 			return true;
 	}
 	return false;
@@ -250,31 +250,50 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], qPos, zPos, optm, pess);
 			optm += moveScore;
 			pess += moveScore;
-			Move move = moves[i];
-			double test = optm;
+			if (moveHasLetter2(moves[i], 'Q'))
+			{
+				pess *= QVAL;
+				optm *= QVAL;
+			}
+			if (moveHasLetter2(moves[i], 'Z'))
+			{
+				pess *= ZVAL;
+				optm *= ZVAL;
+			}
+
+			if (moveHasLetter2(moves[i], 'J'))
+			{
+				pess *= JVAL;
+				optm *= JVAL;
+			}
+			//Move move = moves[i];
+			//double test = optm;
 			/*if (moves[i].Plays[0].Letter == 'T' && moves[i].Plays.size()==1)
 				cout << "T move:" << optm;*/
-			if (moveHasQ(moves[i]))
-			{
-				//cout << "MIN" << optm << " " << pess<<endl;
-				optm *= HASQVAL;
-				pess *= HASQVAL;
-				/*cout << move.Plays[0].coordinates.second<<","<< move.Plays[0].coordinates.first<<endl;
-				cout << optm << "," << pess<<endl;*/
+			//if (moveHasQ(moves[i]))
+			//{
+			//	//cout << "MIN" << optm << " " << pess<<endl;
+			//	optm *= HASQVAL;
+			//	pess *= HASQVAL;
+			//	/*cout << move.Plays[0].coordinates.second<<","<< move.Plays[0].coordinates.first<<endl;
+			//	cout << optm << "," << pess<<endl;*/
 
-			}
-			else if (qPos.size() != 0)
-			{
-				int val = Qsticking(moves[i], qPos, zPos);
-				//cout << "val: "<<val;
-				optm *= val;
-				pess *= val;
-				int x=moves[i].Plays[0].coordinates.second;
-				int y = moves[i].Plays[0].coordinates.first;
+			//}
+			//else if (moveHasZ(moves[i]))
+			//{
+			//	optm *= HASZVAL;
+			//	pess *= HASZVAL;
+			//}
+			//else if (qPos.size() != 0)
+			//{
+			//	int val = Qsticking(moves[i], qPos, zPos);
+			//	//cout << "val: "<<val;
+			//	optm *= val;
+			//	pess *= val;
 
-				//cout <<"row,col " <<moves[i].Plays[0].coordinates.second << "," << moves[i].Plays[0].coordinates.first << endl;
-				//cout << optm << "," << pess << endl;
-			}
+			//	//cout <<"row,col " <<moves[i].Plays[0].coordinates.second << "," << moves[i].Plays[0].coordinates.first << endl;
+			//	//cout << optm << "," << pess << endl;
+			//}
 			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
 			//cout << test;
 			cachevector.push_back(tempnode);
@@ -313,20 +332,41 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			hr->endGame2vals(myrack.getRackTiles(),oprack, moves[i], qPos, zPos, pess, optm);
 			optm += moveScore;
 			pess += moveScore;
-			if (moveHasQ(moves[i]))
+			if (moveHasLetter2(moves[i], 'Q'))
 			{
-				//cout <<"MIN"<< optm << " " << pess<<endl;
-				optm *= HASQVAL;
-				pess *= HASQVAL;
-
+				pess *= QVAL;
+				optm *= QVAL;
 			}
-			else if (qPos.size() != 0)
+			if (moveHasLetter2(moves[i], 'Z'))
 			{
-				int val = Qsticking(moves[i], qPos, zPos);
-				optm *= val;
-				pess *= val;
-
+				pess *= ZVAL;
+				optm *= ZVAL;
 			}
+
+			if (moveHasLetter2(moves[i], 'J'))
+			{
+				pess *= JVAL;
+				optm *= JVAL;
+			}
+			//if (moveHasQ(moves[i]))
+			//{
+			//	//cout <<"MIN"<< optm << " " << pess<<endl;
+			//	optm *= HASQVAL;
+			//	pess *= HASQVAL;
+
+			//}
+			//else if (moveHasZ(moves[i]))
+			//{
+			//	optm *= HASZVAL;
+			//	pess *= HASZVAL;
+			//}
+			//else if (qPos.size() != 0)
+			//{
+			//	int val = Qsticking(moves[i], qPos, zPos);
+			//	optm *= val;
+			//	pess *= val;
+
+			//}
 			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
 			cachevector.push_back(tempnode);
 			if (optm < minOptm)
@@ -468,7 +508,9 @@ Move EndSimulation::start()
 	
 	EndSimulation::id = 0;
 	BStarNode root(-1000, 1000, 0, 0, Move());
-	return BStar(root, 0, true, myRack, opponetRack).move;
+	BStarNode node=BStar(root, 0, true, myRack, opponetRack);
+	cout << "score: " << node.score << ", optm: " << node.optm << " , pess: " << node.pess << endl;
+	return node.move;
 }
 void EndSimulation::estimateOPRack()
 {

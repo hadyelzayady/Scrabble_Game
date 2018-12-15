@@ -82,7 +82,7 @@ int main()
 	oprack.addTile('Q');
 	oprack.addTile('G');
 	oprack.addTile('H');
-	oprack.addTile('J');
+	oprack.addTile('S');
 	oprack.addTile('Z');
 
 	TileLookUp tl;

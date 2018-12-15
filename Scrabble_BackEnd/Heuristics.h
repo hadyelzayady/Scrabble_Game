@@ -14,6 +14,10 @@ class Heuristics
 	map<string, double> double_RL;
 	map<string, double> leave_DP;
 	vector<pair<vector<char>, double>> SaveDP;
+	const int QVAL = 150;
+	const int ZVAL = 60;
+	const int JVAL = 20;
+
 
 public:
 	Heuristics();
