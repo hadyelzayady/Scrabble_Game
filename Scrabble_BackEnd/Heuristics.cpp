@@ -171,7 +171,7 @@ double Heuristics::Double_RL(const Move& move, const vector<char>&  leave, const
 		bool U = false;
 		bool Z = false;
 		bool X = false;
-		// TODO handle the Q
+
 		bool holding_bad_tile = false;
 		int i, ilen;
 		for (i = 0, ilen = uniqleave.size(); i < ilen; i++)

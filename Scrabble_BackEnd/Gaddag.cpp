@@ -165,7 +165,7 @@ void Gaddag::goOnHorizontal(int offset, int anchorx, int anchory, char letter, M
 	if (offset <= 0) {	//if making prefix
 		//if its a valid move ending record it
 		if (currNode->hasCharAsEnd(letter) && board->isEmptySquare(anchory, anchorx + offset - 1) && board->isEmptySquare(anchory, anchorx + 1)) {
-			if (rack.size() == 0)
+			if (inMove.Plays.size() == 7)
 				inMove.isBingo = true;
 			moves.push_back(inMove);
 		}
@@ -184,7 +184,7 @@ void Gaddag::goOnHorizontal(int offset, int anchorx, int anchory, char letter, M
 	else if (offset > 0) {	//else if making suffix
 		//if its a valid move ending record it
 		if (currNode->hasCharAsEnd(letter) && board->isEmptySquare(anchory, anchorx + offset + 1)) {
-			if (rack.size() == 0)
+			if (inMove.Plays.size() == 7)
 				inMove.isBingo = true;
 			moves.push_back(inMove);
 		}
@@ -245,7 +245,7 @@ void Gaddag::goOnVertical(int offset, int anchorx, int anchory, char letter, Mov
 	if (offset <= 0) {	//if making prefix
 		   //if its a valid move ending record it			
 		if (currNode->hasCharAsEnd(letter) && board->isEmptySquare(anchory + offset - 1, anchorx) && board->isEmptySquare(anchory + 1, anchorx)) {
-			if (rack.size() == 0)
+			if (inMove.Plays.size() == 7)
 				inMove.isBingo = true;
 			moves.push_back(inMove);
 		}
@@ -265,7 +265,7 @@ void Gaddag::goOnVertical(int offset, int anchorx, int anchory, char letter, Mov
 	else if (offset > 0) {	//else if making suffix
 		//if its a valid move ending record it
 		if (currNode->hasCharAsEnd(letter) && board->isEmptySquare(anchory + offset + 1, anchorx)) {
-			if (rack.size() == 0)
+			if (inMove.Plays.size() == 7)
 				inMove.isBingo = true;
 			moves.push_back(inMove);
 		}

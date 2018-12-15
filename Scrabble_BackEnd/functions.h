@@ -2,6 +2,7 @@
 #include<vector>
 #include <string>
 #include<math.h>
+#include "Constants.h"
 
 using namespace std;
 
@@ -15,12 +16,11 @@ vector<char> convertToletters(vector<int>v)
 		if (v[i] == 0)
 			result.push_back('.');
 		if (v[i] == 100)
-			result.push_back('[]');
+			result.push_back(BLANK_TILE);
 		else if (v[i] > 100)
-			result.push_back((char)v[i] - 101 + 'A');
+			result.push_back((char)v[i] - 101 + 'a');
 		else
 			result.push_back((char)(v[i] + 'A' - 1));
-
 	}
 	return result;
 }
@@ -33,9 +33,10 @@ vector<int> convertToNumbers(vector<char>v)
 	int size = v.size();
 	for (int i = 0; i < size; i++)
 	{
+		// TODO: Handle the case of a blank tile transformed into a letter by bringing the letter here as lowercase (change in formatMyMove in Board)
 		if (v[i] == '.')
 			result.push_back(0);
-		else if (v[i] == '[]')
+		else if (v[i] == BLANK_TILE)
 			result.push_back(100);
 		else
 			result.push_back((int)(v[i] - 'A' + 1));

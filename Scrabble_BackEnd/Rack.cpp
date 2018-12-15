@@ -118,6 +118,4 @@ int Rack::getSize()const
 
 Rack::~Rack()
 {
-
-
 }

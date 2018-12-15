@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+#include <string>
 #include "enums.h"
 
 struct uTime
@@ -82,8 +83,8 @@ struct player2Move_formated
 	int direction;
 	std::vector<char> tiles;
 	int score;
-	int challengeTime;
-	uTime time;
+	std::string challengeTime;
+	fromatedTime time;
 };
 
 struct playerStart

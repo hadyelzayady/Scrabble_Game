@@ -262,23 +262,23 @@ player2Move_formated Client::decodePlay(std::vector<uint8_t>& message)
 
 	memcpy(&umove.score, message.data() + bufferOffset, sizeof(umove.score));
 	bufferOffset += sizeof(umove.score);
-	move.score = int(umove.score);
+	move.score = int(_byteswap_ulong(umove.score));
 	cout << "score: " << move.score << endl;
 
 	memcpy(&umove.challengeTime, message.data() + bufferOffset, sizeof(umove.challengeTime));
 	bufferOffset += sizeof(umove.challengeTime);
-	move.challengeTime = umove.challengeTime;
+	move.challengeTime = to_string(int(_byteswap_ulong(umove.challengeTime)));
 	cout << "ChallengeTime: " << move.challengeTime << endl;
 
 	memcpy(&umove.time.playerTime, message.data() + bufferOffset, sizeof(umove.time.playerTime));
 	bufferOffset += sizeof(umove.time.playerTime);
-	move.time.playerTime = umove.time.playerTime;
-	cout << "playerTime: " << move.time.playerTime << endl;
+	move.time.playTime = to_string(int(_byteswap_ulong(umove.time.playerTime)));
+	cout << "playerTime: " << move.time.playTime << endl;
 
 
 	memcpy(&umove.time.totalTime, message.data() + bufferOffset, sizeof(umove.time.totalTime));
 	bufferOffset += sizeof(umove.time.totalTime);
-	move.time.totalTime = umove.time.totalTime;
+	move.time.totalTime = to_string(int(_byteswap_ulong(umove.time.totalTime)));
 	cout << "totalTime: " << move.time.totalTime << endl;
 
 	return move;
@@ -295,12 +295,12 @@ endMove Client::decodeEndGame(std::vector<uint8_t>& message)
 
 	memcpy(&end.score, message.data() + bufferoffset, 4);
 	bufferoffset += 4;
-	end.score = int(end.score);
+	end.score = int(_byteswap_ulong(end.score));
 	cout << "myscore: " << end.score << endl;
 
 	memcpy(&end.opponentScore, message.data() + bufferoffset, 4);
 	bufferoffset += 4;
-	end.opponentScore = int(end.opponentScore);
+	end.opponentScore = int(_byteswap_ulong(end.opponentScore));
 	cout << "OpponentScore: " << end.opponentScore << endl;
 	return end;
 }

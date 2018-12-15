@@ -74,10 +74,8 @@ Square Board::BoardForm[ROWS_COUNT][COLUMNS_COUNT] = { {Square(WordBonusX3),Squa
 		,Square(NoBonus),Square(WordBonusX3),Square(NoBonus)
 		,Square(NoBonus),Square(NoBonus),Square(LetterBonusX2)
 		,Square(NoBonus),Square(NoBonus),Square(WordBonusX3)} };
-//TODO: blank letters should be added in board letter	
 const string &Board::getBoardLetters()
 {
-	// TODO: insert return statement here
 	return LettersOnBoard;
 }
 //we added board as parameter so we can use it inside commitMoveSim
@@ -90,8 +88,11 @@ void Board::commitMove(const Move &move)
 		pair<int, int> position = move.Plays[i].coordinates;
 		setTile(letter, position.second, position.first);
 		m_board[position.second][position.first].blank = move.Plays[i].Blank;
-		//
-		LettersOnBoard += letter;
+		
+		if(!move.Plays[i].Blank)
+			LettersOnBoard += letter;
+		else
+			LettersOnBoard += BLANK_TILE;
 	}
 }
 //?we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
@@ -147,7 +148,15 @@ Board::Board(char board[15][15])
 {
 	for (int i = 0; i < 15; i++) {
 		for (int j = 0; j < 15; j++) {
-			if (board[i][j] != '.') {
+			if (board[i][j] == '.') {
+				continue;
+			}
+			else if (board[i][j] > 'Z') {
+				m_board[i][j].letter = toupper(board[i][j]);
+				m_board[i][j].blank = true;
+				LettersOnBoard += BLANK_TILE;
+			}
+			else {
 				m_board[i][j].letter = board[i][j];
 				LettersOnBoard += board[i][j];
 			}
@@ -445,7 +454,6 @@ bool Board::checkMoveHorizontal(const Move& move) {
 		return false;
 }
 
-// Under construction
 void Board::formatMyMove( Move& move, playMove & moveToBeSent) {
 	if (checkMoveHorizontal(move)) {
 		moveToBeSent.direction = 0;
@@ -460,13 +468,14 @@ void Board::formatMyMove( Move& move, playMove & moveToBeSent) {
 	}
 	moveToBeSent.Scolumn = move.Plays[0].coordinates.first; /// x
 	moveToBeSent.Srow = move.Plays[0].coordinates.second;  /// y
+	moveToBeSent.score = move.score;
 	int i, ilen;
 	for (i = 0, ilen = (int) move.Plays.size(); i < ilen; ++i) {
 		moveToBeSent.tiles.push_back(move.Plays[i].Letter);
 	}
 }
 
-std::string Board::formatOponentMove(const player2Move_formated& move, int& challengeTime, uTime& currentTime, Move &oponentMove, double& score) {
+std::string Board::formatOponentMove(const player2Move_formated& move, fromatedTime& currentTime, Move &oponentMove) {
 	string word = "";
 	if (move.direction == 0) { // if horizontal
 		int y = move.Srow;
@@ -482,9 +491,9 @@ std::string Board::formatOponentMove(const player2Move_formated& move, int& chal
 				word += this->m_board[y][next].letter;
 				next++;
 			}
-			word += move.tiles[i];
-			if (move.blankIndecies[0] == i || move.blankIndecies[1] == i)
-				oponentMove.addPlay(next, y, move.tiles[i], true);
+			word += toupper(move.tiles[i]);
+			if (move.tiles[i] > 'Z')
+				oponentMove.addPlay(next, y, toupper(move.tiles[i]), true);
 			else
 				oponentMove.addPlay(next, y, move.tiles[i]);
 		}
@@ -503,18 +512,16 @@ std::string Board::formatOponentMove(const player2Move_formated& move, int& chal
 				word += this->m_board[next][x].letter;
 				next++;
 			}
-			word += move.tiles[i];
-			if (move.blankIndecies[0] == i || move.blankIndecies[1] == i)
-				oponentMove.addPlay(x, next, move.tiles[i], true);
+			word += toupper(move.tiles[i]);
+			if (move.tiles[i] > 'Z')
+				oponentMove.addPlay(x, next, toupper(move.tiles[i]), true);
 			else
 				oponentMove.addPlay(x, next, move.tiles[i]);
 		}
 	}
-	challengeTime = move.challengeTime;
 	currentTime = move.time;
-	score = (double)move.score;
+	oponentMove.score = move.score;
 	return word;
-
 }
 
 void Board::uncommitMove(const Move &move)

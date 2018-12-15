@@ -47,7 +47,7 @@ public:
 	bool isMoveValid(const Move &oponentMove, GaddagNode* root, std::string word);
 	bool checkMoveHorizontal(const Move& move);
 	void formatMyMove( Move& move, playMove & moveToBeSent);
-	string formatOponentMove(const player2Move_formated& move, int& challengeTime, uTime& currentTime, Move &oponentMove, double& score);
+	string formatOponentMove(const player2Move_formated& move, fromatedTime& currentTime, Move &oponentMove);
 
 	~Board();
 };

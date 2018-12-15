@@ -18,7 +18,7 @@ public:
 	GaddagNode(char x);
 	~GaddagNode();
 
-	GaddagNode* putTransitionChar(char transitionChar);
+	//GaddagNode* putTransitionChar(char transitionChar);
 	GaddagNode* putTransitionChar(char transitionChar, GaddagNode * son);
 
 	GaddagNode* getChildren(char  transitionChar);

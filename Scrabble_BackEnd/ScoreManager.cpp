@@ -77,7 +77,7 @@ ScoreManager::ScoreManager(Board* boardManager, TileLookUp* tileLookUp)
 	this->tileLookUp = tileLookUp;
 }
 
-double ScoreManager::calculateScore( Move & m, Board * board, TileLookUp * tileLookUp) {
+double ScoreManager::calculateScore(Move & m, Board * board, TileLookUp * tileLookUp) {
 
 	double score=0.0;
 	if (board->checkMoveHorizontal(m)) {
@@ -217,6 +217,7 @@ double ScoreManager::calculateScore( Move & m, Board * board, TileLookUp * tileL
 			score += 50;
 		score  += verticalTemp * wordMult;
 	}
+	m.score = score;
 	return score;
 }
 

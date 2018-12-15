@@ -8,6 +8,7 @@ public:
 	string playerName;
 	int playerScore;
 	Rack *rack;
+	int cummulativePenalty;
 	Player(string name);		//constructor
 	~Player();					//destructor
 };

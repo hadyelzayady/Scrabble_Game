@@ -263,7 +263,6 @@ namespace { // private module-only namespace
 		}
 
 		virtual void _dispatchBinary(BytesCallback_Imp & callable) {
-			// TODO: consider acquiring a lock on rxbuf...
 			while (true) {
 				wsheader_type ws;
 				if (rxbuf.size() < 2) { return; /* Need at least 2 */ }
@@ -358,12 +357,8 @@ namespace { // private module-only namespace
 
 		template<class Iterator>
 		void sendData(wsheader_type::opcode_type type, uint64_t message_size, Iterator message_begin, Iterator message_end) {
-			// TODO:
-			// Masking key should (must) be derived from a high quality random
-			// number generator, to mitigate attacks on non-WebSocket friendly
-			// middleware:
 			const uint8_t masking_key[4] = { 0x12, 0x34, 0x56, 0x78 };
-			// TODO: consider acquiring a lock on txbuf...
+
 			if (readyState == CLOSING || readyState == CLOSED) { return; }
 			std::vector<uint8_t> header;
 			header.assign(2 + (message_size >= 126 ? 2 : 0) + (message_size >= 65536 ? 6 : 0) + (useMask ? 4 : 0), 0);
@@ -389,7 +384,7 @@ namespace { // private module-only namespace
 					header[7] = masking_key[3];
 				}
 			}
-			else { // TODO: run coverage testing here
+			else {
 				header[1] = 127 | (useMask ? 0x80 : 0);
 				header[2] = (message_size >> 56) & 0xff;
 				header[3] = (message_size >> 48) & 0xff;
@@ -487,7 +482,7 @@ namespace { // private module-only namespace
 			line[i] = 0;
 			if (i == 255) { fprintf(stderr, "ERROR: Got invalid status line connecting to: %s\n", url.c_str()); return NULL; }
 			if (sscanf(line, "HTTP/1.1 %d", &status) != 1 || status != 101) { fprintf(stderr, "ERROR: Got bad status connecting to %s: %s", url.c_str(), line); return NULL; }
-			// TODO: verify response headers,
+			
 			while (true) {
 				for (i = 0; i < 2 || (i < 255 && line[i - 2] != '\r' && line[i - 1] != '\n'); ++i) { if (recv(sockfd, line + i, 1, 0) == 0) { return NULL; } }
 				if (line[0] == '\r' && line[1] == '\n') { break; }

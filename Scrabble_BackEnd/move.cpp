@@ -53,7 +53,7 @@ void Move::setPlayPointer(vector<Play> Plays)
 
 Move::Move()
 {
-	
+	isBingo = false;
 }
 
 Move::Move(const Move& other)
