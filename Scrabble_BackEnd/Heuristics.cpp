@@ -347,7 +347,7 @@ void Heuristics::endGame2vals(const vector<char>& estimatedRack, const Rack& cur
 
 	double val1 = Qsticking(estimatedRack, move, Qpos, Zpos);
 	double val2 = SlowEndGame(current.getSize(), move.Plays.size());
-	double val3 = Double_RL(move, leave, uniqleave);
+	double val3 =Double_RL(move, leave, uniqleave);
 	double val4 = VowelCons(leave);
 
 

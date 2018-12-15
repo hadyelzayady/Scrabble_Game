@@ -24,7 +24,7 @@ class EndSimulation
 	TileLookUp *tileLookup;
 	Rack opponetRack;
 	Rack myRack;
-	Board board;
+	Board* board;
 	void getOpRack();
 	vector<BStarNode>* getChildren(const BStarNode& node, Rack& myrack, Rack&oprac, bool ismax, vector<BStarNode *>& bestFirstAndSecond);
 	BStarNode BStar(BStarNode &node, int depth, bool maximizingPlayer,Rack myrack,Rack oprack);

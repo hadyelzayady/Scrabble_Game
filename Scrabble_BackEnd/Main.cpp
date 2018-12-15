@@ -91,9 +91,9 @@ int main()
 	log.DisplayBoard(&board);
 	bool h = true;
 	EndSimulation ends(&board, &tl, oprack, myrack, g, &hr);
-	while (!oprack.getRackTiles().empty() && !myrack.getRackTiles().empty())
+
+	while (!ends.opponetRack.getRackTiles().empty() && !ends.myRack.getRackTiles().empty())
 	{
-		EndSimulation ends(&board, &tl, oprack, myrack, g, &hr);
 		Move best = ends.start();
 		if (best.Plays.empty())
 		{
@@ -106,22 +106,28 @@ int main()
 			
 		if (best.Plays.size() != 0)
 		{
-			cout << "score "<<ScoreManager::calculateScore(best, &board, &tl)<<endl;
+			//cout << "score "<<ScoreManager::calculateScore(best, &board, &tl)<<endl;
 			board.commitMove(best);
+			log.DisplayRack(&ends.myRack);
+			log.DisplayRack(&ends.opponetRack);
+
 			log.DisplayBoard(&board);
-			log.DisplayRack(&myrack);
+			ends.myRack.commitMove(&best);
+			log.DisplayRack(&ends.myRack);
+			log.DisplayRack(&ends.opponetRack);
 			board.computeCrossSets(g->root);
 			writeBoardToFile(board);
-			myrack.commitMove(&best);
 			cout << best.Plays[0].coordinates.first << "," << best.Plays[0].coordinates.second << endl;
 		}
-		else
-			cout << "pass\n";
+		//else
+		//	cout << "pass\n";
 		//opposite game
-		Rack temp = oprack;
-		oprack=myrack;
-		myrack = temp;
-		cout << "end simulation\n";
+		Rack temp = ends.opponetRack;
+		ends.opponetRack=ends.myRack;
+		ends.myRack= temp;
+
+
+		//cout << "end simulation\n";
 
 	}
 

@@ -125,7 +125,7 @@ void EndSimulation::getOpRack()
 	//TileLookUp tl;
 	//unordered_map<char, int>lookup;
 	//int frq=0;
-	//for (const char&letter : board.getBoardLetters())
+	//for (const char&letter : board->getBoardLetters())
 	//{
 	//	frq=tl.getFrequency(letter);
 
@@ -224,9 +224,9 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 		{
 			for (size_t j = 0; j < 15; j++)
 			{
-				if (board.m_board[i][j].horizontalSet.find('Q') != board.m_board[i][j].horizontalSet.end())
+				if (board->m_board[i][j].horizontalSet.find('Q') != board->m_board[i][j].horizontalSet.end())
 					qPos.push_back(pair<int, int>(i, j));
-				else if (board.m_board[i][j].horizontalSet.find('Z') != board.m_board[i][j].horizontalSet.end())
+				else if (board->m_board[i][j].horizontalSet.find('Z') != board->m_board[i][j].horizontalSet.end())
 					zPos.push_back(pair<int, int>(i, j));
 			}
 		}
@@ -237,7 +237,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 	if (ismax) {
 		
 		vector<Move> moves;
-		MG->findWords(myrack.getRackTiles(), moves, &board);
+		MG->findWords(myrack.getRackTiles(), moves, board);
 		double maxOptm = -100000;
 		double maxaltern = -20000;
 		double bestPess = -100000;
@@ -245,38 +245,38 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 		{
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
 
-			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
+			double moveScore = ScoreManager::calculateScore(moves[i], board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], qPos, zPos, optm, pess);
 			optm += moveScore;
 			pess += moveScore;
 			Move move = moves[i];
 			double test = optm;
-			if (moves[i].Plays[0].Letter == 'T' && moves[i].Plays.size()==1)
-				cout << "T move:" << optm;
+			/*if (moves[i].Plays[0].Letter == 'T' && moves[i].Plays.size()==1)
+				cout << "T move:" << optm;*/
 			if (moveHasQ(moves[i]))
 			{
-				cout << "MIN" << optm << " " << pess<<endl;
+				//cout << "MIN" << optm << " " << pess<<endl;
 				optm *= HASQVAL;
 				pess *= HASQVAL;
-				cout << move.Plays[0].coordinates.second<<","<< move.Plays[0].coordinates.first<<endl;
-				cout << optm << "," << pess<<endl;
+				/*cout << move.Plays[0].coordinates.second<<","<< move.Plays[0].coordinates.first<<endl;
+				cout << optm << "," << pess<<endl;*/
 
 			}
 			else if (qPos.size() != 0)
 			{
 				int val = Qsticking(moves[i], qPos, zPos);
-				cout << "val: "<<val;
+				//cout << "val: "<<val;
 				optm *= val;
 				pess *= val;
 				int x=moves[i].Plays[0].coordinates.second;
 				int y = moves[i].Plays[0].coordinates.first;
 
-				cout <<"row,col " <<moves[i].Plays[0].coordinates.second << "," << moves[i].Plays[0].coordinates.first << endl;
-				cout << optm << "," << pess << endl;
+				//cout <<"row,col " <<moves[i].Plays[0].coordinates.second << "," << moves[i].Plays[0].coordinates.first << endl;
+				//cout << optm << "," << pess << endl;
 			}
 			BStarNode tempnode(optm, pess,moveScore, id++, moves[i]);
-			cout << test;
+			//cout << test;
 			cachevector.push_back(tempnode);
 			if (optm > maxOptm)
 			{
@@ -300,7 +300,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 	else {
 
 		vector<Move> moves;
-		MG->findWords(oprack.getRackTiles(),moves, &board);
+		MG->findWords(oprack.getRackTiles(),moves, board);
 		double bestPess = 10000;
 		double minOptm = DBL_MAX - 1;
 		double minaltern = DBL_MAX;
@@ -308,14 +308,14 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 		{
 
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
-			double moveScore = ScoreManager::calculateScore(moves[i], &board, tileLookup);
+			double moveScore = ScoreManager::calculateScore(moves[i], board, tileLookup);
 			double optm, pess;
 			hr->endGame2vals(myrack.getRackTiles(),oprack, moves[i], qPos, zPos, pess, optm);
 			optm += moveScore;
 			pess += moveScore;
 			if (moveHasQ(moves[i]))
 			{
-				cout <<"MIN"<< optm << " " << pess<<endl;
+				//cout <<"MIN"<< optm << " " << pess<<endl;
 				optm *= HASQVAL;
 				pess *= HASQVAL;
 
@@ -393,7 +393,7 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 			//backup
 			node.pess = maxOptimisticValue;
 			node.optm = maxPessimisticValue;
-			cout << "backup. " << node.optm << "," << node.pess<<endl;
+			//cout << "backup. " << node.optm << "," << node.pess<<endl;
 			if (depth > 0)
 				return BStarNode(); //TODO what to return
 			//else depth=0
@@ -403,11 +403,11 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 		
 			Rack newrack = myrack;
 			newrack.commitMove(&(bestFirstAndSecond[0]->move));
-			board.commitMove(bestFirstAndSecond[0]->move);
-			board.computeCrossSets(MG->root);
+			board->commitMove(bestFirstAndSecond[0]->move);
+			board->computeCrossSets(MG->root);
 			int id = BStar(*bestFirstAndSecond[0], depth + 1, false, newrack, oprack).id;
-			board.UnCommitMove(bestFirstAndSecond[0]->move);
-			board.computeCrossSets( MG->root);
+			board->UnCommitMove(bestFirstAndSecond[0]->move);
+			board->computeCrossSets( MG->root);
 	}
 	while (!maximizingPlayer)//min always starts in depth 1 (not working if min is depth 0
 	{
@@ -453,11 +453,11 @@ BStarNode EndSimulation::BStar(BStarNode &node, int depth, bool maximizingPlayer
 		
 			Rack newrack = oprack;
 			newrack.commitMove(&bestFirstAndSecond[0]->move);
-			board.commitMove(bestFirstAndSecond[0]->move);
-			board.computeCrossSets( MG->root);
+			board->commitMove(bestFirstAndSecond[0]->move);
+			board->computeCrossSets( MG->root);
 			int id = BStar(*bestFirstAndSecond[0], depth + 1, true, myrack, newrack).id;
-			board.UnCommitMove(bestFirstAndSecond[0]->move);
-			board.computeCrossSets(MG->root);
+			board->UnCommitMove(bestFirstAndSecond[0]->move);
+			board->computeCrossSets(MG->root);
 		
 	}
 	return BStarNode();
@@ -472,7 +472,7 @@ Move EndSimulation::start()
 }
 void EndSimulation::estimateOPRack()
 {
-	string boardLetters = board.getBoardLetters();
+	string boardLetters = board->getBoardLetters();
 	vector<char> myLetters = myRack.getRackTiles();
 
 	unordered_map<char, int> freq;
@@ -533,12 +533,12 @@ EndSimulation::EndSimulation(Board* board, TileLookUp*tl, Rack opponentRack, Rac
 	this->opponetRack = opponentRack;
 	this->myRack = myRack;
 	this->tileLookup = tl;
-	this->board = *board; //! test implicit copy constructors
+	this->board = board; //! test implicit copy constructors
 	this->MG = GD;
 	this->hr = hr;
 }
 //! for production 
-//EndSimulation::EndSimulation(const Board &board, TileLookUp*tl, Rack myRack, Gaddag * GD, Heuristics* hr)
+//EndSimulation::EndSimulation(const Board board, TileLookUp*tl, Rack myRack, Gaddag * GD, Heuristics* hr)
 //{
 //	this->scoreManager = scoreManager;
 //	this->opponetRack = opponentRack;
