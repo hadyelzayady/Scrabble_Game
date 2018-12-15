@@ -8,8 +8,6 @@ public:
 	string playerName;
 	int playerScore;
 	Rack *rack;
-
-
 	Player(string name);		//constructor
 	~Player();					//destructor
 };

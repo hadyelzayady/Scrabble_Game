@@ -37,16 +37,34 @@ char BagOfLetters::draw()
 	std::mt19937 eng(rd());							// seed the generator
 	std::uniform_int_distribution<> distr(0, 26); // define the range inclusive
 	int x = distr(eng);
+	if (bag[x] == 0) {
+		while (bag[x]==0)
+		{
+			std::random_device rd;							// obtain a random number from hardware
+			std::mt19937 eng(rd());							// seed the generator
+			std::uniform_int_distribution<> distr(0, 26); // define the range inclusive
+			x = distr(eng);
+		}
+	}
 	bag[x] -= 1;
 	this->size -= 1;
 	return mapping[x];
 }
 
-char BagOfLetters::swap(char x) {
-	char y = draw();
-	bag[x - 'A'] += 1;
-	this->size += 1;
-	return y;
+char* BagOfLetters::swap(char* x,int counter) {
+	
+	char* z = new char[counter];
+	int i;
+	for (i = 0; i < counter;++i)
+	{
+		char y = draw();
+		z[i] = y;
+	}
+	for (i = 0; i < strlen(x); ++i) {
+		bag[x[i] - 'A'] += 1;
+	}
+	this->size += counter;
+	return z;
 }
 
 int BagOfLetters::getSize() {

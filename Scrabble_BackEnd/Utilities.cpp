@@ -1,6 +1,8 @@
 #include "Utilities.h"
 
 
+//TODO : change the method we compute factorial with 
+
 long double Utilities::Cparta(int K, int r) {
 	return (this->factorial(K) / this->factorial(K - r)) / this->factorial(r);
 }
@@ -22,6 +24,26 @@ long double Utilities::factorial(int n)     //eh max number momken nekon benhsba
 	
 }
 
+// creating rectangular for NcR by Ahmed Osman
+void Utilities::makeTriangle() {
+	int i, j;
+
+	// initialize the first row
+	triangle[0][0] = 1; // C(0, 0) = 1
+
+	for (i = 1; i < MAX; i++) {
+		triangle[i][0] = 1; // C(i, 0) = 1
+		for (j = 1; j <= i; j++) {
+			triangle[i][j] = triangle[i - 1][j - 1] + triangle[i - 1][j];
+		}
+	}
+}
+
+//calculating C 
+long double Utilities::C(int n, int r) {
+	return triangle[n][r];
+}
+
 void Utilities::setFactorialDB()
 {
 	for (int i = 0; i < 100; i++) {
@@ -33,7 +55,8 @@ void Utilities::setFactorialDB()
 
 Utilities::Utilities()
 {
-	this->setFactorialDB();
+	this->makeTriangle();
+//	this->setFactorialDB();
 }
 
 

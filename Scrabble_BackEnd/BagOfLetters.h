@@ -7,19 +7,21 @@
 #include <random>
 class BagOfLetters {
 
-	int bag[27];	//Stack used to represent the letter bag
-	int size;
+	int bag[27];	//array used to represent the letter bag
+	
 public:
+	int size;
 	//Constructor
 	BagOfLetters();
 
 	char draw();
 	//Swap tiles
-	char swap(char b);
+	char* swap(char* b, int counter);
 
 	int getSize();
 
 	bool hasLetters();
 
 	//void fillRack(Rack* r);
+
 };
