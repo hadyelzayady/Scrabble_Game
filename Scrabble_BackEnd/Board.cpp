@@ -94,19 +94,51 @@ void Board::commitMove(const Move &move)
 		LettersOnBoard += letter;
 	}
 }
+void Board::commitMoves(const vector<Move> &moves)
+{
+	for (Move move : moves) 
+	{
+		vector<Play>plays = move.Plays;
+		for (size_t i = 0; i < plays.size(); i++)
+		{
+			char letter = plays[i].get_Letter();
+			pair<int, int> position = plays[i].get_Coordinates();
+			setTile(letter, position.second, position.first);
+			//
+			LettersOnBoard += letter;
+		}
+	}	
+}
 //?we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
-/*Board Board::commitMoveSimB(const Move &move)
+Board Board::commitMoveSimB(const Move &move)
 {
 	Board newBoard(m_board);
 	newBoard.commitMove(move);
 	return newBoard; //? still not sure if we should return 2d array or board object but soliman needs board object to get moves
-}*/
-//we use commitMoveSim instead of commitMove as we return new board with move changes and no effect happens to the original board
-Board Board::commitMoveSim(const Move & move, const Board &board)
+}
+void Board::commitMoveSimC(const Move & move, Board & newBoard)
+{
+	newBoard.commitMove(move);
+}
+void Board::UnCommitMove(const Move & move)
+{
+	//
+	vector<Play>plays = move.Plays;
+	string moveLetters="";//2 approachs ,find substring of move in boardletters string then remove it or remove one letter one by one in for loop 
+	for (size_t i = 0; i < plays.size(); i++)
+	{
+		pair<int, int> position = plays[i].get_Coordinates();
+		removeTile(position.second, position.first);
+		size_t start = LettersOnBoard.find_first_of(plays[i].Letter);
+		LettersOnBoard.erase(start, 1);
+	}
+}
+Board Board::commitMoveSim(const Move & move, Board board)
 {
 	Board   B(board);
 	B.commitMove(move);
 	return B;
+
 }
 
 const char &Board::getLetter(unsigned short row, unsigned short column) const
@@ -121,7 +153,6 @@ bool Board::isEmptySquare(unsigned short row, unsigned short column) const
 		return m_board[row][column].isEmpty();
 	}
 	return true;
-	//throw EXCEPTION_OUT_OF_BOUND;
 }
 
 Board::Board(const Square board[ROWS_COUNT][COLUMNS_COUNT])
@@ -165,14 +196,14 @@ Board::Board()
 Board::Board(const Board&b) {
 
 	std::copy(&b.m_board[0][0], &b.m_board[0][0] + ROWS_COUNT * COLUMNS_COUNT, &m_board[0][0]);
-	/*	for (size_t i = 0; i < ROWS_COUNT; i++)
+		for (size_t i = 0; i < ROWS_COUNT; i++)
 			for (size_t j = 0; j < COLUMNS_COUNT; j++)
 			{
 				m_board[i][j] = b.m_board[i][j];
 				if (!m_board[i][j].isEmpty())
 					LettersOnBoard+=m_board[i][j].letter;
 			}
-			*/
+		
 }
 
 void Board::setTile(char letter, unsigned short row, unsigned short column)
@@ -182,10 +213,22 @@ void Board::setTile(char letter, unsigned short row, unsigned short column)
 		m_board[row][column].letter = letter;
 		return;
 	}
-	//throw EXCEPTION_OUT_OF_BOUND;
-}
 
-bool Board::isHook(unsigned short row, unsigned short column) const
+	throw EXCEPTION_OUT_OF_BOUND;
+
+}
+void Board::removeTile(unsigned short row, unsigned short column)
+{
+	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
+	{
+		m_board[row][column].letter = EMPTY_SQUARE;
+		return;
+	}
+
+	throw EXCEPTION_OUT_OF_BOUND;
+
+}
+ bool Board::isHook(unsigned short row, unsigned short column) const
 {
 	if (row < ROWS_COUNT && column < COLUMNS_COUNT)
 	{
@@ -218,6 +261,7 @@ bool Board::isAnchor(unsigned short row, unsigned short column) const
 	//throw EXCEPTION_OUT_OF_BOUND;
 	return false;
 }
+
 
 void Board::computeCrossSets(GaddagNode* g) {
 
@@ -534,4 +578,5 @@ void Board::unsetTile(unsigned short row, unsigned short column)
 
 Board::~Board()
 {
+
 }
