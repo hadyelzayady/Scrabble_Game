@@ -8,6 +8,7 @@ public:
 	vector<Play>  Plays;
 	vector<char> chars;
 	bool isBingo;
+	int score;
 	vector<Play> getPlaysPointer() const;
 	void setBingo(bool bingo);
 	bool getBingo();

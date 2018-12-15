@@ -37,6 +37,7 @@ Move::Move(const Move& other)
 			this->Plays.push_back(other.Plays[i]);
 	this->chars = other.chars;
 	isBingo = other.isBingo;
+	score = other.score;
 }
 
 void Move::setBingo(bool bingo) {
