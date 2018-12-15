@@ -156,11 +156,12 @@ def PreProcessing(dict):
 
     f = open('ML.txt', 'r')
     lines = [line.strip() for line in f.readlines()]
-    for i in range(0, len(lines), 4):
+    for i in range(0, len(lines), 5):
         currentBoard = lines[i].split()
         rack = lines[i + 1].split()
         move = lines[i + 2].split()
-        score = int(lines[i + 3])
+        newRack = lines[i + 3].split()
+        score = int(lines[i + 4])
 
         state = np.zeros(12064)
         action = np.zeros(11700)
@@ -190,10 +191,10 @@ def PreProcessing(dict):
             if (nextBoard[j] != '_'):
                 nextstate[j * 52: j * 52 + 52] = dict[nextBoard[j]]
 
-        for j in range(len(rack)):
-            if (rack[j] != '_'):
+        for j in range(len(newRack)):
+            if (newRack[j] != '_'):
                 index = j + (15 * 15)
-                nextstate[index * 52: index * 52 + 52] = dict[rack[j]]
+                nextstate[index * 52: index * 52 + 52] = dict[newRack[j]]
 
         stateList.append(state)
         actionList.append(action)
@@ -327,7 +328,7 @@ with tf.Session() as sess:
             episode_rewards.append(reward[step])
 
             if step -len(state)==1:
-                done=true
+                done=True
 
             memory.add((state[step], action[step], reward[step], nextstate[step], done))
 
