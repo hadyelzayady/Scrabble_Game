@@ -1,4 +1,29 @@
 #include "move.h"
+#include <algorithm>
+
+bool Move::sortByFirst(const Play &a, const Play &b)
+{
+    return a.coordinates.first < b.coordinates.first;
+}
+
+bool Move::sortBySecond(const Play &a, const Play &b)
+{
+    return a.coordinates.second < b.coordinates.second;
+}
+
+
+void Move::sortPlaysFirst(vector<Play>&play_vector)
+{
+    std::sort(play_vector.begin(), play_vector.end(), sortByFirst);
+    return;
+}
+
+void Move::sortPlaysSecond(vector<Play>&play_vector)
+{
+    std::sort(play_vector.begin(), play_vector.end(), sortBySecond);
+    return;
+}
+
 vector<Play> Move::getPlaysPointer()const
 {
 

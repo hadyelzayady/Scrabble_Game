@@ -37,20 +37,16 @@ public:
 	////Ahmed osman////
 	void unsetTile(unsigned short row, unsigned short column);	
 	void uncommitMove(const Move & move);
+
 	//Ahmed Soliman Updates
 	void computeCrossSets(GaddagNode* g);  // g is the root in gaddag class 
-
 	void computeHorizontalSet(int i, int j, GaddagNode* root);
 	void computeVerticalSet(int i, int j, GaddagNode* root);
-
 	bool checkCharInHorizontalSet(int i, int j, char l) const;
 	bool checkCharInVerticalSet(int i, int j, char l) const;
 	bool isMoveValid(const Move &oponentMove, GaddagNode* root, std::string word);
 	bool checkMoveHorizontal(const Move& move);
-	// Under construction (sorting)
-	void formatMyMove(const Move& move, playMove & moveToBeSent);
-
-
+	void formatMyMove( Move& move, playMove & moveToBeSent);
 	string formatOponentMove(const player2Move_formated& move, int& challengeTime, uTime& currentTime, Move &oponentMove, double& score);
 
 	~Board();

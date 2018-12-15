@@ -12,8 +12,8 @@ public:
 
 	// Methods
 		//timon|
-	static	double calculateScore(const Move & m, Board * board,  TileLookUp * tileLookUp);
-
+	static	double calculateScore( Move & m, Board * board,  TileLookUp * tileLookUp);
 	ScoreManager(Board*, TileLookUp*);
+	
 	~ScoreManager();
 };
