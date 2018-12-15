@@ -94,14 +94,15 @@ Move PreEndGameManager::GenerateMove()
 		BestMoveIndex = (BestScore < myScore + futureScore + fishingFuture - opponentScore) ? i : BestMoveIndex;
 		BestScore = (BestScore < myScore + futureScore+ fishingFuture - opponentScore) ? myScore + fishingFuture +futureScore - opponentScore : BestScore;
 		cout << "Best Score " << BestScore << " MY SCORE: " << myScore << " future Score: " << futureScore << "opponentScore: " << opponentScore <<"Fishing score "<< fishingFuture << endl;
+		b->uncommitMove((*movesList)[i]);
 		if (exceeded(120)) {
 			
 			cout <<endl<< "the movements we reached is " << i << "and the best score "<< BestScore << endl;
+			
 			break;
 
 		}
-		b->uncommitMove((*movesList)[i]);
-				}
+					}
 //	delete M;
 	return BestMoveIndex;
 

@@ -81,7 +81,7 @@ vector<pair<vector<char>, double>> MonteCarlo::simulation(int N)
 	for (int i = 0; i < N; i++) {
 		std::vector<char> temp = this->availableCharacters;
 		std::vector<char> rackgenerated;
-		cout << "THE AVAILBLE CHARACTERS SIZE :" << availableCharacters.size() << endl;
+	//	cout << "THE AVAILBLE CHARACTERS SIZE :" << availableCharacters.size() << endl;
 		int sizeofj = (7 > availableCharacters.size()) ? availableCharacters.size() : 7;
 		for (int j = 0; j < sizeofj; j++) {
 			const int range_from = 0;
