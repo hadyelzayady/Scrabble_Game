@@ -71,7 +71,7 @@ int main()
 	writeBoardToFile(board);
 	board.computeCrossSets(g->root);
 	Rack myrack, oprack;
-	myrack.addTile('T');
+	myrack.addTile('A');
 	myrack.addTile('B');
 	myrack.addTile('A');
 	myrack.addTile('S');
@@ -79,10 +79,10 @@ int main()
 	myrack.addTile('Z');
 
 	oprack.addTile('T');
-	oprack.addTile('Q');
+	oprack.addTile('T');
 	oprack.addTile('G');
 	oprack.addTile('H');
-	oprack.addTile('S');
+	oprack.addTile('Q');
 	oprack.addTile('Z');
 
 	TileLookUp tl;

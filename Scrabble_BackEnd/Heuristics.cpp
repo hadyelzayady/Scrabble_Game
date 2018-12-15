@@ -171,7 +171,6 @@ double Heuristics::Double_RL(const Move& move, const vector<char>&  leave, const
 		bool U = false;
 		bool Z = false;
 		bool X = false;
-		bool J = false;
 		// TODO handle the Q
 		bool holding_bad_tile = false;
 		int i, ilen;
@@ -179,17 +178,16 @@ double Heuristics::Double_RL(const Move& move, const vector<char>&  leave, const
 		{
 
 			if (uniqleave[i] == 'U') U = true;
-			if (uniqleave[i] == 'Q' || uniqleave[i] == 'X' || uniqleave[i] == 'Z' || uniqleave[i] == 'J')
+			if (uniqleave[i] == 'Q' || uniqleave[i] == 'X' || uniqleave[i] == 'Z')
 			{
 				if (uniqleave[i] == 'Q') Q = true;
 				if (uniqleave[i] == 'X') X = true;
 				if (uniqleave[i] == 'Z') Z = true;
-				if (uniqleave[i] == 'J') J = true;
 				holding_bad_tile = true;
 			}
 		}
 
-		if (Q == true && U == true && X == false && Z == false && J == false)holding_bad_tile = false;
+		if (Q == true && U == true && X == false && Z == false)holding_bad_tile = false;
 
 
 
@@ -244,7 +242,7 @@ double Heuristics::Qsticking(const vector<char>& estimatedRack, const Move& move
 			{
 				if (move.Plays[i].coordinates == Qpos[k])
 				{
-					quality = quality + 10;
+					quality = quality + 2;
 				}
 
 			}
@@ -257,7 +255,7 @@ double Heuristics::Qsticking(const vector<char>& estimatedRack, const Move& move
 			{
 				if (move.Plays[i].coordinates == Zpos[k])
 				{
-					quality = quality + 10;
+					quality = quality + 2;
 				}
 
 			}
@@ -333,71 +331,36 @@ double Heuristics::midGame(bool first_turn, const Move&  move, vector<char> leav
 }
 
 // for hady 
-bool moveHasLetter(const Move&move,char letter) {
-	for (size_t i = 0; i < move.Plays.size(); i++)
-	{
-		if (move.Plays[i].Letter == letter)
-			return true;
-	}
-	return false;
-
-}
 void Heuristics::endGame2vals(const vector<char>& estimatedRack, const Rack& current, const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos, double &maxVal, double &minVal)
 {
+	// need to add the score with the heuristic -> check with them
+	// calculate double rack leave -> value
+	// vowel-consonants balance -> value
+	// map # positions that this move blocks for the opponent -> 
 
+	// end manager must:
+	// receive list of moves
+	// call endgame_heuristic_function(...) 
+	// gets 2 values, save them in optimitic/pessimistic
 	vector<char> leave = current.getLeave(move);
 	vector<char> uniqleave = current.getUniqueLeave(move);
 
-	
-	
-	double val1 = SlowEndGame(current.getSize(), move.Plays.size());
-	double val2 = Double_RL(move, leave, uniqleave);
-	double val3 = VowelCons(leave);
-
-	double val4 = 0;
-	if (!moveHasLetter(move, 'Q'))
-	{
-		 val4 = Qsticking(estimatedRack, move, Qpos, Zpos);
-	}
+	double val1 = Qsticking(estimatedRack, move, Qpos, Zpos);
+	double val2 = SlowEndGame(current.getSize(), move.Plays.size());
+	double val3 = Double_RL(move, leave, uniqleave);
+	double val4 = VowelCons(leave);
 
 
-	
 	double x = min(val1, val2);
 	x = min(x, val3);
-	
-	if (!moveHasLetter(move, 'Q'))
-	{
-		x = min(x, val4);
-	}
-	
+	x = min(x, val4);
 	minVal = x;
 
 	x = max(val1, val2);
 	x = max(x, val3);
-	
-	if (!moveHasLetter(move, 'Q'))
-	{
-		
-		x = max(x, val4); 
-	}
-	
+	x = max(x, val4);
 	maxVal = x;
-	if (moveHasLetter(move, 'Q'))
-	{
-		minVal += QVAL;
-		maxVal += QVAL;
-	}
-	if (moveHasLetter(move, 'Z'))
-	{
-		minVal += ZVAL;
-		maxVal += ZVAL;
-	}
 
-	if (moveHasLetter(move, 'J'))
-	{
-		minVal += JVAL;
-		maxVal += JVAL;
-	}
 }
 
 Heuristics::~Heuristics()

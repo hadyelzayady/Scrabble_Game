@@ -150,45 +150,31 @@ bool moveHasLetter2(const Move&move, char letter) {
 	return false;
 
 }
-double Qsticking(const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos)
+double Qsticking2(const vector<char>& estimatedRack, const Move& move, const vector<pair<int, int>>&  Qpos, const vector<pair<int, int>>&  Zpos)
 {
 
 	//vector<Play> plays = move.Plays;
-	bool hasQ = false;
-	bool hasZ = false;
-	double quality = 1;
+
+	double quality = 0;
 	int i, ilen;
+
 
 	for (i = 0, ilen = move.Plays.size(); i < ilen; i++)
 	{
-		if (hasQ)
-		{
+
 			int k, klen;
 			for (k = 0, klen = Qpos.size(); k < klen; k++)
 			{
 				if (move.Plays[i].coordinates == Qpos[k])
 				{
-					quality = quality + 10;
+					quality = quality + 50;
 				}
 
 			}
-
-		}
-		/*if (hasZ)
-		{
-			int k, klen;
-			for (k = 0, klen = Zpos.size(); k < klen; k++)
-			{
-				if (move.Plays[i].coordinates == Zpos[k])
-				{
-					quality = quality + 1;
-				}
-
-			}
-		}*/
 	}
 	return quality;
 }
+
 vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrack, Rack&oprack, bool ismax, vector<BStarNode *>& bestFirstAndSecond)
 {
 	if ((ismax && myrack.list.size() == 0) || (!ismax && oprack.list.size() == 0))
@@ -218,7 +204,10 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 	vector<pair<int, int>> qPos = {};//TODO:
 	vector<pair<int, int>> zPos{};//TODO:
 	//q_z positions are used only if I am max and my op has Q or Z ,same in opposite
-	if ((ismax && isRackHaveQ_Z(oprack)) || (!ismax && isRackHaveQ_Z(myrack)))
+	bool opRackHaveQ = isRackHaveQ_Z(oprack);
+	bool myRackHaveQ = isRackHaveQ_Z(myrack);
+
+	if ((ismax && opRackHaveQ) || (!ismax && myRackHaveQ))
 	{
 		for (size_t i = 0; i < 15; i++)
 		{
@@ -250,22 +239,27 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], qPos, zPos, optm, pess);
 			optm += moveScore;
 			pess += moveScore;
-			if (moveHasLetter2(moves[i], 'Q'))
+			int mul = 1;
+			if (opRackHaveQ) {
+
+				mul+=Qsticking2(oprack.getRackTiles(), moves[i], qPos, zPos);
+			}
+			if (moveHasLetter2(moves[i],'Q'))
 			{
-				pess *= QVAL;
-				optm *= QVAL;
+				cout << "MIN" << optm << " " << pess << endl;
+				mul += QVAL;
 			}
 			if (moveHasLetter2(moves[i], 'Z'))
 			{
-				pess *= ZVAL;
-				optm *= ZVAL;
+				mul += ZVAL;
 			}
-
 			if (moveHasLetter2(moves[i], 'J'))
 			{
-				pess *= JVAL;
-				optm *= JVAL;
+				mul += JVAL;
 			}
+			optm *= mul;
+			pess *= mul;
+
 			//Move move = moves[i];
 			//double test = optm;
 			/*if (moves[i].Plays[0].Letter == 'T' && moves[i].Plays.size()==1)
@@ -332,22 +326,26 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			hr->endGame2vals(myrack.getRackTiles(),oprack, moves[i], qPos, zPos, pess, optm);
 			optm += moveScore;
 			pess += moveScore;
+			int mul = 1;
+			if (myRackHaveQ) {
+
+				mul += Qsticking2(myrack.getRackTiles(), moves[i], qPos, zPos);
+			}
 			if (moveHasLetter2(moves[i], 'Q'))
 			{
-				pess *= QVAL;
-				optm *= QVAL;
+				cout << "MIN" << optm << " " << pess << endl;
+				mul += QVAL;
 			}
 			if (moveHasLetter2(moves[i], 'Z'))
 			{
-				pess *= ZVAL;
-				optm *= ZVAL;
+				mul += ZVAL;
 			}
-
 			if (moveHasLetter2(moves[i], 'J'))
 			{
-				pess *= JVAL;
-				optm *= JVAL;
+				mul += JVAL;
 			}
+			optm *= mul;
+			pess *= mul;
 			//if (moveHasQ(moves[i]))
 			//{
 			//	//cout <<"MIN"<< optm << " " << pess<<endl;
