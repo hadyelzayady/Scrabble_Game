@@ -2,7 +2,7 @@
 
 
 
-BStarNode::BStarNode(double opt, double pess,int score, int id,const Move& move)
+BStarNode::BStarNode(double opt, double pess,double score, int id,const Move& move)
 {
 	this->optm = opt;
 	this->pess = pess;
