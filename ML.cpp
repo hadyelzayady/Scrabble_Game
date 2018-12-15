@@ -6,7 +6,7 @@ ML::ML()
 {
 }
 
-void ML::Write2File(Board &board, Rack &rack, Move &m, int score, bool append)
+void ML::Write2File(Board &board, Rack &rack, Move &m, Rack &newRack, int score, bool append)
 {
 	ofstream out;
 	if (append) out.open("ML.txt", fstream::app);
@@ -55,6 +55,21 @@ void ML::Write2File(Board &board, Rack &rack, Move &m, int score, bool append)
 			}
 			out << c << " ";
 		}
+	}
+	out << "\n";
+
+	//Write New Rack
+	vector<char> newRackLetters = newRack.getRackTiles();
+	int newSize = newRackLetters.size();
+
+	if (newSize != 0)
+	{
+		for (int i = 0; i < newSize; i++)
+			out << newRackLetters[i] << " ";
+	}
+	else
+	{
+		out << "_";
 	}
 	out << "\n";
 

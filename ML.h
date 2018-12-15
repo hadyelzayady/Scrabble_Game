@@ -10,7 +10,7 @@ class ML
 
 public:
 	ML();
-	void Write2File(Board &board, Rack &rack, Move &m, int score, bool append = true);
+	void Write2File(Board &board, Rack &rack, Move &m, Rack &newRack, int score, bool append = true);
 	~ML();
 };
 
