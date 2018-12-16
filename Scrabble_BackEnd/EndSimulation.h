@@ -11,7 +11,7 @@ class EndSimulation
 {
 	ScoreManager *scoreManager;
 	static long id;
-	const double QVAL = 50;
+	const double QVAL = 1000;
 	const double ZVAL = 1.3;
 	const double JVAL = 1.2;
 

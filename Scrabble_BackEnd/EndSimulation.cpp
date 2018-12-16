@@ -53,8 +53,8 @@ double getBestPessimisticMin(vector<BStarNode> moves)
 
 void getBestFirstAndSecondMax(vector<BStarNode>&moves, vector<BStarNode *>& bestFirstAndSecond)
 {
-	double maxOptm = -1000000000000;
-	double maxaltern = -20000000000;
+	double maxOptm = -1000000;
+	double maxaltern = -20000000;
 	BStarNode *bestBStarNode = NULL;
 	BStarNode *alternBStarNode = NULL;
 	for (size_t i = 0; i < moves.size(); i++)
@@ -167,7 +167,8 @@ double Qsticking2(const vector<char>& estimatedRack, const Move& move, const vec
 			{
 				if (move.Plays[i].coordinates == Qpos[k])
 				{
-					quality = quality + 5;
+					quality = quality + 100;
+					//return quality;
 				}
 
 			}
@@ -214,9 +215,9 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			for (size_t j = 0; j < 15; j++)
 			{
 				if (board->m_board[i][j].horizontalSet.find('Q') != board->m_board[i][j].horizontalSet.end())
-					qPos.push_back(pair<int, int>(i, j));
+					qPos.push_back(pair<int, int>(j, i));
 				else if (board->m_board[i][j].horizontalSet.find('Z') != board->m_board[i][j].horizontalSet.end())
-					zPos.push_back(pair<int, int>(i, j));
+					zPos.push_back(pair<int, int>(j, i));
 			}
 		}
 	}
@@ -227,9 +228,9 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 		
 		vector<Move> moves;
 		MG->findWords(myrack.getRackTiles(), moves, board);
-		double maxOptm = -100000;
-		double maxaltern = -20000;
-		double bestPess = -100000;
+		double maxOptm = -1000000;
+		double maxaltern = -200000;
+		double bestPess = -1000000;
 		for (size_t i = 0;i< moves.size(); i++)
 		{
 			//! improvement: not all nodes executed so ,board should not be created for all nodes ,just the 1st and 2nd node
@@ -240,6 +241,8 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			optm += moveScore;
 			pess += moveScore;
 			double mul = 1;
+			Move move = moves[i];
+			cout << i << endl;
 			if (opRackHaveQ) {
 
 				mul+=Qsticking2(oprack.getRackTiles(), moves[i], qPos, zPos);
@@ -257,8 +260,8 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			{
 				mul += JVAL;
 			}
-			optm *= mul;
-			pess *= mul;
+			optm += mul;
+			pess += mul;
 
 			//Move move = moves[i];
 			//double test = optm;
@@ -314,7 +317,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 
 		vector<Move> moves;
 		MG->findWords(oprack.getRackTiles(),moves, board);
-		double bestPess = 10000;
+		double bestPess = 1000000;
 		double minOptm = DBL_MAX - 1;
 		double minaltern = DBL_MAX;
 		for (size_t i = 0; i < moves.size(); i++)
@@ -344,8 +347,8 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			{
 				mul += JVAL;
 			}
-			optm *= mul;
-			pess *= mul;
+			optm += mul;
+			pess += mul;
 			//if (moveHasQ(moves[i]))
 			//{
 			//	//cout <<"MIN"<< optm << " " << pess<<endl;

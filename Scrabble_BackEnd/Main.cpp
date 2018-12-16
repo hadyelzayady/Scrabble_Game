@@ -72,11 +72,11 @@ int main()
 	board.computeCrossSets(g->root);
 	Rack myrack, oprack;
 	myrack.addTile('A');
-	myrack.addTile('B');
+	myrack.addTile('Q');
 	myrack.addTile('A');
 	myrack.addTile('H');
 
-	oprack.addTile('Q');
+	oprack.addTile('A');
 	oprack.addTile('U');
 	oprack.addTile('G');
 	oprack.addTile('H');
@@ -91,6 +91,7 @@ int main()
 	EndSimulation ends(&board, &tl, oprack, myrack, g, &hr);
 	vector<Move> moves;
 	g->findWords(myrack.getRackTiles(), moves, &board);
+
 	for (size_t i = 0; i < moves.size(); i++)
 	{
 		log.PrintMove(&moves[i]);
