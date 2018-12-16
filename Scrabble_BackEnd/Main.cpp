@@ -74,15 +74,13 @@ int main()
 	myrack.addTile('A');
 	myrack.addTile('B');
 	myrack.addTile('A');
-	myrack.addTile('S');
-	myrack.addTile('C');
-	myrack.addTile('Z');
+	myrack.addTile('H');
 
-	oprack.addTile('T');
-	oprack.addTile('T');
+	oprack.addTile('Q');
+	oprack.addTile('U');
 	oprack.addTile('G');
 	oprack.addTile('H');
-	oprack.addTile('Q');
+	oprack.addTile('E');
 	oprack.addTile('Z');
 
 	TileLookUp tl;
@@ -91,7 +89,12 @@ int main()
 	log.DisplayBoard(&board);
 	bool h = true;
 	EndSimulation ends(&board, &tl, oprack, myrack, g, &hr);
-
+	vector<Move> moves;
+	g->findWords(myrack.getRackTiles(), moves, &board);
+	for (size_t i = 0; i < moves.size(); i++)
+	{
+		log.PrintMove(&moves[i]);
+	}
 	while (!ends.opponetRack.getRackTiles().empty() && !ends.myRack.getRackTiles().empty())
 	{
 		Move best = ends.start();

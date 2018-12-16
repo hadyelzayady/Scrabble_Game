@@ -345,10 +345,10 @@ void Heuristics::endGame2vals(const vector<char>& estimatedRack, const Rack& cur
 	vector<char> leave = current.getLeave(move);
 	vector<char> uniqleave = current.getUniqueLeave(move);
 
-	double val1 = Qsticking(estimatedRack, move, Qpos, Zpos);
-	double val2 = SlowEndGame(current.getSize(), move.Plays.size());
-	double val3 = Double_RL(move, leave, uniqleave);
-	double val4 = VowelCons(leave);
+	double val1 = 50+Qsticking(estimatedRack, move, Qpos, Zpos);
+	double val2 = 50+SlowEndGame(current.getSize(), move.Plays.size());
+	double val3 = 50+Double_RL(move, leave, uniqleave);
+	double val4 = 50+VowelCons(leave);
 
 
 	double x = min(val1, val2);

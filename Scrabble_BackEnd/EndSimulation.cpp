@@ -167,7 +167,7 @@ double Qsticking2(const vector<char>& estimatedRack, const Move& move, const vec
 			{
 				if (move.Plays[i].coordinates == Qpos[k])
 				{
-					quality = quality + 50;
+					quality = quality + 5;
 				}
 
 			}
@@ -239,7 +239,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			hr->endGame2vals(oprack.getRackTiles(),myRack, moves[i], qPos, zPos, optm, pess);
 			optm += moveScore;
 			pess += moveScore;
-			int mul = 1;
+			double mul = 1;
 			if (opRackHaveQ) {
 
 				mul+=Qsticking2(oprack.getRackTiles(), moves[i], qPos, zPos);
@@ -326,7 +326,7 @@ vector<BStarNode>* EndSimulation::getChildren(const BStarNode &node, Rack& myrac
 			hr->endGame2vals(myrack.getRackTiles(),oprack, moves[i], qPos, zPos, pess, optm);
 			optm += moveScore;
 			pess += moveScore;
-			int mul = 1;
+			double mul = 1;
 			if (myRackHaveQ) {
 
 				mul += Qsticking2(myrack.getRackTiles(), moves[i], qPos, zPos);
